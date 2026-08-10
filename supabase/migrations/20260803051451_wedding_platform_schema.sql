@@ -268,15 +268,4 @@ INSERT INTO rsvp_questions (label, field_key, input_type, options, required, dis
 SELECT 'Song request', 'song_requests', 'text', '[]'::jsonb, false, 6
 WHERE NOT EXISTS (SELECT 1 FROM rsvp_questions WHERE field_key='song_requests');
 
--- ============ Seed sample events + venue ============
-INSERT INTO venues (id, name, address, description)
-SELECT '00000000-0000-0000-0000-000000000010', 'The Garden Terrace', '123 Blossom Lane, Napa Valley, CA', 'An open-air terrace surrounded by olive trees and string lights.'
-WHERE NOT EXISTS (SELECT 1 FROM venues);
 
-INSERT INTO events (id, title, description, start_time, venue_id, display_order, rsvp_enabled)
-SELECT '00000000-0000-0000-0000-000000000020', 'Ceremony', 'Join us as we exchange vows beneath the oak tree.', '2026-09-12 16:00:00+00', '00000000-0000-0000-0000-000000000010', 1, true
-WHERE NOT EXISTS (SELECT 1 FROM events WHERE title='Ceremony');
-
-INSERT INTO events (id, title, description, start_time, venue_id, display_order, rsvp_enabled)
-SELECT '00000000-0000-0000-0000-000000000021', 'Reception', 'Dinner, dancing, and celebration to follow.', '2026-09-12 18:00:00+00', '00000000-0000-0000-0000-000000000010', 2, true
-WHERE NOT EXISTS (SELECT 1 FROM events WHERE title='Reception');
