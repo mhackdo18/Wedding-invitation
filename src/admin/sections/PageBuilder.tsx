@@ -452,7 +452,7 @@ function StylingTab() {
           </Card>
 
           <Card>
-            <h3 className="font-semibold text-[#3a2e22] mb-3">Envelope &amp; Wax Seal</h3>
+            <h3 className="font-semibold text-[#3a2e22] mb-3">Invitation envelop waxsea</h3>
             <div className="space-y-3">
               <div><label className="admin-label">Greeting Text (shown before opening)</label><textarea className="admin-input" rows={2} value={draft.env_greeting || ''} onChange={(e) => update({ env_greeting: e.target.value })} /></div>
               <div><label className="admin-label">Open Button Text</label><input className="admin-input" value={draft.env_button_text} onChange={(e) => update({ env_button_text: e.target.value })} /></div>
@@ -527,7 +527,7 @@ function StylingTab() {
 
           <Card>
             <h3 className="font-semibold text-[#3a2e22] mb-3">Continue Button Action</h3>
-            <p className="text-xs text-[#8a7a66] mb-3">The button text is set in the Envelope &amp; Wax Seal section above.</p>
+            <p className="text-xs text-[#8a7a66] mb-3">The button text is set in the Invitation envelop waxsea section above.</p>
             <div className="space-y-3">
               <div><label className="admin-label">Link Type</label>
                 <select className="admin-input" value={draft.env_cta_type} onChange={(e) => update({ env_cta_type: e.target.value as 'internal' | 'external' })}>

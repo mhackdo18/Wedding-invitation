@@ -136,7 +136,7 @@ export default function InvitationDesigner() {
   };
 
   const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
-    { key: 'envelope', label: 'Envelope & Wax Seal', icon: <Mail size={15} /> },
+    { key: 'envelope', label: 'Invitation envelop waxsea', icon: <Mail size={15} /> },
     { key: 'letter', label: 'Letter Body', icon: <FileText size={15} /> },
     { key: 'email', label: 'Email Content', icon: <Send size={15} /> },
     { key: 'send', label: 'Send Invitations', icon: <LinkIcon size={15} /> },
