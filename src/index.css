@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --page-color: #FBF7F0;
+  --bg-color: #E9DFD0;
+  --page-width: 720px;
+  --heading-font: 'Cormorant Garamond', serif;
+  --body-font: 'Montserrat', sans-serif;
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--body-font);
+  background: var(--bg-color);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Embossed invitation card ---------- */
+.embossed-card {
+  background: var(--page-color);
+  position: relative;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.7) inset,
+    0 -1px 0 rgba(0,0,0,0.04) inset,
+    0 2px 6px rgba(80,60,40,0.10),
+    0 14px 40px rgba(80,60,40,0.18);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+.embossed-card::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(120,90,60,0.18);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* layered scroll edge effect */
+.scroll-edge {
+  background-image:
+    linear-gradient(to bottom, rgba(120,90,60,0.08), transparent 18%, transparent 82%, rgba(120,90,60,0.08));
+}
+
+/* ---------- Envelope animation ---------- */
+.env-stage {
+  perspective: 1200px;
+}
+.envelope {
+  width: 280px;
+  height: 190px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.2,0.8,0.2,1);
+}
+.env-back {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #b5462f, #8a3220);
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+}
+.env-body {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #c75a42, #9c3c28);
+  clip-path: polygon(0 28%, 50% 78%, 100% 28%, 100% 100%, 0 100%);
+  border-radius: 10px;
+}
+.env-letter {
+  position: absolute;
+  left: 14px; right: 14px;
+  top: 18px; bottom: 18px;
+  background: var(--page-color, #FBF7F0);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.8s cubic-bezier(0.2,0.8,0.2,1);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  padding: 12px;
+  text-align: center;
+}
+.env-flap {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #d2664c, #a8442e);
+  clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 28%, 50% 78%, 0 28%);
+  transform-origin: top center;
+  transition: transform 0.7s cubic-bezier(0.2,0.8,0.2,1);
+  z-index: 4;
+  border-radius: 10px 10px 0 0;
+}
+.env-seal {
+  position: absolute;
+  top: 46%; left: 50%;
+  width: 54px; height: 54px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d33838, #8c1010);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);
+  z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  color: #f4d9b0; font-family: 'Great Vibes', cursive; font-size: 28px;
+  transition: opacity 0.4s, transform 0.5s;
+}
+.envelope.open .env-flap {
+  transform: rotateX(180deg) translateY(-2px);
+  z-index: 1;
+}
+.envelope.open .env-seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4) rotate(20deg);
+}
+.envelope.open .env-letter {
+  transform: translateY(-130px) scale(1.06);
+  z-index: 6;
+}
+
+/* ---------- Admin ---------- */
+.admin-input {
+  width: 100%;
+  border: 1px solid #d6cdbf;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.admin-input:focus {
+  border-color: #b59a6b;
+  box-shadow: 0 0 0 3px rgba(181,154,107,0.18);
+}
+.admin-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b5d4f;
+  margin-bottom: 4px;
+  display: block;
+  letter-spacing: 0.02em;
+}
+.admin-card {
+  background: #fff;
+  border: 1px solid #e6ddcd;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(80,60,40,0.06);
+}
+.btn-primary {
+  background: #8a6d3b;
+  color: #fff;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 8px;
+  transition: background 0.15s, transform 0.1s;
+  font-size: 14px;
+}
+.btn-primary:hover { background: #74582f; }
+.btn-primary:active { transform: scale(0.98); }
+.btn-ghost {
+  background: transparent;
+  color: #6b5d4f;
+  border: 1px solid #d6cdbf;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+.btn-ghost:hover { background: #f5efe5; }
+.btn-danger {
+  background: #b03a3a;
+  color: #fff;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.btn-danger:hover { background: #963030; }
+
+/* range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: #d6cdbf;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #8a6d3b;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* thin scrollbar for admin */
+.thin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: #cdbfa3; border-radius: 6px; }
+
+/* fade up */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.6s cubic-bezier(0.2,0.8,0.2,1) both; }
+
+@keyframes waxDrip {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.wax-pop { animation: waxDrip 0.5s cubic-bezier(0.2,0.8,0.2,1) both; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
