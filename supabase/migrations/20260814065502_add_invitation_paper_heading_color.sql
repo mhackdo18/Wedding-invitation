@@ -1,0 +1,1 @@
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS invitation_paper_heading_color text;
