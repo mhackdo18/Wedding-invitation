@@ -4,7 +4,7 @@ import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { FONT_OPTIONS, stackFor } from '@/lib/fonts';
 import { uploadImage } from '@/lib/upload';
 import { SectionHeader, Card, ConfirmButton, EmptyState } from '../ui';
-import type { SiteSettings, TypeStyle, Page, StoryMilestone, InformationConfig, InformationBlock, PageBackground, BackgroundFit, BackgroundPosition } from '@/types';
+import type { SiteSettings, TypeStyle, Page, StoryMilestone, InformationConfig, InformationBlock, PageBackground, BackgroundFit, BackgroundPosition, BackgroundLayer } from '@/types';
 import { Save, Loader2, RotateCcw, Plus, Trash2, Eye, EyeOff, ArrowUp, ArrowDown, FileText, X, Upload, ImageIcon, Image, GripVertical, ChevronUp, ChevronDown, Music } from 'lucide-react';
 import { FontSelect } from '@/components/admin/FontSelect';
 import RichTextEditor from '@/components/admin/RichTextEditor';
@@ -684,7 +684,7 @@ function TypoRow({ label, style, onChange, onReset }: { label: string; style?: T
 }
 
 const DEFAULT_BG: PageBackground = {
-  url: null, fit: 'cover', position: 'center', opacity: 100, blur: 0, overlayColor: null, overlayOpacity: 0,
+  url: null, fit: 'cover', position: 'center', opacity: 100, blur: 0, overlayColor: null, overlayOpacity: 0, layer: 'back',
 };
 
 function getBg(form: Partial<Page>): PageBackground {
@@ -742,6 +742,29 @@ function PageBackgroundEditor({ form, setForm }: { form: Partial<Page>; setForm:
 
       {bg.url && (
         <>
+          <div>
+            <label className="admin-label">Layer Placement</label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setForm(setBg(form, { layer: 'back' }))}
+                className={`flex-1 text-xs px-3 py-2 rounded-md border transition ${bg.layer !== 'front' ? 'bg-[#8a6d3b] text-white border-[#8a6d3b]' : 'bg-[#f0e8d8] text-[#8a6d3b] border-[#d6cdbf] hover:border-[#8a6d3b]'}`}
+              >
+                Behind Content
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm(setBg(form, { layer: 'front' }))}
+                className={`flex-1 text-xs px-3 py-2 rounded-md border transition ${bg.layer === 'front' ? 'bg-[#8a6d3b] text-white border-[#8a6d3b]' : 'bg-[#f0e8d8] text-[#8a6d3b] border-[#d6cdbf] hover:border-[#8a6d3b]'}`}
+              >
+                In Front of Content
+              </button>
+            </div>
+            {bg.layer === 'front' && (
+              <p className="text-[10px] text-[#8a7a66] mt-1">Best for transparent PNGs like floral overlays, watermarks, or decorative frames that should sit on top of text and photos.</p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="admin-label">Fit</label>

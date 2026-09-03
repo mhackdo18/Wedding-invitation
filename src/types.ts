@@ -281,6 +281,8 @@ export interface EmailSettings {
 export type BackgroundFit = 'cover' | 'contain' | 'fill' | 'center' | 'repeat';
 export type BackgroundPosition = 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
+export type BackgroundLayer = 'back' | 'front';
+
 export interface PageBackground {
   url: string | null;
   fit: BackgroundFit;
@@ -289,6 +291,7 @@ export interface PageBackground {
   blur: number;
   overlayColor: string | null;
   overlayOpacity: number;
+  layer: BackgroundLayer;
 }
 
 export interface Page {

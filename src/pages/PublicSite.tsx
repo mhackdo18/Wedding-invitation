@@ -70,27 +70,45 @@ function SectionBackground({ page, children }: { page: Page; children: ReactNode
   const bgRepeat = bg.fit === 'repeat' ? 'repeat' : 'no-repeat';
   const opacity = bg.opacity / 100;
   const overlayOpacity = bg.overlayOpacity / 100;
+  const isFront = bg.layer === 'front';
+
+  const imgLayer = (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        backgroundImage: `url(${bg.url})`,
+        backgroundSize: bgSize,
+        backgroundPosition: bgPositionCss(bg.position),
+        backgroundRepeat: bgRepeat,
+        opacity,
+        filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
+        transform: bg.blur > 0 ? 'scale(1.05)' : undefined,
+        zIndex: isFront ? 2 : 0,
+      }}
+    />
+  );
+
+  const overlayLayer = bg.overlayColor ? (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{ background: bg.overlayColor, opacity: overlayOpacity, zIndex: isFront ? 1 : 0 }}
+    />
+  ) : null;
+
+  if (isFront) {
+    return (
+      <div className="relative">
+        <div className="relative" style={{ zIndex: 1 }}>{children}</div>
+        {overlayLayer}
+        {imgLayer}
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `url(${bg.url})`,
-          backgroundSize: bgSize,
-          backgroundPosition: bgPositionCss(bg.position),
-          backgroundRepeat: bgRepeat,
-          opacity,
-          filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
-          transform: bg.blur > 0 ? 'scale(1.05)' : undefined,
-        }}
-      />
-      {bg.overlayColor && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: bg.overlayColor, opacity: overlayOpacity }}
-        />
-      )}
+      {imgLayer}
+      {overlayLayer}
       <div className="relative" style={{ zIndex: 1 }}>{children}</div>
     </div>
   );
