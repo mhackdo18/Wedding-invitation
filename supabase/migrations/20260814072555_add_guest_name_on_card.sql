@@ -1,0 +1,1 @@
+ALTER TABLE guests ADD COLUMN IF NOT EXISTS name_on_card text;

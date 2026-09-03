@@ -1,0 +1,1 @@
+ALTER TABLE rsvp_questions ADD COLUMN IF NOT EXISTS column_name text;

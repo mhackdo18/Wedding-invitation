@@ -1,0 +1,2 @@
+[functions.send-invitations]
+verify_jwt = false
