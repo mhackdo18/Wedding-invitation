@@ -4,7 +4,7 @@ import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { FONT_OPTIONS, stackFor } from '@/lib/fonts';
 import { uploadImage } from '@/lib/upload';
 import { SectionHeader, Card, ConfirmButton, EmptyState } from '../ui';
-import type { SiteSettings, TypeStyle, Page, StoryMilestone, InformationConfig, InformationBlock } from '@/types';
+import type { SiteSettings, TypeStyle, Page, StoryMilestone, InformationConfig, InformationBlock, PageBackground, BackgroundFit, BackgroundPosition } from '@/types';
 import { Save, Loader2, RotateCcw, Plus, Trash2, Eye, EyeOff, ArrowUp, ArrowDown, FileText, X, Upload, ImageIcon, Image, GripVertical, ChevronUp, ChevronDown, Music } from 'lucide-react';
 import { FontSelect } from '@/components/admin/FontSelect';
 import RichTextEditor from '@/components/admin/RichTextEditor';
@@ -260,6 +260,7 @@ function PageForm({ page, onCancel, onSave, existingSlugs }: { page: Page | null
           {form.template === 'information' && (
             <InformationConfigEditor form={form} setForm={setForm} />
           )}
+          <PageBackgroundEditor form={form} setForm={setForm} />
           <label className="flex items-center gap-2 text-sm text-[#5a4430]">
             <input type="checkbox" checked={form.is_visible ?? true} onChange={(e) => setForm({ ...form, is_visible: e.target.checked })} className="accent-[#8a6d3b]" />
             Visible on public site
@@ -678,6 +679,122 @@ function TypoRow({ label, style, onChange, onReset }: { label: string; style?: T
           <input type="text" value={style?.color || ''} onChange={(e) => onChange({ color: e.target.value || undefined })} placeholder="#5a4430" className="admin-input !py-1.5 !text-xs w-20" />
         </div>
       </div>
+    </div>
+  );
+}
+
+const DEFAULT_BG: PageBackground = {
+  url: null, fit: 'cover', position: 'center', opacity: 100, blur: 0, overlayColor: null, overlayOpacity: 0,
+};
+
+function getBg(form: Partial<Page>): PageBackground {
+  const raw = (form.config as any)?.background;
+  return raw ? { ...DEFAULT_BG, ...raw } : DEFAULT_BG;
+}
+
+function setBg(form: Partial<Page>, bg: Partial<PageBackground>): Partial<Page> {
+  const cfg = (form.config as Record<string, unknown>) || {};
+  return { ...form, config: { ...cfg, background: { ...getBg(form), ...bg } } };
+}
+
+function PageBackgroundEditor({ form, setForm }: { form: Partial<Page>; setForm: (f: Partial<Page>) => void }) {
+  const bg = getBg(form);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const ref = useRef<HTMLInputElement>(null);
+
+  const handleUpload = async (file: File) => {
+    if (uploading) return;
+    setUploading(true);
+    setProgress(0);
+    const url = await uploadImage(file, 'page-bg', setProgress);
+    if (url) setForm(setBg(form, { url }));
+    setUploading(false);
+    setProgress(0);
+  };
+
+  return (
+    <div className="rounded-lg border p-3 space-y-3" style={{ borderColor: '#e6ddcd', background: '#fffdf8' }}>
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold text-[#5a4430]">Page Background Photo</span>
+        {bg.url && (
+          <button type="button" onClick={() => setForm(setBg(form, { url: null }))} className="text-xs text-[#b03a3a] hover:underline">Remove</button>
+        )}
+      </div>
+      <p className="text-[10px] text-[#8a7a66]">Set a background photo for this section. It appears behind the content on the public site.</p>
+
+      {bg.url ? (
+        <div onClick={() => !uploading && ref.current?.click()} className="cursor-pointer rounded-md overflow-hidden border" style={{ borderColor: '#e6ddcd' }}>
+          {uploading ? (
+            <div className="flex items-center justify-center py-4 gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
+          ) : (
+            <img src={bg.url} alt="Background" className="w-full h-20 object-cover" />
+          )}
+        </div>
+      ) : (
+        <div onClick={() => !uploading && ref.current?.click()} className="rounded-lg border-2 border-dashed p-3 text-center cursor-pointer transition hover:border-[#8a6d3b]" style={{ borderColor: '#d6cdbf', background: '#faf6ee' }}>
+          {uploading ? <div className="flex items-center justify-center gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
+            : <div><Upload size={16} className="mx-auto text-[#a07c4a] mb-1" /><p className="text-xs text-[#6b5d4f]">Click to upload background photo</p></div>}
+        </div>
+      )}
+      {uploading && <UploadProgress percent={progress} />}
+      <input ref={ref} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); e.target.value = ''; }} />
+
+      {bg.url && (
+        <>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="admin-label">Fit</label>
+              <select className="admin-input !py-1.5 !text-xs" value={bg.fit} onChange={(e) => setForm(setBg(form, { fit: e.target.value as BackgroundFit }))}>
+                <option value="cover">Cover (fill)</option>
+                <option value="contain">Fit (contain)</option>
+                <option value="fill">Stretch (fill)</option>
+                <option value="center">Center (actual size)</option>
+                <option value="repeat">Tile / Repeat</option>
+              </select>
+            </div>
+            <div>
+              <label className="admin-label">Position</label>
+              <select className="admin-input !py-1.5 !text-xs" value={bg.position} onChange={(e) => setForm(setBg(form, { position: e.target.value as BackgroundPosition }))}>
+                <option value="center">Center</option>
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+                <option value="top-left">Top Left</option>
+                <option value="top-right">Top Right</option>
+                <option value="bottom-left">Bottom Left</option>
+                <option value="bottom-right">Bottom Right</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Opacity</label><span className="text-xs text-[#8a7a66]">{bg.opacity}%</span></div>
+            <input type="range" min={10} max={100} value={bg.opacity} onChange={(e) => setForm(setBg(form, { opacity: parseInt(e.target.value) }))} className="w-full" />
+          </div>
+
+          <div>
+            <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Blur</label><span className="text-xs text-[#8a7a66]">{bg.blur}px</span></div>
+            <input type="range" min={0} max={20} value={bg.blur} onChange={(e) => setForm(setBg(form, { blur: parseInt(e.target.value) }))} className="w-full" />
+          </div>
+
+          <div className="rounded border p-2" style={{ borderColor: '#f0e8d8', background: '#fff' }}>
+            <p className="text-[10px] font-semibold text-[#5a4430] mb-1.5">Color Overlay</p>
+            <div className="flex items-center gap-2 mb-2">
+              <input type="color" value={bg.overlayColor || '#000000'} onChange={(e) => setForm(setBg(form, { overlayColor: e.target.value }))} className="w-7 h-7 rounded border cursor-pointer shrink-0" style={{ borderColor: '#d6cdbf' }} />
+              <input className="admin-input !py-1.5 !text-xs flex-1" value={bg.overlayColor || ''} onChange={(e) => setForm(setBg(form, { overlayColor: e.target.value || null }))} placeholder="None" />
+              {bg.overlayColor && <button type="button" onClick={() => setForm(setBg(form, { overlayColor: null, overlayOpacity: 0 }))} className="text-xs text-[#b03a3a]">Clear</button>}
+            </div>
+            {bg.overlayColor && (
+              <div>
+                <div className="flex justify-between mb-1"><span className="text-[10px] text-[#8a7a66]">Overlay opacity</span><span className="text-[10px] text-[#8a7a66]">{bg.overlayOpacity}%</span></div>
+                <input type="range" min={0} max={90} value={bg.overlayOpacity} onChange={(e) => setForm(setBg(form, { overlayOpacity: parseInt(e.target.value) }))} className="w-full" />
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

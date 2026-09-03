@@ -278,6 +278,19 @@ export interface EmailSettings {
   updated_at: string;
 }
 
+export type BackgroundFit = 'cover' | 'contain' | 'fill' | 'center' | 'repeat';
+export type BackgroundPosition = 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+export interface PageBackground {
+  url: string | null;
+  fit: BackgroundFit;
+  position: BackgroundPosition;
+  opacity: number;
+  blur: number;
+  overlayColor: string | null;
+  overlayOpacity: number;
+}
+
 export interface Page {
   id: string;
   slug: string;

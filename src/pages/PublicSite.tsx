@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { navigate } from '@/lib/router';
@@ -24,6 +25,7 @@ import { Reveal } from '@/components/public/Reveal';
 import { PageBorder } from '@/components/public/PageBorder';
 import { isRsvpClosed, formatDeadlineDate } from '@/lib/timezone';
 import { getBorderFromTypography } from '@/lib/pageTemplates';
+import type { PageBackground, BackgroundFit, BackgroundPosition } from '@/types';
 
 const SECTION_IDS: Record<string, string> = {
   welcome: 'section-welcome',
@@ -36,6 +38,63 @@ const SECTION_IDS: Record<string, string> = {
   document: 'section-document',
   custom: 'section-custom',
 };
+
+const FIT_TO_CSS: Record<BackgroundFit, string> = {
+  cover: 'cover',
+  contain: 'contain',
+  fill: '100% 100%',
+  center: 'auto',
+  repeat: 'auto',
+};
+
+function bgPositionCss(pos: BackgroundPosition): string {
+  const map: Record<BackgroundPosition, string> = {
+    center: 'center',
+    top: 'top',
+    bottom: 'bottom',
+    left: 'left',
+    right: 'right',
+    'top-left': 'top left',
+    'top-right': 'top right',
+    'bottom-left': 'bottom left',
+    'bottom-right': 'bottom right',
+  };
+  return map[pos] || 'center';
+}
+
+function SectionBackground({ page, children }: { page: Page; children: ReactNode }) {
+  const bg = (page.config as Record<string, unknown>)?.background as PageBackground | undefined;
+  if (!bg?.url) return <>{children}</>;
+
+  const bgSize = FIT_TO_CSS[bg.fit] || 'cover';
+  const bgRepeat = bg.fit === 'repeat' ? 'repeat' : 'no-repeat';
+  const opacity = bg.opacity / 100;
+  const overlayOpacity = bg.overlayOpacity / 100;
+
+  return (
+    <div className="relative">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `url(${bg.url})`,
+          backgroundSize: bgSize,
+          backgroundPosition: bgPositionCss(bg.position),
+          backgroundRepeat: bgRepeat,
+          opacity,
+          filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
+          transform: bg.blur > 0 ? 'scale(1.05)' : undefined,
+        }}
+      />
+      {bg.overlayColor && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: bg.overlayColor, opacity: overlayOpacity }}
+        />
+      )}
+      <div className="relative" style={{ zIndex: 1 }}>{children}</div>
+    </div>
+  );
+}
 
 export default function PublicSite() {
   const { settings, loading } = useSiteSettings();
@@ -210,7 +269,9 @@ export default function PublicSite() {
         {/* Render sections dynamically in page builder order */}
         {welcomePage && (
           <div id={welcomePage.id ? `section-${welcomePage.id}` : 'section-welcome'}>
+            <SectionBackground page={welcomePage}>
             <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate}>{renderSection(welcomePage)}</PageBorder></Reveal>
+            </SectionBackground>
           </div>
         )}
         {!welcomePage && (
@@ -221,7 +282,9 @@ export default function PublicSite() {
 
         {otherPages.map((p, idx) => (
           <div key={p.id} id={`section-${p.id}`}>
+            <SectionBackground page={p}>
             <Reveal enabled={!!settings.scroll_animation_enabled} animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}><PageBorder template={borderTemplate}>{renderSection(p)}</PageBorder></Reveal>
+            </SectionBackground>
           </div>
         ))}
 
