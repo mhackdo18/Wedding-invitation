@@ -442,7 +442,7 @@ export default function WelcomePage({
     return (
       <header className="relative overflow-hidden flex flex-col" style={{ minHeight: 600 }}>
         {/* Names at top */}
-        <div className="relative text-center px-6 pt-10 pb-4" style={{ background: 'var(--page-color)' }}>
+        <div className="relative text-center px-6 pt-10 pb-4" style={{ background: 'transparent' }}>
           {pretitleText && <p style={{ ...typeStyle(typo.heroPretitle), fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: typo.heroPretitle?.color || '#a07c4a', marginBottom: 8 }}>{pretitleText}</p>}
           <h1 style={{ ...typeStyle(typo.heroTitle), fontFamily: typo.heroTitle?.fontFamily ? stackFor(typo.heroTitle.fontFamily) : 'var(--heading-font)', fontSize: typo.heroTitle?.fontSize || 'clamp(2rem, 6vw, 3.5rem)', fontWeight: typo.heroTitle?.fontWeight || 600, color: typo.heroTitle?.color || '#5a4430', margin: 0, lineHeight: 1.1 }}>
             {settings.partner1_name} <span style={{ fontFamily: 'Great Vibes, cursive', color: '#b5462f', fontSize: '0.7em', ...ampBase }}>&amp;</span> {settings.partner2_name}
@@ -455,7 +455,7 @@ export default function WelcomePage({
         )}
 
         {/* Dates and countdown at bottom */}
-        <div className="relative text-center px-6 pt-5 pb-8" style={{ background: 'var(--page-color)' }}>
+        <div className="relative text-center px-6 pt-5 pb-8" style={{ background: 'transparent' }}>
           {dateStr && <p style={{ fontSize: typo.heroDate?.fontSize || 15, color: typo.heroDate?.color || '#6b5d4f', letterSpacing: '0.04em', ...typeStyle(typo.heroDate) }}>{dateStr}</p>}
           {settings.venue_line && <p style={{ fontSize: typo.heroVenue?.fontSize || 13, color: typo.heroVenue?.color || '#8a7a66', marginTop: 2, ...typeStyle(typo.heroVenue) }}>{settings.venue_line}</p>}
           {countdown}

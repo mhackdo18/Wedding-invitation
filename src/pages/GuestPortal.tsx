@@ -100,7 +100,7 @@ export default function GuestPortal() {
 
         {done ? (
           <Reveal enabled={!!settings?.scroll_animation_enabled} animation="scale-in">
-          <PageBorder template={getBorderFromTypography(settings?.typography)}>
+          <PageBorder template={getBorderFromTypography(settings?.typography)} typography={settings?.typography}>
           <div className="text-center">
             <div className="rounded-2xl p-6 shadow-sm" style={{ background: '#fff', border: '1px solid #e6ddcd' }}>
               <SiteMonogram settings={settings} size={28} className="mx-auto mb-3" />
@@ -116,7 +116,7 @@ export default function GuestPortal() {
         ) : (
           <>
             <Reveal enabled={!!settings?.scroll_animation_enabled} animation="fade-up" delay={100}>
-            <PageBorder template={getBorderFromTypography(settings?.typography)}>
+            <PageBorder template={getBorderFromTypography(settings?.typography)} typography={settings?.typography}>
             <form onSubmit={submit} className="rounded-2xl p-6 shadow-sm" style={{ background: '#fff', border: '1px solid #e6ddcd' }}>
               {error && (
                 <div className="rounded-lg px-3 py-2 mb-4 text-sm" style={{ background: 'rgba(176,58,58,0.08)', color: '#b03a3a', border: '1px solid rgba(176,58,58,0.15)' }}>

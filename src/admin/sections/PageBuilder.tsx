@@ -10,7 +10,8 @@ import { FontSelect } from '@/components/admin/FontSelect';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import { UploadProgress } from '@/components/admin/UploadProgress';
 import TagInput from '@/components/admin/TagInput';
-import { PAGE_BORDER_TEMPLATES, getBorderFromTypography, setBorderInTypography } from '@/lib/pageTemplates';
+import { PAGE_BORDER_TEMPLATES, getBorderFromTypography, setBorderInTypography, getBorderColorFromTypography, setBorderColorInTypography, getBorderThicknessFromTypography, setBorderThicknessInTypography, getBorderTemplate, getCardBg, setCardBg, getOuterBg, setOuterBg } from '@/lib/pageTemplates';
+import type { BgPhotoConfig } from '@/lib/pageTemplates';
 
 const TYPO_KEYS = [
   { key: 'pageTitle', label: 'Page Title' },
@@ -536,25 +537,56 @@ function StylingTab() {
           </Card>
 
           <Card>
-            <h3 className="font-semibold text-[#3a2e22] mb-1">Page Border &amp; Background</h3>
-            <p className="text-xs text-[#8a7a66] mb-3">Choose an elegant border and background style applied to every section of your public site and guest portal.</p>
+            <h3 className="font-semibold text-[#3a2e22] mb-1">Page Border</h3>
+            <p className="text-xs text-[#8a7a66] mb-3">Choose an elegant border style applied to every section. All borders have a transparent background — they layer over your page and background photos without covering them.</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {PAGE_BORDER_TEMPLATES.map((t) => (
-                <button key={t.value} onClick={() => update({ typography: setBorderInTypography(draft.typography, t.value) })}
-                  className="group text-left rounded-lg border overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md"
-                  style={{ borderColor: (getBorderFromTypography(draft.typography) || 'plain') === t.value ? '#8a6d3b' : '#e6ddcd', boxShadow: (getBorderFromTypography(draft.typography) || 'plain') === t.value ? '0 0 0 2px rgba(138,109,59,0.14)' : undefined }}>
-                  <div className="aspect-[4/3] flex items-center justify-center" style={{ background: t.preview.background, borderTop: t.preview.border, borderLeft: t.preview.border, borderRight: t.preview.border }}>
-                    <div className="w-3/4 h-1/2 flex items-center justify-center" style={{ border: `1px solid ${t.preview.accent}`, borderRadius: t.preview.borderRadius }}>
-                      <span className="text-[8px] uppercase tracking-[0.18em]" style={{ color: t.preview.accent }}>Names</span>
+              {PAGE_BORDER_TEMPLATES.map((t) => {
+                const selected = (getBorderFromTypography(draft.typography) || 'plain') === t.value;
+                return (
+                  <button key={t.value} onClick={() => update({ typography: setBorderInTypography(draft.typography, t.value) })}
+                    className="group text-left rounded-lg border overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md"
+                    style={{ borderColor: selected ? '#8a6d3b' : '#e6ddcd', boxShadow: selected ? '0 0 0 2px rgba(138,109,59,0.14)' : undefined }}>
+                    <div className="aspect-[4/3] flex items-center justify-center relative" style={{ background: 'transparent' }}>
+                      {t.type === 'none' ? (
+                        <span className="text-[10px] text-[#b0a896]">No border</span>
+                      ) : (
+                        <BorderPreview type={t.type} color={t.defaultColor} thickness={t.defaultThickness} />
+                      )}
+                    </div>
+                    <div className="p-2" style={{ background: '#fff' }}>
+                      <p className="font-semibold text-[11px]" style={{ color: selected ? '#8a6d3b' : '#5a4430' }}>{t.label}</p>
+                      <p className="text-[10px] text-[#8a7a66] mt-0.5 leading-snug">{t.hint}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            {(() => {
+              const sel = getBorderFromTypography(draft.typography) || 'plain';
+              const tpl = getBorderTemplate(sel);
+              if (tpl.type === 'none') return null;
+              const color = getBorderColorFromTypography(draft.typography) || tpl.defaultColor;
+              const thickness = getBorderThicknessFromTypography(draft.typography) ?? tpl.defaultThickness;
+              return (
+                <div className="mt-3 rounded-lg border p-3 space-y-3" style={{ borderColor: '#e6ddcd', background: '#fffdf8' }}>
+                  <p className="text-[10px] font-semibold text-[#5a4430]">Customize Border</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="admin-label">Border Color</label>
+                      <div className="flex items-center gap-2">
+                        <input type="color" value={color} onChange={(e) => update({ typography: setBorderColorInTypography(draft.typography, e.target.value) })} className="w-8 h-8 rounded border cursor-pointer shrink-0" style={{ borderColor: '#d6cdbf' }} />
+                        <input className="admin-input !py-1.5 !text-xs flex-1" value={color} onChange={(e) => update({ typography: setBorderColorInTypography(draft.typography, e.target.value) })} placeholder={tpl.defaultColor} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Thickness</label><span className="text-xs text-[#8a7a66]">{thickness}px</span></div>
+                      <input type="range" min={0.5} max={8} step={0.5} value={thickness} onChange={(e) => update({ typography: setBorderThicknessInTypography(draft.typography, parseFloat(e.target.value)) })} className="w-full" />
                     </div>
                   </div>
-                  <div className="p-2" style={{ background: '#fff' }}>
-                    <p className="font-semibold text-[11px]" style={{ color: (getBorderFromTypography(draft.typography) || 'plain') === t.value ? '#8a6d3b' : '#5a4430' }}>{t.label}</p>
-                    <p className="text-[10px] text-[#8a7a66] mt-0.5 leading-snug">{t.hint}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
+                  <button type="button" onClick={() => update({ typography: { ...draft.typography, _borderColor: undefined, _borderThickness: undefined } })} className="text-xs text-[#b03a3a] hover:underline">Reset to default color &amp; thickness</button>
+                </div>
+              );
+            })()}
           </Card>
 
           <Card>
@@ -588,6 +620,8 @@ function StylingTab() {
                 <div><label className="admin-label">Background Color</label><div className="flex gap-2 items-center"><input type="color" value={draft.bg_color} onChange={(e) => update({ bg_color: e.target.value })} className="w-10 h-9 rounded border border-[#d6cdbf] cursor-pointer" /><input className="admin-input" value={draft.bg_color} onChange={(e) => update({ bg_color: e.target.value })} /></div></div>
               </div>
               <div><div className="flex justify-between mb-1"><label className="admin-label !mb-0">Page Width</label><span className="text-xs text-[#8a7a66]">{draft.page_width}px</span></div><input type="range" min={320} max={1100} step={10} value={draft.page_width} onChange={(e) => update({ page_width: parseInt(e.target.value) })} className="w-full" /></div>
+              <BgPhotoEditor label="Page Color (Card) Background Photo" bg={getCardBg(draft.typography)} onChange={(p) => update({ typography: setCardBg(draft.typography, p) })} />
+              <BgPhotoEditor label="Outer Background Photo" bg={getOuterBg(draft.typography)} onChange={(p) => update({ typography: setOuterBg(draft.typography, p) })} />
             </div>
           </Card>
 
@@ -633,6 +667,197 @@ function StylingTab() {
       </div>
     </div>
   );
+}
+
+function BgPhotoEditor({ label, bg, onChange }: { label: string; bg: BgPhotoConfig; onChange: (patch: Partial<BgPhotoConfig>) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const ref = useRef<HTMLInputElement>(null);
+
+  const handleUpload = async (file: File) => {
+    if (uploading) return;
+    setUploading(true);
+    setProgress(0);
+    const url = await uploadImage(file, 'page-bg', setProgress);
+    if (url) onChange({ url });
+    setUploading(false);
+    setProgress(0);
+  };
+
+  return (
+    <div className="rounded-lg border p-3 space-y-3" style={{ borderColor: '#e6ddcd', background: '#fffdf8' }}>
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold text-[#5a4430]">{label}</span>
+        {bg.url && <button type="button" onClick={() => onChange({ url: null })} className="text-xs text-[#b03a3a] hover:underline">Remove</button>}
+      </div>
+
+      {bg.url ? (
+        <div onClick={() => !uploading && ref.current?.click()} className="cursor-pointer rounded-md overflow-hidden border" style={{ borderColor: '#e6ddcd' }}>
+          {uploading ? (
+            <div className="flex items-center justify-center py-4 gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
+          ) : (
+            <img src={bg.url} alt={label} className="w-full h-20 object-cover" />
+          )}
+        </div>
+      ) : (
+        <div onClick={() => !uploading && ref.current?.click()} className="rounded-lg border-2 border-dashed p-3 text-center cursor-pointer transition hover:border-[#8a6d3b]" style={{ borderColor: '#d6cdbf', background: '#faf6ee' }}>
+          {uploading ? <div className="flex items-center justify-center gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
+            : <div><Upload size={16} className="mx-auto text-[#a07c4a] mb-1" /><p className="text-xs text-[#6b5d4f]">Click to upload photo</p></div>}
+        </div>
+      )}
+      {uploading && <UploadProgress percent={progress} />}
+      <input ref={ref} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); e.target.value = ''; }} />
+
+      {bg.url && (
+        <>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="admin-label">Fit</label>
+              <select className="admin-input !py-1.5 !text-xs" value={bg.fit} onChange={(e) => onChange({ fit: e.target.value as BgPhotoConfig['fit'] })}>
+                <option value="cover">Cover (fill)</option>
+                <option value="contain">Fit (contain)</option>
+                <option value="fill">Stretch (fill)</option>
+                <option value="center">Center (actual size)</option>
+                <option value="repeat">Tile / Repeat</option>
+              </select>
+            </div>
+            <div>
+              <label className="admin-label">Position</label>
+              <select className="admin-input !py-1.5 !text-xs" value={bg.position} onChange={(e) => onChange({ position: e.target.value as BgPhotoConfig['position'] })}>
+                <option value="center">Center</option>
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+                <option value="top-left">Top Left</option>
+                <option value="top-right">Top Right</option>
+                <option value="bottom-left">Bottom Left</option>
+                <option value="bottom-right">Bottom Right</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Opacity</label><span className="text-xs text-[#8a7a66]">{bg.opacity}%</span></div>
+            <input type="range" min={10} max={100} value={bg.opacity} onChange={(e) => onChange({ opacity: parseInt(e.target.value) })} className="w-full" />
+          </div>
+
+          <div>
+            <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Blur</label><span className="text-xs text-[#8a7a66]">{bg.blur}px</span></div>
+            <input type="range" min={0} max={20} value={bg.blur} onChange={(e) => onChange({ blur: parseInt(e.target.value) })} className="w-full" />
+          </div>
+
+          <div className="rounded border p-2" style={{ borderColor: '#f0e8d8', background: '#fff' }}>
+            <p className="text-[10px] font-semibold text-[#5a4430] mb-1.5">Color Overlay</p>
+            <div className="flex items-center gap-2 mb-2">
+              <input type="color" value={bg.overlayColor || '#000000'} onChange={(e) => onChange({ overlayColor: e.target.value })} className="w-7 h-7 rounded border cursor-pointer shrink-0" style={{ borderColor: '#d6cdbf' }} />
+              <input className="admin-input !py-1.5 !text-xs flex-1" value={bg.overlayColor || ''} onChange={(e) => onChange({ overlayColor: e.target.value || null })} placeholder="None" />
+              {bg.overlayColor && <button type="button" onClick={() => onChange({ overlayColor: null, overlayOpacity: 0 })} className="text-xs text-[#b03a3a]">Clear</button>}
+            </div>
+            {bg.overlayColor && (
+              <div>
+                <div className="flex justify-between mb-1"><span className="text-[10px] text-[#8a7a66]">Overlay opacity</span><span className="text-[10px] text-[#8a7a66]">{bg.overlayOpacity}%</span></div>
+                <input type="range" min={0} max={90} value={bg.overlayOpacity} onChange={(e) => onChange({ overlayOpacity: parseInt(e.target.value) })} className="w-full" />
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function BorderPreview({ type, color, thickness }: { type: string; color: string; thickness: number }) {
+  const t = Math.max(0.5, thickness);
+  const base = { width: '80%', height: '55%', position: 'relative' as const };
+  if (type === 'arch') {
+    return (
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={base} aria-hidden="true">
+        <path d="M 2 98 L 2 28 Q 50 4 98 28 L 98 98" fill="none" stroke={color} strokeWidth={t * 1.2} />
+      </svg>
+    );
+  }
+  if (type === 'corner') {
+    return (
+      <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '2px', opacity: 0.9 }}>
+        <div style={{ position: 'absolute', top: -t, left: -t, width: 14, height: 14, borderTop: `${t * 1.8}px solid ${color}`, borderLeft: `${t * 1.8}px solid ${color}` }} />
+        <div style={{ position: 'absolute', top: -t, right: -t, width: 14, height: 14, borderTop: `${t * 1.8}px solid ${color}`, borderRight: `${t * 1.8}px solid ${color}` }} />
+        <div style={{ position: 'absolute', bottom: -t, left: -t, width: 14, height: 14, borderBottom: `${t * 1.8}px solid ${color}`, borderLeft: `${t * 1.8}px solid ${color}` }} />
+        <div style={{ position: 'absolute', bottom: -t, right: -t, width: 14, height: 14, borderBottom: `${t * 1.8}px solid ${color}`, borderRight: `${t * 1.8}px solid ${color}` }} />
+      </div>
+    );
+  }
+  if (type === 'double') {
+    return <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '4px', boxShadow: `inset 0 0 0 1px transparent, inset 0 0 0 3px ${color}` }} />;
+  }
+  if (type === 'dotted') {
+    return <div style={{ ...base, border: `${t * 1.5}px dotted ${color}`, borderRadius: '4px' }} />;
+  }
+  if (type === 'ornate') {
+    return <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '2px', boxShadow: `inset 0 0 0 1px ${color}` }} />;
+  }
+  if (type === 'botanical' || type === 'filigree') {
+    return (
+      <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '3px' }}>
+        <svg viewBox="0 0 80 80" className="absolute" style={{ top: -2, left: -2, opacity: 0.6 }} width="28" height="28" aria-hidden="true">
+          <path d="M 4 4 Q 18 4 24 14 Q 28 22 26 32" fill="none" stroke={color} strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M 4 4 Q 4 18 14 24 Q 22 28 32 26" fill="none" stroke={color} strokeWidth="1.2" strokeLinecap="round" />
+          <circle cx="4" cy="4" r="2" fill="none" stroke={color} strokeWidth="0.8" />
+        </svg>
+        <svg viewBox="0 0 80 80" className="absolute" style={{ bottom: -2, right: -2, transform: 'scale(-1,-1)', opacity: 0.6 }} width="28" height="28" aria-hidden="true">
+          <path d="M 4 4 Q 18 4 24 14 Q 28 22 26 32" fill="none" stroke={color} strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M 4 4 Q 4 18 14 24 Q 22 28 32 26" fill="none" stroke={color} strokeWidth="1.2" strokeLinecap="round" />
+          <circle cx="4" cy="4" r="2" fill="none" stroke={color} strokeWidth="0.8" />
+        </svg>
+      </div>
+    );
+  }
+  if (type === 'vintage_lace') {
+    return (
+      <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '2px', opacity: 0.85, boxShadow: `inset 0 0 0 3px ${color}` }}>
+        <svg viewBox="0 0 160 160" className="absolute" style={{ top: -3, left: -3, opacity: 0.55 }} width="40" height="40" aria-hidden="true">
+          <path d="M 6 6 Q 28 8 44 22 Q 60 36 68 54 Q 74 68 72 82" fill="none" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+          <path d="M 6 6 Q 8 28 22 44 Q 36 60 54 68 Q 68 74 82 72" fill="none" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+          <path d="M 24 24 Q 36 18 42 30 Q 38 40 28 36 Z" fill="none" stroke={color} strokeWidth="0.7" />
+          <path d="M 36 36 Q 48 30 54 42 Q 50 52 40 48 Z" fill="none" stroke={color} strokeWidth="0.7" />
+          <circle cx="48" cy="48" r="3" fill="none" stroke={color} strokeWidth="0.5" />
+          <circle cx="48" cy="48" r="1" fill={color} opacity="0.6" />
+        </svg>
+        <svg viewBox="0 0 160 160" className="absolute" style={{ bottom: -3, right: -3, transform: 'scale(-1,-1)', opacity: 0.55 }} width="40" height="40" aria-hidden="true">
+          <path d="M 6 6 Q 28 8 44 22 Q 60 36 68 54 Q 74 68 72 82" fill="none" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+          <path d="M 6 6 Q 8 28 22 44 Q 36 60 54 68 Q 68 74 82 72" fill="none" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+          <path d="M 24 24 Q 36 18 42 30 Q 38 40 28 36 Z" fill="none" stroke={color} strokeWidth="0.7" />
+        </svg>
+      </div>
+    );
+  }
+  if (type === 'floral_side') {
+    const c = color;
+    const fill = c + '22';
+    return (
+      <div style={{ ...base, border: `${t}px solid ${c}`, borderRadius: '2px', opacity: 0.9 }}>
+        {/* Left floral side preview */}
+        <svg viewBox="0 0 30 120" className="absolute" style={{ top: 0, left: 0, height: '100%' }} width="20" preserveAspectRatio="xMidYMid stretch" aria-hidden="true">
+          <path d="M 12 0 Q 20 20 14 40 Q 6 60 18 80 Q 24 100 12 120" fill="none" stroke={c} strokeWidth="0.8" opacity="0.5" />
+          <circle cx="14" cy="20" r="3.5" fill={fill} stroke={c} strokeWidth="0.4" opacity="0.7" />
+          <circle cx="14" cy="20" r="2" fill={fill} stroke={c} strokeWidth="0.3" />
+          <circle cx="16" cy="60" r="3" fill={fill} stroke={c} strokeWidth="0.4" opacity="0.7" />
+          <circle cx="14" cy="95" r="3.5" fill={fill} stroke={c} strokeWidth="0.4" opacity="0.7" />
+          <path d="M 12 30 Q 18 31 18 35 Q 16 38 13 37" fill="none" stroke={c} strokeWidth="0.3" opacity="0.4" />
+        </svg>
+        {/* Right floral side preview (mirrored) */}
+        <svg viewBox="0 0 30 120" className="absolute" style={{ top: 0, right: 0, height: '100%', transform: 'scaleX(-1)' }} width="20" preserveAspectRatio="xMidYMid stretch" aria-hidden="true">
+          <path d="M 12 0 Q 20 20 14 40 Q 6 60 18 80 Q 24 100 12 120" fill="none" stroke={c} strokeWidth="0.8" opacity="0.5" />
+          <circle cx="14" cy="20" r="3.5" fill={fill} stroke={c} strokeWidth="0.4" opacity="0.7" />
+          <circle cx="14" cy="20" r="2" fill={fill} stroke={c} strokeWidth="0.3" />
+          <circle cx="16" cy="60" r="3" fill={fill} stroke={c} strokeWidth="0.4" opacity="0.7" />
+          <circle cx="14" cy="95" r="3.5" fill={fill} stroke={c} strokeWidth="0.4" opacity="0.7" />
+        </svg>
+      </div>
+    );
+  }
+  // simple
+  return <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '4px' }} />;
 }
 
 function FooterMonogramUpload({ url, onUpload, onRemove }: { url: string | null | undefined; onUpload: (url: string) => void; onRemove: () => void }) {

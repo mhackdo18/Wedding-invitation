@@ -24,7 +24,8 @@ import FallingPetals from '@/components/public/FallingPetals';
 import { Reveal } from '@/components/public/Reveal';
 import { PageBorder } from '@/components/public/PageBorder';
 import { isRsvpClosed, formatDeadlineDate } from '@/lib/timezone';
-import { getBorderFromTypography } from '@/lib/pageTemplates';
+import { getBorderFromTypography, getCardBg, getOuterBg } from '@/lib/pageTemplates';
+import type { BgPhotoConfig } from '@/lib/pageTemplates';
 import type { PageBackground, BackgroundFit, BackgroundPosition } from '@/types';
 
 const SECTION_IDS: Record<string, string> = {
@@ -114,6 +115,36 @@ function SectionBackground({ page, children }: { page: Page; children: ReactNode
   );
 }
 
+function BgPhotoLayer({ bg, children }: { bg: BgPhotoConfig; children: ReactNode }) {
+  if (!bg.url) return <>{children}</>;
+  const bgSize = FIT_TO_CSS[bg.fit] || 'cover';
+  const bgRepeat = bg.fit === 'repeat' ? 'repeat' : 'no-repeat';
+  const opacity = bg.opacity / 100;
+  const overlayOpacity = bg.overlayOpacity / 100;
+  const imgLayer = (
+    <div className="absolute inset-0 pointer-events-none" style={{
+      backgroundImage: `url(${bg.url})`,
+      backgroundSize: bgSize,
+      backgroundPosition: bgPositionCss(bg.position),
+      backgroundRepeat: bgRepeat,
+      opacity,
+      filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
+      transform: bg.blur > 0 ? 'scale(1.05)' : undefined,
+      zIndex: 0,
+    }} />
+  );
+  const overlayLayer = bg.overlayColor ? (
+    <div className="absolute inset-0 pointer-events-none" style={{ background: bg.overlayColor, opacity: overlayOpacity, zIndex: 0 }} />
+  ) : null;
+  return (
+    <div className="relative">
+      {imgLayer}
+      {overlayLayer}
+      <div className="relative" style={{ zIndex: 1 }}>{children}</div>
+    </div>
+  );
+}
+
 export default function PublicSite() {
   const { settings, loading } = useSiteSettings();
   const [pages, setPages] = useState<Page[]>([]);
@@ -160,6 +191,8 @@ export default function PublicSite() {
 
   const typo = settings.typography || {};
   const borderTemplate = getBorderFromTypography(settings.typography);
+  const cardBg = getCardBg(settings.typography);
+  const outerBg = getOuterBg(settings.typography);
   const visiblePages = pages.filter((p) => p.is_visible).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
   const mainEvents = events.filter((e) => !e.parent_id).map((e) => ({
     ...e,
@@ -220,6 +253,7 @@ export default function PublicSite() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-color)' }}>
+      <BgPhotoLayer bg={outerBg}>
       <DoorReveal
         open={introOpen || doorOpen}
         opening={doorOpening}
@@ -236,6 +270,7 @@ export default function PublicSite() {
       />
 
       <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)' }}>
+        <BgPhotoLayer bg={cardBg}>
         {/* Sticky Navigation */}
         <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
           <button onClick={() => scrollToSection('welcome')} className="flex items-center gap-1.5 shrink-0">
@@ -288,20 +323,20 @@ export default function PublicSite() {
         {welcomePage && (
           <div id={welcomePage.id ? `section-${welcomePage.id}` : 'section-welcome'}>
             <SectionBackground page={welcomePage}>
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate}>{renderSection(welcomePage)}</PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography}>{renderSection(welcomePage)}</PageBorder></Reveal>
             </SectionBackground>
           </div>
         )}
         {!welcomePage && (
           <div id="section-welcome">
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate}><WelcomePage settings={settings} typo={typo} onRsvp={() => navigate('/rsvp')} /></PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography}><WelcomePage settings={settings} typo={typo} onRsvp={() => navigate('/rsvp')} /></PageBorder></Reveal>
           </div>
         )}
 
         {otherPages.map((p, idx) => (
           <div key={p.id} id={`section-${p.id}`}>
             <SectionBackground page={p}>
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}><PageBorder template={borderTemplate}>{renderSection(p)}</PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}><PageBorder template={borderTemplate} typography={settings.typography}>{renderSection(p)}</PageBorder></Reveal>
             </SectionBackground>
           </div>
         ))}
@@ -345,12 +380,14 @@ export default function PublicSite() {
           </p>
         </footer>
         </Reveal>
+        </BgPhotoLayer>
       </div>
       <div className="h-10" />
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
       )}
       <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} />
+      </BgPhotoLayer>
     </div>
   );
 }
