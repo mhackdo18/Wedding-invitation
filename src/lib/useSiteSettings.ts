@@ -54,7 +54,7 @@ function buildBgLayerVars(prefix: string, bg: ReturnType<typeof getCardBg>) {
   const root = document.documentElement.style;
   if (bg.url) {
     root.setProperty(`--${prefix}-bg-image`, `url(${bg.url})`);
-    root.setProperty(`--${prefix}-bg-size`, FIT_TO_CSS[bg.fit] || 'cover');
+    root.setProperty(`--${prefix}-bg-size`, bg.fit === 'repeat' ? 'auto' : (FIT_TO_CSS[bg.fit] || 'cover'));
     root.setProperty(`--${prefix}-bg-position`, bgPositionCss(bg.position));
     root.setProperty(`--${prefix}-bg-repeat`, bg.fit === 'repeat' ? 'repeat' : 'no-repeat');
     root.setProperty(`--${prefix}-bg-opacity`, String(bg.opacity / 100));

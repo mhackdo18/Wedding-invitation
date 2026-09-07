@@ -78,7 +78,7 @@ function SectionBackground({ page, children }: { page: Page; children: ReactNode
       className="absolute inset-0 pointer-events-none"
       style={{
         backgroundImage: `url(${bg.url})`,
-        backgroundSize: bgSize,
+        ...(bg.fit !== 'repeat' ? { backgroundSize: bgSize } : {}),
         backgroundPosition: bgPositionCss(bg.position),
         backgroundRepeat: bgRepeat,
         opacity,
@@ -124,7 +124,7 @@ function BgPhotoLayer({ bg, children }: { bg: BgPhotoConfig; children: ReactNode
   const imgLayer = (
     <div className="absolute inset-0 pointer-events-none" style={{
       backgroundImage: `url(${bg.url})`,
-      backgroundSize: bgSize,
+      ...(bg.fit !== 'repeat' ? { backgroundSize: bgSize } : {}),
       backgroundPosition: bgPositionCss(bg.position),
       backgroundRepeat: bgRepeat,
       opacity,

@@ -72,9 +72,6 @@ INSERT INTO pages (slug, title, template, is_visible, display_order, config)
 SELECT 'home', 'Welcome', 'welcome', true, 0, '{}'::jsonb
 WHERE NOT EXISTS (SELECT 1 FROM pages WHERE slug='home');
 
-INSERT INTO pages (slug, title, template, is_visible, display_order, config)
-SELECT 'story', 'Our Story', 'story', true, 1, '{}'::jsonb
-WHERE NOT EXISTS (SELECT 1 FROM pages WHERE slug='story');
 
 
 

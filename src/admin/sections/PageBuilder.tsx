@@ -696,7 +696,11 @@ function BgPhotoEditor({ label, bg, onChange }: { label: string; bg: BgPhotoConf
           {uploading ? (
             <div className="flex items-center justify-center py-4 gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
           ) : (
-            <img src={bg.url} alt={label} className="w-full h-20 object-cover" />
+            bg.fit === 'repeat' ? (
+              <div className="w-full h-20" style={{ backgroundImage: `url(${bg.url})`, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundPosition: 'top left' }} />
+            ) : (
+              <img src={bg.url} alt={label} className="w-full h-20 object-cover" />
+            )
           )}
         </div>
       ) : (
@@ -953,7 +957,11 @@ function PageBackgroundEditor({ form, setForm }: { form: Partial<Page>; setForm:
           {uploading ? (
             <div className="flex items-center justify-center py-4 gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
           ) : (
-            <img src={bg.url} alt="Background" className="w-full h-20 object-cover" />
+            bg.fit === 'repeat' ? (
+              <div className="w-full h-20" style={{ backgroundImage: `url(${bg.url})`, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundPosition: 'top left' }} />
+            ) : (
+              <img src={bg.url} alt="Background" className="w-full h-20 object-cover" />
+            )
           )}
         </div>
       ) : (
