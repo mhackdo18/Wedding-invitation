@@ -697,7 +697,7 @@ function BgPhotoEditor({ label, bg, onChange }: { label: string; bg: BgPhotoConf
             <div className="flex items-center justify-center py-4 gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
           ) : (
             bg.fit === 'repeat' ? (
-              <div className="w-full h-20" style={{ backgroundImage: `url(${bg.url})`, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundPosition: 'top left' }} />
+              <div className="w-full h-20" style={{ backgroundImage: `url(${bg.url})`, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundPosition: '0 0' }} />
             ) : (
               <img src={bg.url} alt={label} className="w-full h-20 object-cover" />
             )
@@ -958,7 +958,7 @@ function PageBackgroundEditor({ form, setForm }: { form: Partial<Page>; setForm:
             <div className="flex items-center justify-center py-4 gap-2 text-xs text-[#8a7a66]"><Loader2 size={14} className="animate-spin" /> Uploading...</div>
           ) : (
             bg.fit === 'repeat' ? (
-              <div className="w-full h-20" style={{ backgroundImage: `url(${bg.url})`, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundPosition: 'top left' }} />
+              <div className="w-full h-20" style={{ backgroundImage: `url(${bg.url})`, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundPosition: '0 0' }} />
             ) : (
               <img src={bg.url} alt="Background" className="w-full h-20 object-cover" />
             )

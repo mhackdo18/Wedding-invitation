@@ -78,8 +78,8 @@ function SectionBackground({ page, children }: { page: Page; children: ReactNode
       className="absolute inset-0 pointer-events-none"
       style={{
         backgroundImage: `url(${bg.url})`,
-        ...(bg.fit !== 'repeat' ? { backgroundSize: bgSize } : {}),
-        backgroundPosition: bgPositionCss(bg.position),
+        backgroundSize: bg.fit === 'repeat' ? 'auto' : bgSize,
+        backgroundPosition: bg.fit === 'repeat' ? '0 0' : bgPositionCss(bg.position),
         backgroundRepeat: bgRepeat,
         opacity,
         filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
@@ -124,8 +124,8 @@ function BgPhotoLayer({ bg, children }: { bg: BgPhotoConfig; children: ReactNode
   const imgLayer = (
     <div className="absolute inset-0 pointer-events-none" style={{
       backgroundImage: `url(${bg.url})`,
-      ...(bg.fit !== 'repeat' ? { backgroundSize: bgSize } : {}),
-      backgroundPosition: bgPositionCss(bg.position),
+      backgroundSize: bg.fit === 'repeat' ? 'auto' : bgSize,
+      backgroundPosition: bg.fit === 'repeat' ? '0 0' : bgPositionCss(bg.position),
       backgroundRepeat: bgRepeat,
       opacity,
       filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
