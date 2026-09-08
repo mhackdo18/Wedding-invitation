@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { navigate } from '@/lib/router';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import type { SiteSettings, TypeStyle, Page, WeddingEvent, GalleryPhoto, RsvpQuestion, StoryMilestone } from '@/types';
 import WelcomePage from '@/components/public/WelcomePage';
 import StoryPage from '@/components/public/StoryPage';
@@ -206,7 +206,7 @@ export default function PublicSite() {
   };
 
   const navItems = visiblePages.filter((p) => p.template !== 'rsvp');
-  const ctaSize = settings.cta_size === 'small' ? { py: 7, px: 16, fontSize: 13 } : settings.cta_size === 'large' ? { py: 12, px: 28, fontSize: 16 } : { py: 9, px: 22, fontSize: 14 };
+  const ctaSize = settings.cta_size === 'small' ? { py: 7, px: 16, fontSize: fluidPx(13) } : settings.cta_size === 'large' ? { py: 12, px: 28, fontSize: fluidPx(16) } : { py: 9, px: 22, fontSize: fluidPx(14) };
 
   // Render a page section dynamically based on its template
   const renderSection = (p: Page) => {
@@ -233,7 +233,7 @@ export default function PublicSite() {
         return (
           <section className="px-6 py-8" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
             <div className="text-center mb-6">
-              <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>{p.title}</h2>
+              <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>{p.title}</h2>
             </div>
             <HeroImage url={p.hero_image_url} alt={p.title} />
             <div
@@ -275,7 +275,7 @@ export default function PublicSite() {
         <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
           <button onClick={() => scrollToSection('welcome')} className="flex items-center gap-1.5 shrink-0">
             <SiteMonogram settings={settings} size={14} />
-            <span className="hidden sm:inline" style={{ fontFamily: 'var(--heading-font)', fontSize: 14, fontWeight: 600, color: '#5a4430' }}>
+            <span className="hidden sm:inline" style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(14), fontWeight: 600, color: '#5a4430' }}>
               {settings.partner1_name} &amp; {settings.partner2_name}
             </span>
           </button>
@@ -320,8 +320,8 @@ export default function PublicSite() {
         {settings.show_rsvp_section !== false && (
           <Reveal enabled={!!settings.scroll_animation_enabled} animation="scale-in">
           <section className="px-6 py-10 text-center">
-            <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 24, color: '#5a4430', margin: 0 }}>Will you join us?</h2>
-            <p style={{ fontSize: 14, color: '#8a7a66', marginTop: 6 }}>Let us know your response</p>
+            <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(24), color: '#5a4430', margin: 0 }}>Will you join us?</h2>
+            <p style={{ fontSize: fluidPx(14), color: '#8a7a66', marginTop: 6 }}>Let us know your response</p>
         {settings.rsvp_deadline && (
           <div className="mt-2">
             <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline, settings.timezone) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
@@ -348,7 +348,7 @@ export default function PublicSite() {
           ) : (
             <SiteMonogram settings={settings} size={16} className="mx-auto mb-2" />
           )}
-          <p style={{ fontSize: 13, color: '#8a7a66', ...typeStyle(typo.footer) }}>
+          <p style={{ fontSize: fluidPx(13), color: '#8a7a66', ...typeStyle(typo.footer) }}>
             {settings.footer_text
               ? settings.footer_text.replace(/\{partner1\}/g, settings.partner1_name).replace(/\{partner2\}/g, settings.partner2_name)
               : `${settings.partner1_name} & ${settings.partner2_name}`}

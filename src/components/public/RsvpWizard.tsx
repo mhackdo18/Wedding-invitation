@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Guest, WeddingEvent, RsvpQuestion, SiteSettings, TypeStyle, ConditionalSubQuestion } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import { Check, ChevronRight, ChevronLeft, Loader2, Clock } from 'lucide-react';
 import { SiteMonogram } from '@/components/public/SiteMonogram';
 import { isRsvpClosed } from '@/lib/timezone';
@@ -422,7 +422,7 @@ export default function RsvpWizard({ guests, events, questions, settings, typo, 
     return (
       <div className="px-6 py-16 text-center">
         <Clock size={40} className="mx-auto mb-4" style={{ color: '#b03a3a' }} />
-        <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 28, color: '#5a4430', margin: 0 }}>
+        <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(28), color: '#5a4430', margin: 0 }}>
           RSVP Has Closed
         </h2>
         <p className="text-sm mt-3" style={{ color: '#8a7a66' }}>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import type { Invitation, Guest, Party, WeddingEvent, RsvpQuestion, Page, GalleryPhoto, StoryMilestone, TypeStyle } from '@/types';
 import EnvelopeIntro from '@/components/public/EnvelopeIntro';
 import DoorReveal from '@/components/public/DoorReveal';
@@ -121,8 +121,8 @@ export default function InvitationPage({ token }: { token: string }) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--bg-color)' }}>
         <div className="embossed-card rounded-xl p-8 text-center max-w-sm">
-          <h1 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430' }}>Invitation not found</h1>
-          <p style={{ fontSize: 14, color: '#8a7a66', marginTop: 8 }}>
+          <h1 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430' }}>Invitation not found</h1>
+          <p style={{ fontSize: fluidPx(14), color: '#8a7a66', marginTop: 8 }}>
             This invitation link may have expired. Please contact the couple.
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function InvitationPage({ token }: { token: string }) {
   };
 
   const navItems = visiblePages.filter((p) => p.template !== 'rsvp');
-  const ctaSize = settings.cta_size === 'small' ? { py: 7, px: 16, fontSize: 13 } : settings.cta_size === 'large' ? { py: 12, px: 28, fontSize: 16 } : { py: 9, px: 22, fontSize: 14 };
+  const ctaSize = settings.cta_size === 'small' ? { py: 7, px: 16, fontSize: fluidPx(13) } : settings.cta_size === 'large' ? { py: 12, px: 28, fontSize: fluidPx(16) } : { py: 9, px: 22, fontSize: fluidPx(14) };
 
   const renderSection = (p: Page) => {
     switch (p.template) {
@@ -171,7 +171,7 @@ export default function InvitationPage({ token }: { token: string }) {
         return (
           <section className="px-6 py-8" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
             <div className="text-center mb-6">
-              <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>{p.title}</h2>
+              <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>{p.title}</h2>
             </div>
             <div
               className="text-sm leading-relaxed text-[#6b5d4f] max-w-md mx-auto text-center"
@@ -211,7 +211,7 @@ export default function InvitationPage({ token }: { token: string }) {
         <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
           <button onClick={() => scrollToSection('welcome')} className="flex items-center gap-1.5 shrink-0">
             <SiteMonogram settings={settings} size={14} />
-            <span className="hidden sm:inline" style={{ fontFamily: 'var(--heading-font)', fontSize: 14, fontWeight: 600, color: '#5a4430' }}>
+            <span className="hidden sm:inline" style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(14), fontWeight: 600, color: '#5a4430' }}>
               {settings.partner1_name} &amp; {settings.partner2_name}
             </span>
           </button>
@@ -308,7 +308,7 @@ export default function InvitationPage({ token }: { token: string }) {
           ) : (
             <SiteMonogram settings={settings} size={16} className="mx-auto mb-2" />
           )}
-          <p style={{ fontSize: 13, color: '#8a7a66', ...typeStyle(typo.footer) }}>
+          <p style={{ fontSize: fluidPx(13), color: '#8a7a66', ...typeStyle(typo.footer) }}>
             {settings.footer_text
               ? settings.footer_text.replace(/\{partner1\}/g, settings.partner1_name).replace(/\{partner2\}/g, settings.partner2_name)
               : `${settings.partner1_name} & ${settings.partner2_name}`}

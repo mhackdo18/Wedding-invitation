@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { SiteSettings, TypeStyle } from '@/types';
-import { typeStyle, fluidFontSize } from '@/lib/typography';
+import { typeStyle, fluidFontSize, fluidPx } from '@/lib/typography';
 import { stackFor } from '@/lib/fonts';
 
 function resolveTypo(
@@ -115,7 +115,7 @@ export default function WelcomePage({
   const ctaButton = settings.show_rsvp_button !== false ? (
     <div className="mt-6 flex flex-col items-center">
       {rsvpDeadline}
-      <button onClick={onRsvp} className="mt-2 font-semibold transition hover:opacity-90" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '10px 28px', fontSize: 15 }}>
+      <button onClick={onRsvp} className="mt-2 font-semibold transition hover:opacity-90" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '10px 28px', fontSize: fluidPx(15) }}>
         {settings.cta_text}
       </button>
     </div>
@@ -227,7 +227,7 @@ export default function WelcomePage({
           {settings.venue_line && <p style={{ ...venueStyle, marginTop: 4 }}>{settings.venue_line}</p>}
           {settings.show_rsvp_button !== false && (
             <div className="mt-6">
-              <button onClick={onRsvp} style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', color: settings.cta_text_color || '#fff', border: '1px solid rgba(255,255,255,0.35)', borderRadius: settings.cta_radius, padding: '10px 28px', fontSize: 14, fontWeight: 600, letterSpacing: '0.08em' }}>
+              <button onClick={onRsvp} style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', color: settings.cta_text_color || '#fff', border: '1px solid rgba(255,255,255,0.35)', borderRadius: settings.cta_radius, padding: '10px 28px', fontSize: fluidPx(14), fontWeight: 600, letterSpacing: '0.08em' }}>
                 {settings.cta_text}
               </button>
             </div>
@@ -250,11 +250,11 @@ export default function WelcomePage({
           {renderNames('inline', { fontSize: titleStyle.fontSize || 'clamp(2rem, 6vw, 3.5rem)', lineHeight: 1.1, margin: 0 })}
           <div className="flex items-center gap-4">
             {dateStr && <p style={{ ...dateStyle, letterSpacing: '0.05em' }}>{dateStr}</p>}
-            {settings.venue_line && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>·</span>}
+            {settings.venue_line && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: fluidPx(12) }}>·</span>}
             {settings.venue_line && <p style={{ ...venueStyle }}>{settings.venue_line}</p>}
           </div>
           <div className="flex items-center gap-4 mt-4">
-            {settings.show_rsvp_button !== false && <button onClick={onRsvp} style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '8px 20px', fontSize: 13, fontWeight: 600 }}>{settings.cta_text}</button>}
+            {settings.show_rsvp_button !== false && <button onClick={onRsvp} style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '8px 20px', fontSize: fluidPx(13), fontWeight: 600 }}>{settings.cta_text}</button>}
             {countdown}
           </div>
         </div>
@@ -271,13 +271,13 @@ export default function WelcomePage({
             <span key={i} className={`absolute ${pos} w-5 h-5 text-[#c9b896] text-lg`} style={{ lineHeight: 1, transform: i > 1 ? 'rotate(180deg)' : i === 1 ? 'scaleX(-1)' : '' }}>❧</span>
           ))}
           {pretitleText && <p style={{ ...pretitleStyle, letterSpacing: '0.45em', textTransform: 'uppercase', marginBottom: 12 }}>{pretitleText}</p>}
-          <p style={{ fontFamily: "'Great Vibes, cursive'", fontSize: 14, color: '#c9b896', letterSpacing: '0.05em', marginBottom: 6 }}>The marriage of</p>
+          <p style={{ fontFamily: "'Great Vibes, cursive'", fontSize: fluidPx(14), color: '#c9b896', letterSpacing: '0.05em', marginBottom: 6 }}>The marriage of</p>
           <h1 style={{ ...titleStyle, lineHeight: 1.15, margin: '8px 0' }}>{settings.partner1_name}</h1>
           <p style={{ ...ampStyle }}>&amp;</p>
           <h1 style={{ ...titleStyle, lineHeight: 1.15, margin: '8px 0 16px' }}>{settings.partner2_name}</h1>
           <div className="flex items-center justify-center gap-2 my-4">
             <span className="h-px flex-1" style={{ background: 'rgba(160,124,74,0.3)' }} />
-            <span style={{ color: '#c9b896', fontSize: 14 }}>✦</span>
+            <span style={{ color: '#c9b896', fontSize: fluidPx(14) }}>✦</span>
             <span className="h-px flex-1" style={{ background: 'rgba(160,124,74,0.3)' }} />
           </div>
           {dateStr && <p style={{ ...dateStyle, letterSpacing: '0.06em' }}>{dateStr}</p>}
@@ -332,7 +332,7 @@ export default function WelcomePage({
           <h1 style={{ ...titleStyle, lineHeight: 1.15, margin: '6px 0 16px' }}>{settings.partner2_name}</h1>
           <div className="flex items-center justify-center gap-2 my-4">
             <span className="h-px w-10" style={{ background: 'rgba(160,124,74,0.4)' }} />
-            <span style={{ color: '#c9b896', fontSize: 12 }}>✦</span>
+            <span style={{ color: '#c9b896', fontSize: fluidPx(12) }}>✦</span>
             <span className="h-px w-10" style={{ background: 'rgba(160,124,74,0.4)' }} />
           </div>
           {dateStr && <p style={{ ...dateStyle, letterSpacing: '0.06em' }}>{dateStr}</p>}
@@ -577,11 +577,11 @@ function CountdownUnit({ value, label, light, style, color, labelColor }: { valu
   return (
     <div className="flex flex-col items-center">
       <div className="w-14 h-14 rounded-lg flex items-center justify-center" style={{ background: light ? 'rgba(255,255,255,0.18)' : 'rgba(138,109,59,0.10)', border: `1px solid ${light ? 'rgba(255,255,255,0.3)' : 'rgba(138,109,59,0.2)'}` }}>
-        <span style={{ fontFamily: style?.fontFamily || 'var(--heading-font)', fontSize: style?.fontSize || 24, fontWeight: style?.fontWeight || 600, color: color || (light ? '#fff' : '#5a4430') }}>
+        <span style={{ fontFamily: style?.fontFamily || 'var(--heading-font)', fontSize: style?.fontSize || fluidPx(24), fontWeight: style?.fontWeight || 600, color: color || (light ? '#fff' : '#5a4430') }}>
           {String(value).padStart(2, '0')}
         </span>
       </div>
-      <span style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: labelColor || (light ? 'rgba(255,230,180,0.8)' : '#a07c4a'), marginTop: 4 }}>
+      <span style={{ fontSize: fluidPx(10), letterSpacing: '0.1em', textTransform: 'uppercase', color: labelColor || (light ? 'rgba(255,230,180,0.8)' : '#a07c4a'), marginTop: 4 }}>
         {label}
       </span>
     </div>

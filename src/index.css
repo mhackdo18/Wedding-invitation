@@ -27,10 +27,9 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Prevent text from shrinking below readable thresholds */
-p, span, li, td, th, label, input, select, textarea, button {
-  min-font-size: 0.75rem;
-}
+/* Fluid root font scaling on <html> handles base sizing.
+   Component-level clamp() values (from fluidPx/typeStyle) enforce
+   per-element minimums of 12px to preserve readability on mobile. */
 
 /* ---------- Embossed invitation card ---------- */
 .embossed-card {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { navigate } from '@/lib/router';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import type { WeddingEvent, RsvpQuestion, SiteSettings, TypeStyle, Guest } from '@/types';
 import { ArrowLeft, Loader2, Search } from 'lucide-react';
 import RsvpWizard from '@/components/public/RsvpWizard';
@@ -110,7 +110,7 @@ export default function RsvpPage() {
           {rsvpClosed ? (
             <div className="px-6 py-16 text-center">
               <Clock size={40} className="mx-auto mb-4" style={{ color: '#b03a3a' }} />
-              <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 28, color: '#5a4430', margin: 0 }}>
+              <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(28), color: '#5a4430', margin: 0 }}>
                 RSVP Has Closed
               </h2>
               <p className="text-sm mt-3" style={{ color: '#8a7a66' }}>
@@ -142,10 +142,10 @@ export default function RsvpPage() {
           <button onClick={() => navigate('/')} className="inline-flex items-center gap-1.5 text-xs mb-4" style={{ color: '#8a7a66' }}>
             <ArrowLeft size={12} /> Back
           </button>
-          <h1 style={{ ...typeStyle(typo.rsvpTitle), fontFamily: 'var(--heading-font)', fontSize: 32, color: '#5a4430', margin: 0 }}>
+          <h1 style={{ ...typeStyle(typo.rsvpTitle), fontFamily: 'var(--heading-font)', fontSize: fluidPx(32), color: '#5a4430', margin: 0 }}>
             RSVP
           </h1>
-          <p style={{ fontSize: 14, color: '#8a7a66', marginTop: 6 }}>{settings.rsvp_intro}</p>
+          <p style={{ fontSize: fluidPx(14), color: '#8a7a66', marginTop: 6 }}>{settings.rsvp_intro}</p>
           {rsvpDeadlineStr && (
             <div className="mt-3">
               <p className="text-base sm:text-lg font-semibold" style={{ color: rsvpClosed ? '#b03a3a' : '#8a6d3b' }}>
@@ -205,7 +205,7 @@ export default function RsvpPage() {
                   <button onClick={() => selectGuest(g)}
                     className="w-full text-left rounded-lg border p-3 transition hover:border-[#8a6d3b]"
                     style={{ borderColor: '#d6cdbf', background: '#fff' }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#5a4430' }}>{g.name}</span>
+                    <span style={{ fontSize: fluidPx(14), fontWeight: 600, color: '#5a4430' }}>{g.name}</span>
                     {g.party_id && <span className="text-xs text-[#a07c4a] block">RSVP for your full party</span>}
                   </button>
                   </Reveal>
