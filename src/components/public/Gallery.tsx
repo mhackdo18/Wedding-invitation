@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { GalleryPhoto, TypeStyle } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import { useScrollLock } from '@/lib/useScrollLock';
 import HeroImage from '@/components/public/HeroImage';
 import { Reveal } from '@/components/public/Reveal';
@@ -36,7 +36,7 @@ export default function Gallery({
       <div className="text-center mb-5">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.galleryTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.galleryTitle) }}>
+          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.galleryTitle) }}>
             Gallery
           </h2>
           <span className="h-px w-8" style={{ background: typo.galleryTitle?.color || '#c9b896' }} />
@@ -80,7 +80,7 @@ export default function Gallery({
                   <Reveal key={p.id} enabled={!!animEnabled} animation="fade-up" delay={idx * 60}>
                   <button onClick={() => setLightbox(photos.indexOf(p))} className="block w-full overflow-hidden rounded-xl">
                     <img src={p.image_url} alt={p.caption || ''} className="w-full max-h-72 object-cover transition-transform hover:scale-105" loading="lazy" />
-                    {p.caption && <p className="text-center py-1.5" style={{ fontSize: 12, color: '#8a7a66' }}>{p.caption}</p>}
+                    {p.caption && <p className="text-center py-1.5" style={{ fontSize: fluidPx(12), color: '#8a7a66' }}>{p.caption}</p>}
                   </button>
                   </Reveal>
                 ))}

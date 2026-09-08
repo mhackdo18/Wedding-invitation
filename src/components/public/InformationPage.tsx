@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { InformationBlock, InformationConfig, TypeStyle } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import { stackFor } from '@/lib/fonts';
 import HeroImage from '@/components/public/HeroImage';
 import { Reveal } from '@/components/public/Reveal';
@@ -23,7 +23,7 @@ function BlockColumn({ block, typo, col }: { block: InformationBlock; typo: Reco
         {subheading && (
           <p style={{
             fontFamily: subFontFamily ? stackFor(subFontFamily) : 'var(--body-font)',
-            fontSize: subFontSize || 14,
+            fontSize: subFontSize ? fluidPx(subFontSize) : fluidPx(14),
             color: subFontColor || '#a0927e',
             margin: '0 0 8px',
             textAlign: 'center',
@@ -32,7 +32,7 @@ function BlockColumn({ block, typo, col }: { block: InformationBlock; typo: Reco
         )}
         {bodyHtml && (
           <div
-            style={{ ...typeStyle(typo.storyBody), fontFamily: bodyFontFamily ? stackFor(bodyFontFamily) : undefined, fontSize: bodyFontSize || 14, lineHeight: 1.7, color: bodyFontColor || '#6b5d4f' }}
+            style={{ ...typeStyle(typo.storyBody), fontFamily: bodyFontFamily ? stackFor(bodyFontFamily) : undefined, fontSize: bodyFontSize ? fluidPx(bodyFontSize) : fluidPx(14), lineHeight: 1.7, color: bodyFontColor || '#6b5d4f' }}
             dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
         )}
@@ -71,7 +71,7 @@ export default function InformationPage({ pageId, typo, heroImageUrl, guestTags,
       <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.pageTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>
+          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>
             {config.title || 'Information'}
           </h2>
           <span className="h-px w-8" style={{ background: typo.pageTitle?.color || '#c9b896' }} />
@@ -95,7 +95,7 @@ export default function InformationPage({ pageId, typo, heroImageUrl, guestTags,
                 <div
                   style={{
                     color: block.heading_font_color || '#5a4430',
-                    fontSize: block.heading_font_size || 16,
+                    fontSize: block.heading_font_size ? fluidPx(block.heading_font_size) : fluidPx(16),
                     fontFamily: block.heading_font_family ? stackFor(block.heading_font_family) : 'var(--heading-font)',
                     fontWeight: 600,
                   }}

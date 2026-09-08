@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { SiteSettings, TypeStyle } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidFontSize } from '@/lib/typography';
 import { stackFor } from '@/lib/fonts';
 
 function resolveTypo(
@@ -12,7 +12,10 @@ function resolveTypo(
   if (s.fontFamily) result.fontFamily = s.fontFamily;
   else if (fallback.font) result.fontFamily = fallback.font;
   if (s.fontSize) result.fontSize = s.fontSize;
-  else if (fallback.size != null) result.fontSize = typeof fallback.size === 'number' ? `${fallback.size}px` : fallback.size;
+  else if (fallback.size != null) {
+    if (typeof fallback.size === 'number') result.fontSize = fluidFontSize(fallback.size);
+    else result.fontSize = fallback.size;
+  }
   if (s.fontWeight) result.fontWeight = s.fontWeight;
   else if (fallback.weight != null) result.fontWeight = fallback.weight;
   if (s.color) result.color = s.color;

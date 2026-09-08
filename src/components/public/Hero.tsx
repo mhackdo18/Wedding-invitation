@@ -1,5 +1,5 @@
 import type { SiteSettings, TypeStyle } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 
 export default function Hero({
   settings, typo,
@@ -21,30 +21,30 @@ export default function Hero({
         }} />
       )}
       <div className="relative">
-        <p style={{ fontSize: 12, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#a07c4a', ...typeStyle(typo.heroPretitle) }}>
+        <p style={{ fontSize: fluidPx(12), letterSpacing: '0.3em', textTransform: 'uppercase', color: '#a07c4a', ...typeStyle(typo.heroPretitle) }}>
           Together with their families
         </p>
-        <h1 style={{ fontFamily: 'var(--heading-font)', fontSize: 48, color: '#5a4430', margin: '10px 0 4px', lineHeight: 1.1, ...typeStyle(typo.heroTitle) }}>
+        <h1 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(48), color: '#5a4430', margin: '10px 0 4px', lineHeight: 1.1, ...typeStyle(typo.heroTitle) }}>
           {settings.partner1_name}
         </h1>
-        <p style={{ fontFamily: 'Great Vibes, cursive', fontSize: 40, color: '#b5462f', margin: 0 }}>
+        <p style={{ fontFamily: 'Great Vibes, cursive', fontSize: fluidPx(40), color: '#b5462f', margin: 0 }}>
           &amp;
         </p>
-        <h1 style={{ fontFamily: 'var(--heading-font)', fontSize: 48, color: '#5a4430', margin: '4px 0 14px', lineHeight: 1.1, ...typeStyle(typo.heroTitle) }}>
+        <h1 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(48), color: '#5a4430', margin: '4px 0 14px', lineHeight: 1.1, ...typeStyle(typo.heroTitle) }}>
           {settings.partner2_name}
         </h1>
         <div className="flex items-center justify-center gap-3 my-3">
           <span className="h-px w-10" style={{ background: '#c9b896' }} />
-          <span style={{ fontSize: 11, letterSpacing: '0.2em', color: '#a07c4a' }}>ARE GETTING MARRIED</span>
+          <span style={{ fontSize: fluidPx(11), letterSpacing: '0.2em', color: '#a07c4a' }}>ARE GETTING MARRIED</span>
           <span className="h-px w-10" style={{ background: '#c9b896' }} />
         </div>
         {dateStr && (
-          <p style={{ fontSize: 15, color: '#6b5d4f', marginTop: 8, ...typeStyle(typo.heroDate) }}>
+          <p style={{ fontSize: fluidPx(15), color: '#6b5d4f', marginTop: 8, ...typeStyle(typo.heroDate) }}>
             {dateStr}
           </p>
         )}
         {settings.venue_line && (
-          <p style={{ fontSize: 13, color: '#8a7a66', marginTop: 2, ...typeStyle(typo.heroVenue) }}>
+          <p style={{ fontSize: fluidPx(13), color: '#8a7a66', marginTop: 2, ...typeStyle(typo.heroVenue) }}>
             {settings.venue_line}
           </p>
         )}

@@ -4,6 +4,7 @@ import type { SiteSettings } from '@/types';
 import { Lock, Loader2 } from 'lucide-react';
 import { SiteMonogram } from '@/components/public/SiteMonogram';
 import { stackFor } from '@/lib/fonts';
+import { fluidPx } from '@/lib/typography';
 
 const SESSION_KEY = 'wedding-pw-granted';
 
@@ -68,10 +69,10 @@ export default function PasswordGate({ settings, onGranted }: { settings: SiteSe
         <div className="w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4" style={{ background: 'rgba(138,109,59,0.10)' }}>
           <Lock size={24} style={{ color: titleColor }} />
         </div>
-        <h1 style={{ fontFamily: titleFont, fontSize: 28, color: titleColor, margin: '0 0 4px' }}>
+        <h1 style={{ fontFamily: titleFont, fontSize: fluidPx(28), color: titleColor, margin: '0 0 4px' }}>
           {settings.partner1_name} &amp; {settings.partner2_name}
         </h1>
-        <p style={{ fontSize: 13, color: titleColor, opacity: 0.7, marginBottom: 20 }}>
+        <p style={{ fontSize: fluidPx(13), color: titleColor, opacity: 0.7, marginBottom: 20 }}>
           Enter the password to view our wedding invitation
         </p>
         <form onSubmit={submit} className="space-y-3">
@@ -84,7 +85,7 @@ export default function PasswordGate({ settings, onGranted }: { settings: SiteSe
             value={pw}
             onChange={(e) => setPw(e.target.value)}
           />
-          {error && <p style={{ fontSize: 13, color: '#b03a3a' }}>{error}</p>}
+          {error && <p style={{ fontSize: fluidPx(13), color: '#b03a3a' }}>{error}</p>}
           <button
             type="submit"
             disabled={checking || !pw.trim()}

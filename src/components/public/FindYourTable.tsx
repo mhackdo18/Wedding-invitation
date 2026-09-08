@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
+import { fluidPx } from '@/lib/typography';
 import type { Guest, SeatingTable, SeatAssignment } from '@/types';
 import { Search, Armchair, MapPin, X } from 'lucide-react';
 import HeroImage from '@/components/public/HeroImage';
@@ -123,12 +124,12 @@ export default function FindYourTable({ heroImageUrl, animEnabled }: { heroImage
         </div>
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0 }}>
+          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0 }}>
             Find Your Table
           </h2>
           <span className="h-px w-8" style={{ background: '#c9b896' }} />
         </div>
-        <p style={{ fontSize: 13, color: '#8a7a66', marginTop: 4 }}>
+        <p style={{ fontSize: fluidPx(13), color: '#8a7a66', marginTop: 4 }}>
           Type your name to see where you&apos;re seated
         </p>
       </div>
@@ -190,12 +191,12 @@ export default function FindYourTable({ heroImageUrl, animEnabled }: { heroImage
         {!loading && results.map((r, idx) => (
           <Reveal key={r.guest.id} enabled={!!animEnabled} animation="fade-up" delay={idx * 60}>
           <div className="rounded-xl border p-4" style={{ borderColor: '#d6cdbf', background: '#fff' }}>
-            <p style={{ fontFamily: 'var(--heading-font)', fontSize: 18, color: '#5a4430', margin: '0 0 8px 0' }}>
+            <p style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(18), color: '#5a4430', margin: '0 0 8px 0' }}>
               {r.guest.name}
             </p>
             <div className="flex items-center gap-2">
               {r.table ? (
-                <span className="inline-flex items-center gap-2 font-semibold" style={{ color: '#5a7a4a', fontSize: 22 }}>
+                <span className="inline-flex items-center gap-2 font-semibold" style={{ color: '#5a7a4a', fontSize: fluidPx(22) }}>
                   <MapPin size={18} /> {r.table.name}
                 </span>
               ) : (

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { WeddingEvent, TypeStyle } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import HeroImage from '@/components/public/HeroImage';
 import { Reveal } from '@/components/public/Reveal';
 import { Clock, MapPin, CalendarPlus, Navigation, Navigation2 } from 'lucide-react';
@@ -87,7 +87,7 @@ export default function Schedule({
       <div className="text-center mb-5">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.scheduleTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.scheduleTitle) }}>
+          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.scheduleTitle) }}>
             Order of Events
           </h2>
           <span className="h-px w-8" style={{ background: typo.scheduleTitle?.color || '#c9b896' }} />
@@ -102,14 +102,14 @@ export default function Schedule({
             {hasMultipleDates && group.dateLabel && (
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px" style={{ background: typo.eventDate?.color || '#d6cdbf' }} />
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#8a6d3b', letterSpacing: '0.03em', whiteSpace: 'nowrap', ...typeStyle(typo.eventDate) }}>
+                <span style={{ fontSize: fluidPx(13), fontWeight: 600, color: '#8a6d3b', letterSpacing: '0.03em', whiteSpace: 'nowrap', ...typeStyle(typo.eventDate) }}>
                   {group.dateLabel}
                 </span>
                 <div className="flex-1 h-px" style={{ background: typo.eventDate?.color || '#d6cdbf' }} />
               </div>
             )}
             {!hasMultipleDates && group.dateLabel && (
-              <p className="text-center mb-4" style={{ fontSize: 14, color: '#8a6d3b', fontWeight: 500, ...typeStyle(typo.eventDate) }}>{group.dateLabel}</p>
+              <p className="text-center mb-4" style={{ fontSize: fluidPx(14), color: '#8a6d3b', fontWeight: 500, ...typeStyle(typo.eventDate) }}>{group.dateLabel}</p>
             )}
 
             <div className="relative">
@@ -122,16 +122,16 @@ export default function Schedule({
                     <Reveal key={ev.id} enabled={!!animEnabled} animation="fade-up" delay={evIdx * 60} className="relative pl-10">
                       <div className="absolute left-1.5 top-1.5 w-3 h-3 rounded-full" style={{ background: typo.eventTime?.color || '#b5462f', border: '2px solid var(--page-color)' }} />
                       {ev.start_time && (
-                        <span style={{ fontSize: 13, color: '#a07c4a', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', ...typeStyle(typo.eventTime) }}>
+                        <span style={{ fontSize: fluidPx(13), color: '#a07c4a', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', ...typeStyle(typo.eventTime) }}>
                           {formatRange(ev.start_time, ev.end_time)}
                         </span>
                       )}
-                      <h3 style={{ fontFamily: 'var(--heading-font)', fontSize: 20, color: '#5a4430', margin: '4px 0 0', ...typeStyle(typo.eventName) }}>
+                      <h3 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(20), color: '#5a4430', margin: '4px 0 0', ...typeStyle(typo.eventName) }}>
                         {ev.title}
                       </h3>
 
                       {ev.description && (
-                        <p style={{ fontSize: 13, color: '#8a7a66', marginTop: 4, ...typeStyle(typo.eventDescription) }}>{ev.description}</p>
+                        <p style={{ fontSize: fluidPx(13), color: '#8a7a66', marginTop: 4, ...typeStyle(typo.eventDescription) }}>{ev.description}</p>
                       )}
 
                       {showLoc && ev.venue && (
@@ -167,18 +167,18 @@ export default function Schedule({
                           {ev.sub_events.map((sub) => (
                             <div key={sub.id} className="pl-3 border-l-2" style={{ borderColor: typo.subEventTime?.color || typo.eventTime?.color || '#e0d4be' }}>
                               {sub.start_time && (
-                                <span style={{ fontSize: 11, color: '#a07c4a', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', ...typeStyle(typo.subEventTime) }}>
+                                <span style={{ fontSize: fluidPx(11), color: '#a07c4a', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', ...typeStyle(typo.subEventTime) }}>
                                   {formatRange(sub.start_time, sub.end_time)}
                                 </span>
                               )}
                               <div className="flex items-center gap-1.5 min-w-0">
                                 <Clock size={11} style={{ color: typo.subEventTime?.color || '#c9b896' }} />
-                                <span style={{ fontSize: 14, color: '#6b5d4f', ...typeStyle(typo.subEventName) }} className="truncate">
+                                <span style={{ fontSize: fluidPx(14), color: '#6b5d4f', ...typeStyle(typo.subEventName) }} className="truncate">
                                   {sub.title}
                                 </span>
                               </div>
                               {sub.description && (
-                                <p style={{ fontSize: 12, color: '#a08c7a', marginTop: 2, marginBottom: 4, ...typeStyle(typo.subEventDescription) }}>{sub.description}</p>
+                                <p style={{ fontSize: fluidPx(12), color: '#a08c7a', marginTop: 2, marginBottom: 4, ...typeStyle(typo.subEventDescription) }}>{sub.description}</p>
                               )}
                               {sub.photo_url && (
                                 <img src={sub.photo_url} alt={sub.title} className="w-full max-h-32 object-cover rounded-lg mt-2 mb-1" />

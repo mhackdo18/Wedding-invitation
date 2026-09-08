@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { EntourageConfig, TypeStyle } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import HeroImage from '@/components/public/HeroImage';
 import { Reveal } from '@/components/public/Reveal';
 
@@ -30,7 +30,7 @@ export default function EntouragePage({ pageId, typo, heroImageUrl, animEnabled 
       <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.pageTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>
+          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>
             {config.title || 'Entourage'}
           </h2>
           <span className="h-px w-8" style={{ background: typo.pageTitle?.color || '#c9b896' }} />

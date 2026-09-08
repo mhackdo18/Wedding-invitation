@@ -8,11 +8,16 @@
   --page-width: 720px;
   --heading-font: 'Cormorant Garamond', serif;
   --body-font: 'Montserrat', sans-serif;
+  /* Fluid root scale: 14px on mobile → 18px on ultra-wide desktop */
+  --fluid-root: clamp(0.875rem, 0.45vw + 0.78rem, 1.125rem);
 }
 
 * { -webkit-tap-highlight-color: transparent; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  font-size: var(--fluid-root);
+}
 
 body {
   margin: 0;
@@ -20,6 +25,11 @@ body {
   background: var(--bg-color);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Prevent text from shrinking below readable thresholds */
+p, span, li, td, th, label, input, select, textarea, button {
+  min-font-size: 0.75rem;
 }
 
 /* ---------- Embossed invitation card ---------- */
@@ -131,9 +141,9 @@ body {
 .admin-input {
   width: 100%;
   border: 1px solid #d6cdbf;
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 14px;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.875rem;
   background: #fff;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -143,10 +153,10 @@ body {
   box-shadow: 0 0 0 3px rgba(181,154,107,0.18);
 }
 .admin-label {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #6b5d4f;
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
   display: block;
   letter-spacing: 0.02em;
 }
@@ -160,10 +170,10 @@ body {
   background: #8a6d3b;
   color: #fff;
   font-weight: 600;
-  padding: 9px 16px;
-  border-radius: 8px;
+  padding: 0.5625rem 1rem;
+  border-radius: 0.5rem;
   transition: background 0.15s, transform 0.1s;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .btn-primary:hover { background: #74582f; }
 .btn-primary:active { transform: scale(0.98); }
@@ -172,9 +182,9 @@ body {
   color: #6b5d4f;
   border: 1px solid #d6cdbf;
   font-weight: 500;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
   transition: background 0.15s;
 }
 .btn-ghost:hover { background: #f5efe5; }
@@ -182,9 +192,9 @@ body {
   background: #b03a3a;
   color: #fff;
   font-weight: 600;
-  padding: 7px 12px;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 0.4375rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
 }
 .btn-danger:hover { background: #963030; }
 

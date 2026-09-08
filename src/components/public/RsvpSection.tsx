@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { WeddingEvent, RsvpQuestion, SiteSettings, TypeStyle, Guest } from '@/types';
-import { typeStyle } from '@/lib/typography';
+import { typeStyle, fluidPx } from '@/lib/typography';
 import { Check, Loader2, Clock } from 'lucide-react';
 import { isRsvpClosed } from '@/lib/timezone';
 
@@ -82,10 +82,10 @@ export default function RsvpSection({
     return (
       <section className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
         <Clock size={36} className="mx-auto mb-3" style={{ color: '#b03a3a' }} />
-        <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0 }}>
+        <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0 }}>
           RSVP Has Closed
         </h2>
-        <p style={{ fontSize: 14, color: '#8a7a66', marginTop: 8 }}>
+        <p style={{ fontSize: fluidPx(14), color: '#8a7a66', marginTop: 8 }}>
           The RSVP deadline has passed. If you need to update your response, please contact the couple directly.
         </p>
       </section>
@@ -100,10 +100,10 @@ export default function RsvpSection({
         </div>
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.rsvpTitle) }}>Thank you!</h2>
+          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.rsvpTitle) }}>Thank you!</h2>
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
         </div>
-        <p style={{ fontSize: 15, color: '#6b5d4f', marginTop: 6 }}>
+        <p style={{ fontSize: fluidPx(15), color: '#6b5d4f', marginTop: 6 }}>
           {settings.rsvp_thank_you_message || 'Your response has been received. We can\u2019t wait to celebrate with you.'}
         </p>
       </section>
@@ -115,12 +115,12 @@ export default function RsvpSection({
       <div className="text-center mb-4">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: 26, color: '#5a4430', margin: 0, ...typeStyle(typo.rsvpTitle) }}>
+          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.rsvpTitle) }}>
             RSVP
           </h2>
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
         </div>
-        <p style={{ fontSize: 13, color: '#8a7a66', marginTop: 4 }}>
+        <p style={{ fontSize: fluidPx(13), color: '#8a7a66', marginTop: 4 }}>
           {settings.rsvp_intro}
         </p>
 
@@ -144,7 +144,7 @@ export default function RsvpSection({
             <div className="space-y-2">
               {events.map((ev) => (
                 <div key={ev.id} className="flex items-center justify-between rounded-lg border px-3 py-2" style={{ borderColor: '#d6cdbf', background: '#fff' }}>
-                  <span style={{ fontSize: 14, color: '#5a4430' }}>{ev.title}</span>
+                  <span style={{ fontSize: fluidPx(14), color: '#5a4430' }}>{ev.title}</span>
                   <div className="flex gap-1.5">
                     {['yes', 'no'].map((st) => (
                       <button key={st} onClick={() => setEventStatus((s) => ({ ...s, [ev.id]: st }))}
@@ -185,7 +185,7 @@ export default function RsvpSection({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block mb-1" style={{ fontSize: 12, fontWeight: 600, color: '#6b5d4f', letterSpacing: '0.02em' }}>{label}</label>
+      <label className="block mb-1" style={{ fontSize: fluidPx(12), fontWeight: 600, color: '#6b5d4f', letterSpacing: '0.02em' }}>{label}</label>
       {children}
     </div>
   );
