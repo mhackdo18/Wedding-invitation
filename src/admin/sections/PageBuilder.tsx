@@ -794,6 +794,34 @@ function BorderPreview({ type, color, thickness }: { type: string; color: string
   if (type === 'double') {
     return <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '4px', boxShadow: `inset 0 0 0 1px transparent, inset 0 0 0 3px ${color}` }} />;
   }
+  if (type === 'triple') {
+    return <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '4px', boxShadow: `inset 0 0 0 2px transparent, inset 0 0 0 3px ${color}, inset 0 0 0 5px transparent, inset 0 0 0 6px ${color}` }} />;
+  }
+  if (type === 'dashed') {
+    return <div style={{ ...base, border: `${t * 1.5}px dashed ${color}`, borderRadius: '4px' }} />;
+  }
+  if (type === 'inset') {
+    return <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '6px', boxShadow: `inset 0 0 0 2px transparent, inset 0 0 0 3px ${color}, inset 0 2px 6px rgba(80,60,40,0.1)` }} />;
+  }
+  if (type === 'rounded') {
+    return <div style={{ ...base, border: `${t}px solid ${color}`, borderRadius: '12px', boxShadow: `inset 0 0 0 2px transparent, inset 0 0 0 3px ${color}` }} />;
+  }
+  if (type === 'beveled') {
+    return (
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={base} aria-hidden="true">
+        <path d="M 18 0 L 82 0 L 100 18 L 100 82 L 82 100 L 18 100 L 0 82 L 0 18 Z" fill="none" stroke={color} strokeWidth={t * 1.2} />
+        <path d="M 21 3 L 79 3 L 97 21 L 97 79 L 79 97 L 21 97 L 3 79 L 3 21 Z" fill="none" stroke={color} strokeWidth={t * 0.5} opacity={0.4} />
+      </svg>
+    );
+  }
+  if (type === 'keyhole') {
+    return (
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={base} aria-hidden="true">
+        <path d="M 0 100 L 0 30 Q 0 0 50 0 Q 100 0 100 30 L 100 100" fill="none" stroke={color} strokeWidth={t * 1.2} />
+        <path d="M 3 97 L 3 32 Q 3 3 50 3 Q 97 3 97 32 L 97 97" fill="none" stroke={color} strokeWidth={t * 0.5} opacity={0.4} />
+      </svg>
+    );
+  }
   if (type === 'dotted') {
     return <div style={{ ...base, border: `${t * 1.5}px dotted ${color}`, borderRadius: '4px' }} />;
   }

@@ -2,11 +2,12 @@ export interface PageBorderTemplate {
   value: string;
   label: string;
   hint: string;
-  type: 'none' | 'simple' | 'double' | 'corner' | 'arch' | 'botanical' | 'filigree' | 'dotted' | 'ornate' | 'vintage_lace' | 'floral_side';
+  type: 'none' | 'simple' | 'double' | 'triple' | 'dashed' | 'corner' | 'arch' | 'botanical' | 'filigree' | 'dotted' | 'ornate' | 'inset' | 'rounded' | 'beveled' | 'keyhole' | 'vintage_lace' | 'floral_side';
   preview: { borderColor: string; borderRadius: string; accent: string };
   defaultColor: string;
   defaultThickness: number;
   padding: string;
+  edgeGap: number;
   showCorners?: boolean;
   showGoldDots?: boolean;
 }
@@ -21,6 +22,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 1,
     padding: '0px',
+    edgeGap: 0,
   },
   {
     value: 'thin_gold',
@@ -31,6 +33,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 1,
     padding: '14px',
+    edgeGap: 12,
   },
   {
     value: 'double_gold',
@@ -41,6 +44,29 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 2,
     padding: '16px',
+    edgeGap: 12,
+  },
+  {
+    value: 'triple_gold',
+    label: 'Triple Line',
+    hint: 'Three parallel lines for a formal statement',
+    type: 'triple',
+    preview: { borderColor: '#c9a96e', borderRadius: '4px', accent: '#c9a96e' },
+    defaultColor: '#c9a96e',
+    defaultThickness: 1.5,
+    padding: '18px',
+    edgeGap: 12,
+  },
+  {
+    value: 'dashed_gold',
+    label: 'Dashed Line',
+    hint: 'Clean dashed border for a modern feel',
+    type: 'dashed',
+    preview: { borderColor: '#c9a96e', borderRadius: '4px', accent: '#c9a96e' },
+    defaultColor: '#c9a96e',
+    defaultThickness: 1.5,
+    padding: '14px',
+    edgeGap: 12,
   },
   {
     value: 'corner_elegant',
@@ -51,6 +77,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 1,
     padding: '16px',
+    edgeGap: 10,
   },
   {
     value: 'arch_elegant',
@@ -61,6 +88,51 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 1,
     padding: '18px',
+    edgeGap: 10,
+  },
+  {
+    value: 'inset_shadow',
+    label: 'Inset Frame',
+    hint: 'Recessed double frame with soft shadow depth',
+    type: 'inset',
+    preview: { borderColor: '#c9a96e', borderRadius: '6px', accent: '#c9a96e' },
+    defaultColor: '#c9a96e',
+    defaultThickness: 1,
+    padding: '16px',
+    edgeGap: 12,
+  },
+  {
+    value: 'rounded_soft',
+    label: 'Rounded Soft',
+    hint: 'Gentle rounded-corner border with inner accent',
+    type: 'rounded',
+    preview: { borderColor: '#c9a96e', borderRadius: '16px', accent: '#c9a96e' },
+    defaultColor: '#c9a96e',
+    defaultThickness: 1.5,
+    padding: '16px',
+    edgeGap: 12,
+  },
+  {
+    value: 'beveled_frame',
+    label: 'Beveled Frame',
+    hint: 'Angled corner cuts for a modern geometric look',
+    type: 'beveled',
+    preview: { borderColor: '#c9a96e', borderRadius: '0px', accent: '#c9a96e' },
+    defaultColor: '#c9a96e',
+    defaultThickness: 1.5,
+    padding: '16px',
+    edgeGap: 12,
+  },
+  {
+    value: 'keyhole_arch',
+    label: 'Keyhole Arch',
+    hint: 'Rounded arch top with straight sides — art deco style',
+    type: 'keyhole',
+    preview: { borderColor: '#c9a96e', borderRadius: '0px', accent: '#c9a96e' },
+    defaultColor: '#c9a96e',
+    defaultThickness: 1.5,
+    padding: '18px',
+    edgeGap: 10,
   },
   {
     value: 'botanical_emerald',
@@ -71,6 +143,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#065f46',
     defaultThickness: 1,
     padding: '20px',
+    edgeGap: 10,
     showCorners: true,
     showGoldDots: false,
   },
@@ -83,6 +156,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#be185d',
     defaultThickness: 1,
     padding: '20px',
+    edgeGap: 10,
     showCorners: true,
     showGoldDots: false,
   },
@@ -95,6 +169,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#b8860b',
     defaultThickness: 1,
     padding: '20px',
+    edgeGap: 10,
     showCorners: true,
     showGoldDots: true,
   },
@@ -107,6 +182,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 1,
     padding: '20px',
+    edgeGap: 10,
   },
   {
     value: 'dotted_gold',
@@ -117,6 +193,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 2,
     padding: '14px',
+    edgeGap: 12,
   },
   {
     value: 'ornate_black',
@@ -127,6 +204,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#2a2420',
     defaultThickness: 3,
     padding: '14px',
+    edgeGap: 12,
   },
   {
     value: 'vintage_lace_rose',
@@ -137,6 +215,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a0a0',
     defaultThickness: 1,
     padding: '28px',
+    edgeGap: 8,
   },
   {
     value: 'vintage_lace_gold',
@@ -147,6 +226,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c9a96e',
     defaultThickness: 1,
     padding: '28px',
+    edgeGap: 8,
   },
   {
     value: 'vintage_lace_ivory',
@@ -157,6 +237,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#d4c5a9',
     defaultThickness: 1,
     padding: '28px',
+    edgeGap: 8,
   },
   {
     value: 'floral_side_rose',
@@ -167,6 +248,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#c8828c',
     defaultThickness: 1,
     padding: '0px',
+    edgeGap: 0,
   },
   {
     value: 'floral_side_wisteria',
@@ -177,6 +259,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#9678b0',
     defaultThickness: 1,
     padding: '0px',
+    edgeGap: 0,
   },
   {
     value: 'floral_side_garden',
@@ -187,6 +270,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#7882a0',
     defaultThickness: 1,
     padding: '0px',
+    edgeGap: 0,
   },
   {
     value: 'floral_side_wildflower',
@@ -197,6 +281,7 @@ export const PAGE_BORDER_TEMPLATES: PageBorderTemplate[] = [
     defaultColor: '#b89560',
     defaultThickness: 1,
     padding: '0px',
+    edgeGap: 0,
   },
 ];
 
