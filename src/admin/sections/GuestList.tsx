@@ -430,13 +430,17 @@ export default function GuestList() {
     setSelected(new Set()); setBulkAction(null); load();
   };
   const bulkAddTag = async (tag: string) => {
+    const normalizedTag = tag.trim();
+    if (!normalizedTag) return;
+    await addTagToRegistry(normalizedTag);
     const updates = Array.from(selected).map(async (id) => {
       const g = guests.find((x) => x.id === id);
-      if (g && !(g.tags || []).includes(tag)) {
-        await supabase.from('guests').update({ tags: [...(g.tags || []), tag] }).eq('id', id);
+      if (g && !(g.tags || []).includes(normalizedTag)) {
+        await supabase.from('guests').update({ tags: [...(g.tags || []), normalizedTag] }).eq('id', id);
       }
     });
     await Promise.all(updates);
+    invalidateTagCache();
     setSelected(new Set()); setBulkAction(null); load();
   };
 
