@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { FONT_OPTIONS, stackFor, categoryLabel, type FontOption } from '@/lib/fonts';
 import { ensureFontLoaded } from '@/lib/useFontLoader';
 import { ChevronDown, Check } from 'lucide-react';
@@ -12,23 +13,50 @@ interface FontSelectProps {
   className?: string;
 }
 
+interface PopperRect { top: number; left: number; width: number }
+
 export function FontSelect({ value, onChange, previewText = 'Sample Text', previewSize = 16, previewColor = '#5a4430', className }: FontSelectProps) {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState('');
-  const ref = useRef<HTMLDivElement>(null);
+  const [popperRect, setPopperRect] = useState<PopperRect>({ top: 0, left: 0, width: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const popperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (value && value !== 'inherit') ensureFontLoaded(value);
   }, [value]);
   const current = value || 'Cormorant Garamond';
 
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+  const updatePopperRect = useCallback(() => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    setPopperRect({ top: rect.bottom + 4, left: rect.left, width: rect.width });
   }, []);
+
+  useLayoutEffect(() => {
+    if (open) updatePopperRect();
+  }, [open, updatePopperRect]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (containerRef.current?.contains(target)) return;
+      if (popperRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+    const onScroll = () => updatePopperRect();
+    const onResize = () => updatePopperRect();
+    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', onResize);
+    document.addEventListener('mousedown', onMouseDown);
+    return () => {
+      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onResize);
+      document.removeEventListener('mousedown', onMouseDown);
+    };
+  }, [open, updatePopperRect]);
 
   const filtered = FONT_OPTIONS.filter((f) => {
     if (!filter) return true;
@@ -39,10 +67,11 @@ export function FontSelect({ value, onChange, previewText = 'Sample Text', previ
   filtered.forEach((f) => grouped[f.category].push(f));
 
   return (
-    <div className={`relative ${className || ''}`} ref={ref}>
+    <div className={`relative ${className || ''}`} ref={containerRef}>
       <button
+        ref={buttonRef}
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => { setOpen(!open); if (!open) updatePopperRect(); }}
         className="admin-input w-full flex items-center justify-between gap-2"
       >
         <span style={{ fontFamily: stackFor(current), fontSize: Math.min(previewSize, 14) }} className="truncate flex-1 text-left">
@@ -51,8 +80,12 @@ export function FontSelect({ value, onChange, previewText = 'Sample Text', previ
         <ChevronDown size={15} className="text-[#8a7a66] shrink-0" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
       </button>
 
-      {open && (
-        <div className="absolute z-50 left-0 right-0 mt-1 rounded-lg border shadow-lg max-h-72 overflow-hidden flex flex-col" style={{ borderColor: '#e6ddcd', background: '#fff' }}>
+      {open && createPortal(
+        <div
+          ref={popperRef}
+          className="fixed z-[9999] rounded-lg border shadow-lg max-h-72 overflow-hidden flex flex-col"
+          style={{ borderColor: '#e6ddcd', background: '#fff', top: popperRect.top, left: popperRect.left, width: popperRect.width }}
+        >
           <div className="p-2 border-b shrink-0" style={{ borderColor: '#f0e8d8' }}>
             <input
               autoFocus
@@ -87,7 +120,8 @@ export function FontSelect({ value, onChange, previewText = 'Sample Text', previ
               );
             })}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
