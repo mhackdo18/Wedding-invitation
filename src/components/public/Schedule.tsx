@@ -99,21 +99,16 @@ export default function Schedule({
       <div className="max-w-md mx-auto space-y-6">
         {dateGroups.map((group) => (
           <div key={group.date}>
-            {hasMultipleDates && group.dateLabel && (
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 h-px" style={{ background: typo.eventDate?.color || '#d6cdbf' }} />
-                <span style={{ fontSize: fluidPx(13), fontWeight: 600, color: '#8a6d3b', letterSpacing: '0.03em', whiteSpace: 'nowrap', ...typeStyle(typo.eventDate) }}>
-                  {group.dateLabel}
-                </span>
-                <div className="flex-1 h-px" style={{ background: typo.eventDate?.color || '#d6cdbf' }} />
-              </div>
-            )}
-            {!hasMultipleDates && group.dateLabel && (
-              <p className="text-center mb-4" style={{ fontSize: fluidPx(14), color: '#8a6d3b', fontWeight: 500, ...typeStyle(typo.eventDate) }}>{group.dateLabel}</p>
-            )}
-
             <div className="relative">
               <div className="absolute left-3 top-0 bottom-0 w-px" style={{ background: typo.eventTime?.color || typo.eventDate?.color || '#d6cdbf' }} />
+              {group.dateLabel && (
+                <div className="relative pl-10 mb-4 min-h-3">
+                  <div className="absolute left-1.5 top-1.5 w-3 h-3 rounded-full" style={{ background: typo.eventDate?.color || '#c9b896', border: '2px solid var(--page-color)' }} />
+                  <span style={{ fontSize: fluidPx(hasMultipleDates ? 13 : 14), color: typo.eventDate?.color || '#8a6d3b', fontWeight: 600, letterSpacing: '0.03em', ...typeStyle(typo.eventDate) }}>
+                    {group.dateLabel}
+                  </span>
+                </div>
+              )}
               <div className="space-y-6">
                 {group.events.map((ev, evIdx) => {
                   const showLoc = ev.show_location !== false;
@@ -152,7 +147,7 @@ export default function Schedule({
                       )}
 
                       <div className="flex gap-2 mt-2.5">
-                        <button onClick={() => addToCalendar(ev, partner1, partner2)} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition hover:opacity-80" style={{ background: 'rgba(138,109,59,0.12)', color: '#8a6d3b' }}>
+                        <button onClick={() => addToCalendar(ev, partner1, partner2)} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition hover:opacity-80" style={{ background: 'rgba(43, 105, 176, 0.14)', color: '#2468ad' }}>
                           <CalendarPlus size={12} /> Add to Calendar
                         </button>
                         {showLoc && ev.venue && (
