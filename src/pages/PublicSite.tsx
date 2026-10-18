@@ -274,7 +274,7 @@ export default function PublicSite() {
         {/* Sticky Navigation */}
         <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
           <button onClick={() => scrollToSection('welcome')} className="flex items-center shrink-0" aria-label="Back to welcome">
-            <SiteMonogram settings={settings} size={28} />
+            <SiteMonogram settings={settings} size={36} />
           </button>
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((p) => (

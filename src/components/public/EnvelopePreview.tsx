@@ -117,7 +117,6 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
     .replace(/\{\{party_name\}\}/g, 'The Smith Family')
     .replace(/\{\{gate_password\}\}/g, settings.public_password || '')
     .replace(/\{\{rsvp_link\}\}/g, '#');
-  const buttons = settings.invitation_paper_buttons || [];
   const initials = `${(settings.partner1_name || 'A')[0]}${(settings.partner2_name || 'B')[0]}`;
 
   const container = fullscreen
@@ -242,13 +241,6 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
               )}
               <div className="h-px w-12 mx-auto my-3" style={{ background: 'rgba(181,154,107,0.3)' }} />
               <div className="text-sm mb-4 leading-relaxed w-full text-left [&_p]:mb-2 [&_p:last-child]:mb-0" style={{ fontFamily: stackFor(bodyFont), color: paperText, opacity: 0.85 }} dangerouslySetInnerHTML={{ __html: bodyText }} />
-              {buttons.length > 0 && (
-                <div className="flex flex-col gap-2 w-full mt-auto pt-2">
-                  {buttons.map((btn, i) => (
-                    <div key={i} className="px-5 py-2 text-center text-xs font-semibold tracking-widest" style={{ border: `1px solid ${withAlpha(paperText, 0.3)}`, borderRadius: 3, color: paperText, letterSpacing: '0.1em' }}>{btn.label}</div>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
           {isOpen && (
