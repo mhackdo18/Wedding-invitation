@@ -3,13 +3,13 @@ import { supabase } from '@/lib/supabase';
 import { useSiteSettings } from '@/lib/useSiteSettings';
 import { SectionHeader, Card } from '../ui';
 import { FontSelect } from '@/components/admin/FontSelect';
-import type { SiteSettings, InvitationButton, EmailSettings as EmailCfg, Guest, EmailAttachment } from '@/types';
+import type { SiteSettings, EmailSettings as EmailCfg, Guest, EmailAttachment } from '@/types';
 import { uploadImage } from '@/lib/upload';
 import { stackFor } from '@/lib/fonts';
 import { UploadProgress } from '@/components/admin/UploadProgress';
 import {
-  Save, Eye, Loader2, Plus, Trash2, Mail, FileText, Send, Check, X,
-  Upload, GripVertical, ChevronUp, ChevronDown, FlaskConical, Search,
+  Save, Eye, Loader2, Plus, Mail, FileText, Send, Check, X,
+  Upload, FlaskConical, Search,
   ExternalLink, Copy, CheckCheck, DoorClosed,
   Image as ImageIcon, Link as LinkIcon,
 } from 'lucide-react';
@@ -19,13 +19,6 @@ import { DoorStylePreview, DOOR_STYLES, DOOR_SPEEDS } from '@/components/public/
 import type { DoorStyle } from '@/components/public/DoorReveal';
 import { Gauge } from 'lucide-react';
 
-const LINK_TYPES = [
-  { value: 'rsvp', label: 'RSVP' },
-  { value: 'find_table', label: 'Find My Table' },
-  { value: 'welcome', label: 'Welcome Page' },
-  { value: 'page', label: 'Site Page' },
-  { value: 'external', label: 'External URL' },
-];
 type Tab = 'envelope' | 'doors' | 'letter' | 'email' | 'generate' | 'send';
 
 export default function InvitationDesigner() {
@@ -181,18 +174,6 @@ export default function InvitationDesigner() {
     const a = [...(emailCfg?.email_attachments || [])];
     a.splice(idx, 1);
     updEmail({ email_attachments: a });
-  };
-
-  const buttons = draft.invitation_paper_buttons || [];
-  const addButton = () => upd({ invitation_paper_buttons: [...buttons, { label: 'RSVP', link_type: 'rsvp', link_value: '' }] });
-  const updateBtn = (i: number, patch: Partial<InvitationButton>) => {
-    const b = [...buttons]; b[i] = { ...b[i], ...patch }; upd({ invitation_paper_buttons: b });
-  };
-  const removeBtn = (i: number) => { const b = [...buttons]; b.splice(i, 1); upd({ invitation_paper_buttons: b }); };
-  const moveBtn = (i: number, dir: -1 | 1) => {
-    const ni = i + dir;
-    if (ni < 0 || ni >= buttons.length) return;
-    const b = [...buttons]; [b[i], b[ni]] = [b[ni], b[i]]; upd({ invitation_paper_buttons: b });
   };
 
   const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
@@ -580,35 +561,6 @@ export default function InvitationDesigner() {
             </div>
           </Card>
 
-          <Card>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-[#3a2e22]">Action Buttons</h3>
-              <button onClick={addButton} className="btn-ghost flex items-center gap-1 text-sm"><Plus size={14} /> Add</button>
-            </div>
-            {buttons.length === 0 ? (
-              <div className="text-center py-6 text-sm text-[#8a7a66] border border-dashed rounded-lg" style={{ borderColor: '#d6cdbf' }}>No buttons yet</div>
-            ) : (
-              <div className="space-y-2">
-                {buttons.map((btn, i) => (
-                  <div key={i} className="flex items-center gap-2 rounded-lg border p-2" style={{ borderColor: '#e6ddcd', background: '#faf6ee' }}>
-                    <div className="flex flex-col">
-                      <button onClick={() => moveBtn(i, -1)} disabled={i === 0} className="text-[#c9b896] disabled:opacity-30"><ChevronUp size={13} /></button>
-                      <button onClick={() => moveBtn(i, 1)} disabled={i === buttons.length - 1} className="text-[#c9b896] disabled:opacity-30"><ChevronDown size={13} /></button>
-                    </div>
-                    <GripVertical size={14} className="text-[#c9b896]" />
-                    <input className="admin-input flex-1 text-sm" style={{ padding: '4px 8px' }} value={btn.label} onChange={(e) => updateBtn(i, { label: e.target.value })} placeholder="Button label" />
-                    <select className="admin-input text-xs" style={{ padding: '4px 8px', width: 'auto' }} value={btn.link_type} onChange={(e) => updateBtn(i, { link_type: e.target.value as InvitationButton['link_type'], link_value: '' })}>
-                      {LINK_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-                    </select>
-                    {btn.link_type === 'external' && (
-                      <input className="admin-input text-xs flex-1" style={{ padding: '4px 8px' }} value={btn.link_value} onChange={(e) => updateBtn(i, { link_value: e.target.value })} placeholder="https://..." />
-                    )}
-                    <button onClick={() => removeBtn(i)} className="text-[#c9b896] hover:text-[#b03a3a]"><Trash2 size={13} /></button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Card>
         </div>
       )}
 
