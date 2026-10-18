@@ -74,11 +74,8 @@ function StandaloneFindTable({ settings }: { settings: SiteSettings | null }) {
     <div className="min-h-screen" style={{ background: 'var(--bg-color)' }}>
       <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)' }}>
         <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
-          <button onClick={() => navigate('/')} className="flex items-center gap-1.5 shrink-0">
-            <SiteMonogram settings={settings} size={14} />
-            <span className="hidden sm:inline" style={{ fontFamily: 'var(--heading-font)', fontSize: 14, fontWeight: 600, color: '#5a4430' }}>
-              {settings.partner1_name} &amp; {settings.partner2_name}
-            </span>
+          <button onClick={() => navigate('/')} className="flex items-center shrink-0" aria-label="Back to welcome">
+            <SiteMonogram settings={settings} size={28} />
           </button>
         </nav>
         <FindYourTable />

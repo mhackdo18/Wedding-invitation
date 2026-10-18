@@ -9,7 +9,7 @@ export function useSiteSettings() {
 
   useEffect(() => {
     let active = true;
-    (async () => {
+    const load = async () => {
       const { data } = await supabase
         .from('site_settings')
         .select('*')
@@ -20,8 +20,14 @@ export function useSiteSettings() {
         setSettings(data as SiteSettings | null);
         setLoading(false);
       }
-    })();
-    return () => { active = false; };
+    };
+    const refreshOnFocus = () => { void load(); };
+    void load();
+    window.addEventListener('focus', refreshOnFocus);
+    return () => {
+      active = false;
+      window.removeEventListener('focus', refreshOnFocus);
+    };
   }, []);
 
   return { settings, loading, setSettings };

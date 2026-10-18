@@ -209,11 +209,8 @@ export default function InvitationPage({ token }: { token: string }) {
       <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)' }}>
         {/* Sticky Navigation */}
         <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
-          <button onClick={() => scrollToSection('welcome')} className="flex items-center gap-1.5 shrink-0">
-            <SiteMonogram settings={settings} size={14} />
-            <span className="hidden sm:inline" style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(14), fontWeight: 600, color: '#5a4430' }}>
-              {settings.partner1_name} &amp; {settings.partner2_name}
-            </span>
+          <button onClick={() => scrollToSection('welcome')} className="flex items-center shrink-0" aria-label="Back to welcome">
+            <SiteMonogram settings={settings} size={28} />
           </button>
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((p) => (

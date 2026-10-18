@@ -273,6 +273,7 @@ export interface EmailSettings {
   site_url: string | null;
   email_photo_url: string | null;
   email_body_html: string | null;
+  invitation_button_label: string;
   email_attachments: EmailAttachment[];
   created_at: string;
   updated_at: string;

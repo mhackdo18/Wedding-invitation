@@ -21,6 +21,7 @@ interface EmailConfig {
   site_url: string | null;
   email_photo_url: string | null;
   email_body_html: string | null;
+  invitation_button_label: string | null;
   email_attachments: { name: string; url: string }[] | null;
 }
 
@@ -147,7 +148,7 @@ function buildEmailHtml(
 
   const rsvpBtn = rsvpLink
     ? `<div style="text-align:center;margin:28px 0 8px;">
-         <a href="${rsvpLink}" style="display:inline-block;padding:12px 36px;background:#3a3a3a;color:#ffffff;text-decoration:none;font-size:14px;font-weight:normal;font-family:Georgia,serif;border-radius:4px;">Open your invitation</a>
+         <a href="${rsvpLink}" style="display:inline-block;padding:12px 36px;background:#3a3a3a;color:#ffffff;text-decoration:none;font-size:14px;font-weight:normal;font-family:Georgia,serif;border-radius:4px;">${cfg.invitation_button_label || 'Open your invitation'}</a>
        </div>`
     : "";
 
@@ -219,7 +220,7 @@ function buildPlainText(
   rawBody = rawBody.replace(/<[^>]+>/g, '');
 
   if (rsvpLink) {
-    rawBody += `\n\nOpen your invitation: ${rsvpLink}`;
+    rawBody += `\n\n${cfg.invitation_button_label || 'Open your invitation'}: ${rsvpLink}`;
   }
   return rawBody;
 }

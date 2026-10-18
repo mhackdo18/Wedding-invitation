@@ -123,7 +123,8 @@ export default function InvitationDesigner() {
         smtp_user: emailCfg.smtp_user, smtp_pass: emailCfg.smtp_pass, from_email: emailCfg.from_email,
         from_name: emailCfg.from_name, subject_line: emailCfg.subject_line, email_body: emailCfg.email_body,
         site_url: emailCfg.site_url, email_photo_url: emailCfg.email_photo_url,
-        email_body_html: emailCfg.email_body_html, email_attachments: emailCfg.email_attachments,
+        email_body_html: emailCfg.email_body_html, invitation_button_label: emailCfg.invitation_button_label,
+        email_attachments: emailCfg.email_attachments,
         updated_at: new Date().toISOString(),
       }).eq('id', emailCfg.id);
     }
@@ -682,7 +683,9 @@ export default function InvitationDesigner() {
 
           <Card>
             <h3 className="font-semibold text-[#3a2e22] mb-1">Email Body</h3>
-            <p className="text-xs text-[#8a7a66] mb-3">The "OPEN YOUR INVITATION" button is added automatically at the bottom and links to each guest's unique invitation.</p>
+            <p className="text-xs text-[#8a7a66] mb-3">The button is added automatically at the bottom and links to each guest's unique invitation.</p>
+            <label className="admin-label">Invitation Button Label</label>
+            <input className="admin-input mb-3" value={emailCfg.invitation_button_label || ''} onChange={(e) => updEmail({ invitation_button_label: e.target.value })} placeholder="Open your invitation" />
             <RichTextEditor
               value={emailCfg.email_body_html || ''}
               onChange={(html) => updEmail({ email_body_html: html })}
@@ -799,7 +802,7 @@ export default function InvitationDesigner() {
                   />
                   {emailCfg.email_photo_url && <img src={emailCfg.email_photo_url} alt="" style={{ width: '100%', maxHeight: 300, objectFit: 'contain', margin: '24px 0 0' }} />}
                   <div style={{ textAlign: 'center', margin: '28px 0 8px' }}>
-                    <a href="#" style={{ display: 'inline-block', padding: '12px 36px', background: '#3a3a3a', color: '#ffffff', textDecoration: 'none', fontSize: 14, fontWeight: 'normal', fontFamily: 'Georgia, serif', borderRadius: 4 }}>Open your invitation</a>
+                    <a href="#" style={{ display: 'inline-block', padding: '12px 36px', background: '#3a3a3a', color: '#ffffff', textDecoration: 'none', fontSize: 14, fontWeight: 'normal', fontFamily: 'Georgia, serif', borderRadius: 4 }}>{emailCfg.invitation_button_label || 'Open your invitation'}</a>
                   </div>
                 </td></tr>
                 <tr><td style={{ background: '#f0ebe3', padding: '16px 30px', textAlign: 'center' }}>
