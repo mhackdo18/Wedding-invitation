@@ -499,7 +499,7 @@ export default function EnvelopeIntro({
               />
 
               {/* CTA button */}
-              <div className="flex flex-col gap-2.5 w-full mt-auto pt-4">
+              <div className="flex flex-col gap-2.5 w-full pt-2">
                 <button
                   onClick={handleCtaClick}
                   className="px-6 py-2.5 transition-all hover:tracking-widest"
