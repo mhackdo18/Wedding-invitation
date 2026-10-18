@@ -23,6 +23,105 @@ import FloatingMusicControl from '@/components/public/FloatingMusicControl';
 import FallingPetals from '@/components/public/FallingPetals';
 import { Reveal } from '@/components/public/Reveal';
 import { isRsvpClosed, formatDeadlineDate } from '@/lib/timezone';
+import { PageBorder } from '@/components/public/PageBorder';
+import { getBorderFromTypography, getCardBg, getOuterBg } from '@/lib/pageTemplates';
+import type { BgPhotoConfig } from '@/lib/pageTemplates';
+import type { PageBackground, BackgroundFit, BackgroundPosition } from '@/types';
+import type { ReactNode } from 'react';
+
+const FIT_TO_CSS: Record<BackgroundFit, string> = {
+  cover: 'cover',
+  contain: 'contain',
+  fill: '100% 100%',
+  center: 'auto',
+  repeat: 'auto',
+};
+
+function bgPositionCss(pos: BackgroundPosition): string {
+  const map: Record<BackgroundPosition, string> = {
+    center: 'center',
+    top: 'top',
+    bottom: 'bottom',
+    left: 'left',
+    right: 'right',
+    'top-left': 'top left',
+    'top-right': 'top right',
+    'bottom-left': 'bottom left',
+    'bottom-right': 'bottom right',
+  };
+  return map[pos] || 'center';
+}
+
+function SectionBackground({ page, children }: { page: Page; children: ReactNode }) {
+  const bg = (page.config as Record<string, unknown>)?.background as PageBackground | undefined;
+  if (!bg?.url) return <>{children}</>;
+  const bgSize = FIT_TO_CSS[bg.fit] || 'cover';
+  const bgRepeat = bg.fit === 'repeat' ? 'repeat' : 'no-repeat';
+  const opacity = bg.opacity / 100;
+  const overlayOpacity = bg.overlayOpacity / 100;
+  const isFront = bg.layer === 'front';
+  const imgLayer = (
+    <div className="absolute inset-0 pointer-events-none" style={{
+      backgroundImage: `url(${bg.url})`,
+      backgroundSize: bg.fit === 'repeat' ? 'auto' : bgSize,
+      backgroundPosition: bg.fit === 'repeat' ? '0 0' : bgPositionCss(bg.position),
+      backgroundRepeat: bgRepeat,
+      opacity,
+      filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
+      transform: bg.blur > 0 ? 'scale(1.05)' : undefined,
+      zIndex: isFront ? 2 : 0,
+    }} />
+  );
+  const overlayLayer = bg.overlayColor ? (
+    <div className="absolute inset-0 pointer-events-none" style={{ background: bg.overlayColor, opacity: overlayOpacity, zIndex: isFront ? 1 : 0 }} />
+  ) : null;
+  if (isFront) {
+    return (
+      <div className="relative">
+        <div className="relative" style={{ zIndex: 1 }}>{children}</div>
+        {overlayLayer}
+        {imgLayer}
+      </div>
+    );
+  }
+  return (
+    <div className="relative">
+      {imgLayer}
+      {overlayLayer}
+      <div className="relative" style={{ zIndex: 1 }}>{children}</div>
+    </div>
+  );
+}
+
+function BgPhotoLayer({ bg, children }: { bg: BgPhotoConfig; children: ReactNode }) {
+  if (!bg.url) return <>{children}</>;
+  const bgSize = FIT_TO_CSS[bg.fit] || 'cover';
+  const bgRepeat = bg.fit === 'repeat' ? 'repeat' : 'no-repeat';
+  const opacity = bg.opacity / 100;
+  const overlayOpacity = bg.overlayOpacity / 100;
+  const imgLayer = (
+    <div className="absolute inset-0 pointer-events-none" style={{
+      backgroundImage: `url(${bg.url})`,
+      backgroundSize: bg.fit === 'repeat' ? 'auto' : bgSize,
+      backgroundPosition: bg.fit === 'repeat' ? '0 0' : bgPositionCss(bg.position),
+      backgroundRepeat: bgRepeat,
+      opacity,
+      filter: bg.blur > 0 ? `blur(${bg.blur}px)` : undefined,
+      transform: bg.blur > 0 ? 'scale(1.05)' : undefined,
+      zIndex: 0,
+    }} />
+  );
+  const overlayLayer = bg.overlayColor ? (
+    <div className="absolute inset-0 pointer-events-none" style={{ background: bg.overlayColor, opacity: overlayOpacity, zIndex: 0 }} />
+  ) : null;
+  return (
+    <div className="relative">
+      {imgLayer}
+      {overlayLayer}
+      <div className="relative" style={{ zIndex: 1 }}>{children}</div>
+    </div>
+  );
+}
 
 export default function InvitationPage({ token }: { token: string }) {
   const { settings, loading } = useSiteSettings();
@@ -131,6 +230,9 @@ export default function InvitationPage({ token }: { token: string }) {
   }
 
   const typo = settings.typography || {};
+  const borderTemplate = getBorderFromTypography(settings.typography);
+  const cardBg = getCardBg(settings.typography);
+  const outerBg = getOuterBg(settings.typography);
   const rsvpGuests = partyMembers.length > 0 ? partyMembers : (guest ? [guest] : []);
   const visiblePages = pages.filter((p) => p.is_visible).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
   const mainEvents = events.filter((e) => !e.parent_id).map((e) => ({
@@ -189,6 +291,7 @@ export default function InvitationPage({ token }: { token: string }) {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-color)' }}>
+      <BgPhotoLayer bg={outerBg}>
       <DoorReveal
         open={introOpen || doorOpen}
         opening={doorOpening}
@@ -207,6 +310,7 @@ export default function InvitationPage({ token }: { token: string }) {
       />
 
       <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)' }}>
+        <BgPhotoLayer bg={cardBg}>
         {/* Sticky Navigation */}
         <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
           <button onClick={() => scrollToSection('welcome')} className="flex items-center shrink-0" aria-label="Back to welcome">
@@ -255,18 +359,22 @@ export default function InvitationPage({ token }: { token: string }) {
         {/* Render all page sections */}
         {welcomePage && (
           <div id={welcomePage.id ? `section-${welcomePage.id}` : 'section-welcome'}>
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up">{renderSection(welcomePage)}</Reveal>
+            <SectionBackground page={welcomePage}>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography}>{renderSection(welcomePage)}</PageBorder></Reveal>
+            </SectionBackground>
           </div>
         )}
         {!welcomePage && (
           <div id="section-welcome">
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><WelcomePage settings={settings} typo={typo} onRsvp={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} /></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography}><WelcomePage settings={settings} typo={typo} onRsvp={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} /></PageBorder></Reveal>
           </div>
         )}
 
         {otherPages.map((p, idx) => (
           <div key={p.id} id={`section-${p.id}`}>
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}>{renderSection(p)}</Reveal>
+            <SectionBackground page={p}>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}><PageBorder template={borderTemplate} typography={settings.typography}>{renderSection(p)}</PageBorder></Reveal>
+            </SectionBackground>
           </div>
         ))}
 
@@ -312,12 +420,14 @@ export default function InvitationPage({ token }: { token: string }) {
           </p>
         </footer>
         </Reveal>
+        </BgPhotoLayer>
       </div>
       <div className="h-10" />
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
       )}
       <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} />
+      </BgPhotoLayer>
     </div>
   );
 }
