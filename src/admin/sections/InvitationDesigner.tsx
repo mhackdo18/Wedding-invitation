@@ -89,6 +89,7 @@ export default function InvitationDesigner() {
       invitation_paper_background_color: draft.invitation_paper_background_color,
       invitation_paper_text_color: draft.invitation_paper_text_color,
       invitation_paper_border_color: draft.invitation_paper_border_color,
+      invitation_paper_border_style: draft.invitation_paper_border_style,
       invitation_paper_image_url: draft.invitation_paper_image_url,
       invitation_paper_heading_font: draft.invitation_paper_heading_font,
       invitation_paper_heading_color: draft.invitation_paper_heading_color,
@@ -499,6 +500,16 @@ export default function InvitationDesigner() {
               <ColorPicker label="Paper Background" value={draft.invitation_paper_background_color || '#fffef8'} onChange={(v) => upd({ invitation_paper_background_color: v })} />
               <ColorPicker label="Paper Text Color" value={draft.invitation_paper_text_color || '#5a4430'} onChange={(v) => upd({ invitation_paper_text_color: v })} />
               <ColorPicker label="Paper Border Color" value={draft.invitation_paper_border_color || '#e6ddcd'} onChange={(v) => upd({ invitation_paper_border_color: v })} />
+              <div>
+                <label className="admin-label">Paper Border Design</label>
+                <select className="admin-input" value={draft.invitation_paper_border_style || 'solid'} onChange={(e) => upd({ invitation_paper_border_style: e.target.value as SiteSettings['invitation_paper_border_style'] })}>
+                  <option value="none">None</option>
+                  <option value="solid">Solid</option>
+                  <option value="double">Double</option>
+                  <option value="dashed">Dashed</option>
+                  <option value="dotted">Dotted</option>
+                </select>
+              </div>
             </div>
             <div className="mt-4">
               <label className="admin-label">Paper Background Image</label>

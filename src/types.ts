@@ -64,6 +64,7 @@ export interface SiteSettings {
   invitation_paper_background_color: string | null;
   invitation_paper_text_color: string | null;
   invitation_paper_border_color: string | null;
+  invitation_paper_border_style: 'none' | 'solid' | 'double' | 'dashed' | 'dotted' | null;
   invitation_paper_image_url: string | null;
   invitation_paper_heading_font: string | null;
   invitation_paper_heading_color: string | null;

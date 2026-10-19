@@ -166,6 +166,7 @@ export default function EnvelopeIntro({
   const headingColor = settings.invitation_paper_heading_color || settings.invitation_paper_text_color || '#5a4430';
   const paperBg = settings.invitation_paper_background_color || '#fffef8';
   const paperBorder = settings.invitation_paper_border_color || 'rgba(180,160,130,0.4)';
+  const paperBorderStyle = settings.invitation_paper_border_style || 'solid';
 
   const showFlapName = settings.invitation_flap_show_name !== false;
   const flapNameTemplate = settings.invitation_flap_name_text || '';
@@ -177,7 +178,7 @@ export default function EnvelopeIntro({
   const weddingDate = settings.wedding_date ? new Date(settings.wedding_date) : null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-3 py-5 sm:px-4 sm:py-8 overflow-x-hidden" style={{ background: 'rgba(40,28,18,0.82)', backdropFilter: useTextures ? 'blur(6px)' : 'none', opacity: isClosing ? 0 : 1, transition: 'opacity 0.6s ease' }}>
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-3 py-5 sm:px-4 sm:py-8 overflow-y-auto" style={{ background: 'rgba(40,28,18,0.82)', backdropFilter: useTextures ? 'blur(6px)' : 'none', opacity: isClosing ? 0 : 1, transition: 'opacity 0.6s ease' }}>
       <div className="relative w-full max-w-md min-h-[calc(100svh-2.5rem)] sm:min-h-[520px] flex items-center justify-center">
         {/* ---- Envelope ---- */}
         <div
@@ -449,14 +450,16 @@ export default function EnvelopeIntro({
               : 'opacity 0.4s ease, transform 0.76s cubic-bezier(0.22, 0.78, 0.3, 1)',
           }}
         >
-          <div className="overflow-hidden flex flex-col h-[calc(100svh-5rem)] sm:h-auto" style={{
-            maxHeight: 'calc(100svh - 5rem)',
+          <div style={{
             background: paperBg,
-            border: `1px solid ${paperBorder}`,
+            padding: 10,
             borderRadius: 4,
             boxShadow: '0 24px 48px rgba(25, 18, 10, 0.24), 0 5px 12px rgba(25, 18, 10, 0.13), inset 0 1px 0 rgba(255,255,255,0.56)',
           }}>
-            <div className="flex-1 min-h-0 p-6 sm:p-10 flex flex-col text-center overflow-y-auto items-center w-full">
+            <div className="p-6 sm:p-10 flex flex-col text-center items-center w-full" style={{
+              border: paperBorderStyle === 'none' ? 'none' : paperBorderStyle === 'double' ? `3px double ${paperBorder}` : `1px ${paperBorderStyle} ${paperBorder}`,
+              borderRadius: 2,
+            }}>
               {/* Decorative top */}
               <div className="flex items-center justify-center gap-3 mb-4">
                 <span className="h-px w-8" style={{ background: 'rgba(181,154,107,0.3)' }} />
