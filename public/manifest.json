@@ -9,9 +9,9 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "https://supabase.10041889.best/storage/v1/object/public/wedding-images/monogram/7bbd7327-5d1a-46a0-99b0-c4f485a54e00.png",
       "sizes": "any",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
