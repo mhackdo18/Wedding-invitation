@@ -465,7 +465,7 @@ function StylingTab() {
               <div className="space-y-2 pt-1">
                 <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_on_welcome !== false} onChange={(e) => update({ show_rsvp_on_welcome: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP button on Welcome page</label>
                 <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_in_navigation !== false} onChange={(e) => update({ show_rsvp_in_navigation: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP button in navigation</label>
-                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_section !== false} onChange={(e) => update({ show_rsvp_section: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP section on welcome page</label>
+                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_section !== false} onChange={(e) => update({ show_rsvp_section: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP section on bottom page</label>
               </div>
             </div>
           </Card>
