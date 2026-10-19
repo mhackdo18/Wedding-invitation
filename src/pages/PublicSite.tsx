@@ -318,7 +318,7 @@ export default function PublicSite() {
         {settings.show_rsvp_section !== false && (
           <Reveal enabled={!!settings.scroll_animation_enabled} animation="scale-in">
           <section className="px-6 py-10 text-center">
-            <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(24), color: '#5a4430', margin: 0 }}>Will you join us?</h2>
+            <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(24), color: '#5a4430', margin: 0 }}>Join us!</h2>
             <p style={{ fontSize: fluidPx(14), color: '#8a7a66', marginTop: 6 }}>Let us know your response</p>
         {settings.rsvp_deadline && (
           <div className="mt-2">
