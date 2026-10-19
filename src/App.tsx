@@ -33,6 +33,30 @@ export default function App() {
     window.scrollTo(0, 0);
   }, [route.path]);
 
+  useEffect(() => {
+    if (!settings) return;
+    const iconUrl = settings.site_monogram_url || settings.monogram_url || '/favicon.svg';
+    const title = settings.partner1_name && settings.partner2_name
+      ? `${settings.partner1_name} & ${settings.partner2_name}`
+      : 'Our Wedding Invitation';
+    const description = 'You are cordially invited to celebrate our wedding day with us.';
+
+    document.title = title;
+    document.querySelectorAll<HTMLLinkElement>('link[rel="icon"], link[rel="apple-touch-icon"]').forEach((link) => {
+      link.href = iconUrl;
+    });
+    document.querySelectorAll<HTMLMetaElement>('meta[property="og:title"], meta[name="twitter:title"]').forEach((meta) => {
+      meta.content = title;
+    });
+    document.querySelectorAll<HTMLMetaElement>('meta[property="og:description"], meta[name="twitter:description"], meta[name="description"]').forEach((meta) => {
+      meta.content = description;
+    });
+    document.querySelectorAll<HTMLMetaElement>('meta[property="og:image"], meta[name="twitter:image"]').forEach((meta) => {
+      meta.content = iconUrl;
+    });
+    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', window.location.href);
+  }, [settings]);
+
   const isAdmin = route.path.startsWith('admin');
   const isCoordinator = route.path === 'coordinator';
 

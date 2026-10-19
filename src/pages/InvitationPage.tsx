@@ -322,7 +322,7 @@ export default function InvitationPage({ token }: { token: string }) {
                 {p.title}
               </button>
             ))}
-            {settings.show_rsvp_button !== false && (
+            {settings.show_rsvp_in_navigation !== false && (
               <button onClick={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} className="ml-2 font-semibold transition" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                 {settings.cta_text}
               </button>
@@ -347,7 +347,7 @@ export default function InvitationPage({ token }: { token: string }) {
                   </button>
                 ))}
               </div>
-              {settings.show_rsvp_button !== false && (
+              {settings.show_rsvp_in_navigation !== false && (
                 <button onClick={() => { setMobileNav(false); document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }); }} className="mt-3 w-full text-center font-semibold" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                   {settings.cta_text}
                 </button>

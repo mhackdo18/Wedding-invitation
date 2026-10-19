@@ -282,7 +282,7 @@ export default function PublicSite() {
                 {p.title}
               </button>
             ))}
-            {settings.show_rsvp_button !== false && (
+            {settings.show_rsvp_in_navigation !== false && (
               <button onClick={() => navigate('/rsvp')} className="ml-2 font-semibold transition" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                 {settings.cta_text}
               </button>
@@ -329,7 +329,7 @@ export default function PublicSite() {
             </p>
           </div>
         )}
-            {settings.show_rsvp_button !== false && (
+            {settings.show_rsvp_on_welcome !== false && (
               <button onClick={() => navigate('/rsvp')} className="mt-4 font-semibold transition hover:opacity-90" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                 {settings.cta_text}
               </button>
@@ -369,7 +369,7 @@ export default function PublicSite() {
                 </button>
               ))}
             </div>
-            {settings.show_rsvp_button !== false && (
+            {settings.show_rsvp_in_navigation !== false && (
               <button onClick={() => navigate('/rsvp')} className="mt-3 w-full text-center font-semibold" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                 {settings.cta_text}
               </button>

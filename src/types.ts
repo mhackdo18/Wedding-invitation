@@ -16,6 +16,8 @@ export interface SiteSettings {
   rsvp_intro: string | null;
   rsvp_deadline: string | null;
   show_rsvp_button: boolean;
+  show_rsvp_on_welcome: boolean;
+  show_rsvp_in_navigation: boolean;
   show_rsvp_section: boolean;
   welcome_layout: string;
   cta_text: string;

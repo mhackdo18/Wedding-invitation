@@ -237,6 +237,18 @@ export default function Dashboard() {
       </div>
 
       <div className="admin-card p-5 mt-4">
+        <h2 className="font-semibold text-[#3a2e22] mb-2">RSVP Page</h2>
+        <p className="text-sm text-[#8a7a66] mb-3">
+          Share this direct link so guests can respond to your invitation.
+        </p>
+        <div className="flex items-center gap-2 rounded-lg border p-2.5" style={{ borderColor: '#e6ddcd', background: '#faf6ee' }}>
+          <code className="text-xs text-[#5a4430] flex-1 truncate">{window.location.origin}/#/rsvp</code>
+          <CopyLinkButton url={`${window.location.origin}/#/rsvp`} />
+          <button onClick={() => navigate('/rsvp')} className="btn-primary text-xs">Open Page</button>
+        </div>
+      </div>
+
+      <div className="admin-card p-5 mt-4">
         <h2 className="font-semibold text-[#3a2e22] mb-2">Setup Status</h2>
         <div className="space-y-2">
           <SetupRow done={stats.events > 0} label="Events configured" />

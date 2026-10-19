@@ -395,7 +395,7 @@ function StylingTab() {
       page_color: draft.page_color, bg_color: draft.bg_color,
       page_width: draft.page_width, heading_font: draft.heading_font, body_font: draft.body_font,
       typography: draft.typography, rsvp_intro: draft.rsvp_intro, rsvp_deadline: draft.rsvp_deadline,
-      show_rsvp_button: draft.show_rsvp_button, show_rsvp_section: draft.show_rsvp_section,
+      show_rsvp_button: draft.show_rsvp_button, show_rsvp_on_welcome: draft.show_rsvp_on_welcome, show_rsvp_in_navigation: draft.show_rsvp_in_navigation, show_rsvp_section: draft.show_rsvp_section,
       welcome_layout: draft.welcome_layout,
       cta_text: draft.cta_text, cta_bg_color: draft.cta_bg_color, cta_text_color: draft.cta_text_color,
       cta_radius: draft.cta_radius, cta_size: draft.cta_size,
@@ -463,7 +463,8 @@ function StylingTab() {
               <div><label className="admin-label">RSVP Intro Text</label><input className="admin-input" value={draft.rsvp_intro || ''} onChange={(e) => update({ rsvp_intro: e.target.value })} /></div>
               <div><label className="admin-label">RSVP Deadline</label><input type="datetime-local" className="admin-input" value={draft.rsvp_deadline ? new Date(draft.rsvp_deadline).toISOString().slice(0, 16) : ''} onChange={(e) => update({ rsvp_deadline: e.target.value ? new Date(e.target.value).toISOString() : null })} /><p className="text-xs text-[#8a7a66] mt-1">Shown to guests above the RSVP form. Once this deadline passes (in your selected timezone under Settings), RSVP submissions will be automatically closed.</p></div>
               <div className="space-y-2 pt-1">
-                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_button !== false} onChange={(e) => update({ show_rsvp_button: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP button on welcome page and navigation</label>
+                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_on_welcome !== false} onChange={(e) => update({ show_rsvp_on_welcome: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP button on Welcome page</label>
+                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_in_navigation !== false} onChange={(e) => update({ show_rsvp_in_navigation: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP button in navigation</label>
                 <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_section !== false} onChange={(e) => update({ show_rsvp_section: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP section on welcome page</label>
               </div>
             </div>
