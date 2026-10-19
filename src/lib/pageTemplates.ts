@@ -296,6 +296,8 @@ export function hasBorderTemplate(value: string | null | undefined): boolean {
 const BORDER_KEY = '_borderTemplate';
 const BORDER_COLOR_KEY = '_borderColor';
 const BORDER_THICKNESS_KEY = '_borderThickness';
+const BORDER_PADDING_KEY = '_borderPadding';
+const BORDER_EXCLUDE_WELCOME_KEY = '_borderExcludeWelcome';
 
 export function getBorderFromTypography(typography: Record<string, unknown> | null | undefined): string | null {
   if (!typography) return null;
@@ -321,6 +323,30 @@ export function setBorderColorInTypography(
   color: string,
 ): Record<string, unknown> {
   return { ...(typography || {}), [BORDER_COLOR_KEY]: color };
+}
+
+export function getBorderPaddingFromTypography(typography: Record<string, unknown> | null | undefined): number | null {
+  if (!typography) return null;
+  const v = (typography as Record<string, unknown>)[BORDER_PADDING_KEY];
+  return typeof v === 'number' ? v : null;
+}
+
+export function setBorderPaddingInTypography(
+  typography: Record<string, unknown> | null | undefined,
+  padding: number,
+): Record<string, unknown> {
+  return { ...(typography || {}), [BORDER_PADDING_KEY]: padding };
+}
+
+export function getBorderExcludeWelcomeFromTypography(typography: Record<string, unknown> | null | undefined): boolean {
+  return typography?.[BORDER_EXCLUDE_WELCOME_KEY] === true;
+}
+
+export function setBorderExcludeWelcomeInTypography(
+  typography: Record<string, unknown> | null | undefined,
+  exclude: boolean,
+): Record<string, unknown> {
+  return { ...(typography || {}), [BORDER_EXCLUDE_WELCOME_KEY]: exclude };
 }
 
 export function getBorderThicknessFromTypography(typography: Record<string, unknown> | null | undefined): number | null {

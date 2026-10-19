@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { getBorderTemplate, getBorderColorFromTypography, getBorderThicknessFromTypography } from '@/lib/pageTemplates';
+import { getBorderTemplate, getBorderColorFromTypography, getBorderThicknessFromTypography, getBorderPaddingFromTypography } from '@/lib/pageTemplates';
 import { BotanicalBorder, FiligreeBorder, type BotanicalStyle } from '@/components/public/BotanicalBorder';
 import { VintageLaceBorder } from '@/components/public/VintageLaceBorder';
 import { FloralSideBorder } from '@/components/public/FloralSideBorder';
@@ -20,15 +20,17 @@ export function PageBorder({
   typography,
   children,
   className = '',
+  enabled = true,
 }: {
   template: string | null | undefined;
   typography?: Record<string, unknown> | null;
   children: ReactNode;
   className?: string;
+  enabled?: boolean;
 }) {
   const tpl = getBorderTemplate(template);
 
-  if (tpl.type === 'none') {
+  if (!enabled || tpl.type === 'none') {
     return <div className={className}>{children}</div>;
   }
 
@@ -38,6 +40,8 @@ export function PageBorder({
   const thickness = customThickness ?? tpl.defaultThickness;
   const t = Math.max(0.5, thickness);
   const gap = tpl.edgeGap || 0;
+  const padding = getBorderPaddingFromTypography(typography);
+  const innerPadding = padding === null ? '10px' : `${Math.max(0, padding)}px`;
 
   // Botanical SVG corner borders
   if (tpl.type === 'botanical') {
@@ -49,7 +53,7 @@ export function PageBorder({
           className={className}
           borderColor={color}
           borderThickness={t}
-          padding={tpl.padding}
+          padding={innerPadding}
           showCorners={tpl.showCorners !== false}
           showGoldDots={tpl.showGoldDots === true}
         >
@@ -63,7 +67,7 @@ export function PageBorder({
   if (tpl.type === 'filigree') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <FiligreeBorder className={className} borderColor={color} borderThickness={t} padding={tpl.padding}>
+        <FiligreeBorder className={className} borderColor={color} borderThickness={t} padding={innerPadding}>
           {children}
         </FiligreeBorder>
       </BorderWrapper>
@@ -74,7 +78,7 @@ export function PageBorder({
   if (tpl.type === 'vintage_lace') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <VintageLaceBorder className={className} borderColor={color} borderThickness={t} padding={tpl.padding}>
+        <VintageLaceBorder className={className} borderColor={color} borderThickness={t} padding={innerPadding}>
           {children}
         </VintageLaceBorder>
       </BorderWrapper>
@@ -91,7 +95,7 @@ export function PageBorder({
     };
     const variant = variantMap[tpl.value] || 'rose';
     return (
-      <FloralSideBorder className={className} borderColor={color} borderThickness={t} padding={tpl.padding} variant={variant}>
+      <FloralSideBorder className={className} borderColor={color} borderThickness={t} padding={innerPadding} variant={variant}>
         {children}
       </FloralSideBorder>
     );
@@ -101,7 +105,7 @@ export function PageBorder({
   if (tpl.type === 'arch') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={`relative ${className}`} style={{ padding: tpl.padding, background: 'transparent' }}>
+        <div className={`relative ${className}`} style={{ padding: innerPadding, background: 'transparent' }}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100" aria-hidden="true">
             <path d="M 0 100 L 0 25 Q 50 0 100 25 L 100 100" fill="none" stroke={color} strokeWidth={t * 0.8} />
           </svg>
@@ -115,7 +119,7 @@ export function PageBorder({
   if (tpl.type === 'keyhole') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={`relative ${className}`} style={{ padding: tpl.padding, background: 'transparent' }}>
+        <div className={`relative ${className}`} style={{ padding: innerPadding, background: 'transparent' }}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100" aria-hidden="true">
             <path d="M 0 100 L 0 30 Q 0 0 50 0 Q 100 0 100 30 L 100 100" fill="none" stroke={color} strokeWidth={t} />
             <path d="M 3 97 L 3 32 Q 3 3 50 3 Q 97 3 97 32 L 97 97" fill="none" stroke={color} strokeWidth={Math.max(0.5, t * 0.4)} opacity={0.5} />
@@ -131,7 +135,7 @@ export function PageBorder({
     const cut = 18;
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={`relative ${className}`} style={{ padding: tpl.padding, background: 'transparent' }}>
+        <div className={`relative ${className}`} style={{ padding: innerPadding, background: 'transparent' }}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100" aria-hidden="true">
             <path d={`M ${cut} 0 L ${100 - cut} 0 L 100 ${cut} L 100 ${100 - cut} L ${100 - cut} 100 L ${cut} 100 L 0 ${100 - cut} L 0 ${cut} Z`} fill="none" stroke={color} strokeWidth={t} />
             <path d={`M ${cut + 3} 3 L ${100 - cut - 3} 3 L 97 ${cut + 3} L 97 ${100 - cut - 3} L ${100 - cut - 3} 97 L ${cut + 3} 97 L 3 ${100 - cut - 3} L 3 ${cut + 3} Z`} fill="none" stroke={color} strokeWidth={Math.max(0.5, t * 0.4)} opacity={0.4} />
@@ -147,7 +151,7 @@ export function PageBorder({
     const bracket = `${Math.max(8, t * 8)}px`;
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={`relative ${className}`} style={{ padding: tpl.padding, background: 'transparent' }}>
+        <div className={`relative ${className}`} style={{ padding: innerPadding, background: 'transparent' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ border: `${t}px solid ${color}`, borderRadius: '2px', opacity: 0.25 }} />
           <div className="absolute pointer-events-none" style={{ top: 0, left: 0, width: bracket, height: bracket, borderTop: `${t * 1.5}px solid ${color}`, borderLeft: `${t * 1.5}px solid ${color}` }} />
           <div className="absolute pointer-events-none" style={{ top: 0, right: 0, width: bracket, height: bracket, borderTop: `${t * 1.5}px solid ${color}`, borderRight: `${t * 1.5}px solid ${color}` }} />
@@ -163,7 +167,7 @@ export function PageBorder({
   if (tpl.type === 'double') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={className} style={{ padding: tpl.padding, border: `${t}px solid ${color}`, borderRadius: '4px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(1, t)}px transparent, inset 0 0 0 ${Math.max(2, t + 2)}px ${color}` }}>
+        <div className={className} style={{ padding: innerPadding, border: `${t}px solid ${color}`, borderRadius: '4px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(1, t)}px transparent, inset 0 0 0 ${Math.max(2, t + 2)}px ${color}` }}>
           <div style={{ border: `${Math.max(1, t - 1)}px solid ${color}`, borderRadius: '2px', padding: '4px', minHeight: '100%' }}>
             {children}
           </div>
@@ -176,7 +180,7 @@ export function PageBorder({
   if (tpl.type === 'triple') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={className} style={{ padding: tpl.padding, border: `${t}px solid ${color}`, borderRadius: '4px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(2, t + 2)}px transparent, inset 0 0 0 ${Math.max(3, t + 3)}px ${color}, inset 0 0 0 ${Math.max(6, t + 6)}px transparent, inset 0 0 0 ${Math.max(7, t + 7)}px ${color}` }}>
+        <div className={className} style={{ padding: innerPadding, border: `${t}px solid ${color}`, borderRadius: '4px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(2, t + 2)}px transparent, inset 0 0 0 ${Math.max(3, t + 3)}px ${color}, inset 0 0 0 ${Math.max(6, t + 6)}px transparent, inset 0 0 0 ${Math.max(7, t + 7)}px ${color}` }}>
           <div style={{ padding: '4px', minHeight: '100%' }}>
             {children}
           </div>
@@ -189,7 +193,7 @@ export function PageBorder({
   if (tpl.type === 'dashed') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={className} style={{ padding: tpl.padding, border: `${t}px dashed ${color}`, borderRadius: '4px', background: 'transparent' }}>
+        <div className={className} style={{ padding: innerPadding, border: `${t}px dashed ${color}`, borderRadius: '4px', background: 'transparent' }}>
           {children}
         </div>
       </BorderWrapper>
@@ -200,7 +204,7 @@ export function PageBorder({
   if (tpl.type === 'dotted') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={className} style={{ padding: tpl.padding, border: `${t}px dotted ${color}`, borderRadius: '4px', background: 'transparent' }}>
+        <div className={className} style={{ padding: innerPadding, border: `${t}px dotted ${color}`, borderRadius: '4px', background: 'transparent' }}>
           {children}
         </div>
       </BorderWrapper>
@@ -211,7 +215,7 @@ export function PageBorder({
   if (tpl.type === 'ornate') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={className} style={{ padding: tpl.padding, border: `${t}px solid ${color}`, borderRadius: '2px', background: 'transparent', boxShadow: `inset 0 0 0 1px ${color}` }}>
+        <div className={className} style={{ padding: innerPadding, border: `${t}px solid ${color}`, borderRadius: '2px', background: 'transparent', boxShadow: `inset 0 0 0 1px ${color}` }}>
           <div style={{ outline: `1px solid ${color}`, outlineOffset: '4px' }}>
             {children}
           </div>
@@ -224,7 +228,7 @@ export function PageBorder({
   if (tpl.type === 'inset') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={className} style={{ padding: tpl.padding, border: `${t}px solid ${color}`, borderRadius: '6px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(2, t + 2)}px transparent, inset 0 0 0 ${Math.max(3, t + 3)}px ${color}, inset 0 2px 8px rgba(80,60,40,0.08)` }}>
+        <div className={className} style={{ padding: innerPadding, border: `${t}px solid ${color}`, borderRadius: '6px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(2, t + 2)}px transparent, inset 0 0 0 ${Math.max(3, t + 3)}px ${color}, inset 0 2px 8px rgba(80,60,40,0.08)` }}>
           <div style={{ padding: '4px', minHeight: '100%' }}>
             {children}
           </div>
@@ -237,7 +241,7 @@ export function PageBorder({
   if (tpl.type === 'rounded') {
     return (
       <BorderWrapper edgeGap={gap}>
-        <div className={className} style={{ padding: tpl.padding, border: `${t}px solid ${color}`, borderRadius: '16px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(2, t + 2)}px transparent, inset 0 0 0 ${Math.max(3, t + 3)}px ${color}` }}>
+        <div className={className} style={{ padding: innerPadding, border: `${t}px solid ${color}`, borderRadius: '16px', background: 'transparent', boxShadow: `inset 0 0 0 ${Math.max(2, t + 2)}px transparent, inset 0 0 0 ${Math.max(3, t + 3)}px ${color}` }}>
           <div style={{ borderRadius: '12px', padding: '4px', minHeight: '100%' }}>
             {children}
           </div>
@@ -249,7 +253,7 @@ export function PageBorder({
   // Simple thin-line border (default)
   return (
     <BorderWrapper edgeGap={gap}>
-      <div className={className} style={{ padding: tpl.padding, border: `${t}px solid ${color}`, borderRadius: '4px', background: 'transparent' }}>
+      <div className={className} style={{ padding: innerPadding, border: `${t}px solid ${color}`, borderRadius: '4px', background: 'transparent' }}>
         {children}
       </div>
     </BorderWrapper>

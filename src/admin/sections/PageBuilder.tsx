@@ -10,7 +10,7 @@ import { FontSelect } from '@/components/admin/FontSelect';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import { UploadProgress } from '@/components/admin/UploadProgress';
 import TagInput from '@/components/admin/TagInput';
-import { PAGE_BORDER_TEMPLATES, getBorderFromTypography, setBorderInTypography, getBorderColorFromTypography, setBorderColorInTypography, getBorderThicknessFromTypography, setBorderThicknessInTypography, getBorderTemplate, getCardBg, setCardBg, getOuterBg, setOuterBg } from '@/lib/pageTemplates';
+import { PAGE_BORDER_TEMPLATES, getBorderFromTypography, setBorderInTypography, getBorderColorFromTypography, setBorderColorInTypography, getBorderThicknessFromTypography, setBorderThicknessInTypography, getBorderTemplate, getBorderPaddingFromTypography, setBorderPaddingInTypography, getBorderExcludeWelcomeFromTypography, setBorderExcludeWelcomeInTypography, getCardBg, setCardBg, getOuterBg, setOuterBg } from '@/lib/pageTemplates';
 import type { BgPhotoConfig } from '@/lib/pageTemplates';
 
 const TYPO_KEYS = [
@@ -562,6 +562,17 @@ function StylingTab() {
                 );
               })}
             </div>
+            <div className="space-y-2 mb-3 rounded-lg border p-3" style={{ borderColor: '#e6ddcd', background: '#fffdf8' }}>
+              <label className="flex items-center gap-2 text-sm text-[#5a4430]">
+                <input type="checkbox" checked={getBorderExcludeWelcomeFromTypography(draft.typography)} onChange={(e) => update({ typography: setBorderExcludeWelcomeInTypography(draft.typography, e.target.checked) })} className="accent-[#8a6d3b]" />
+                Exclude the Welcome page from the border
+              </label>
+              <div>
+                <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Content Padding</label><span className="text-xs text-[#8a7a66]">{getBorderPaddingFromTypography(draft.typography) ?? 10}px</span></div>
+                <input type="range" min={0} max={32} step={1} value={getBorderPaddingFromTypography(draft.typography) ?? 10} onChange={(e) => update({ typography: setBorderPaddingInTypography(draft.typography, parseInt(e.target.value, 10)) })} className="w-full" />
+                <p className="text-[10px] text-[#8a7a66] mt-1">Controls the space between each page’s content and its border.</p>
+              </div>
+            </div>
             {(() => {
               const sel = getBorderFromTypography(draft.typography) || 'plain';
               const tpl = getBorderTemplate(sel);
@@ -584,7 +595,7 @@ function StylingTab() {
                       <input type="range" min={0.5} max={8} step={0.5} value={thickness} onChange={(e) => update({ typography: setBorderThicknessInTypography(draft.typography, parseFloat(e.target.value)) })} className="w-full" />
                     </div>
                   </div>
-                  <button type="button" onClick={() => update({ typography: { ...draft.typography, _borderColor: undefined, _borderThickness: undefined } })} className="text-xs text-[#b03a3a] hover:underline">Reset to default color &amp; thickness</button>
+                  <button type="button" onClick={() => update({ typography: { ...draft.typography, _borderColor: undefined, _borderThickness: undefined, _borderPadding: undefined } })} className="text-xs text-[#b03a3a] hover:underline">Reset to default color &amp; thickness</button>
                 </div>
               );
             })()}
