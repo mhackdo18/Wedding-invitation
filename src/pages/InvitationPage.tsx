@@ -24,7 +24,7 @@ import FallingPetals from '@/components/public/FallingPetals';
 import { Reveal } from '@/components/public/Reveal';
 import { isRsvpClosed, formatDeadlineDate } from '@/lib/timezone';
 import { PageBorder } from '@/components/public/PageBorder';
-import { getBorderFromTypography, getCardBg, getOuterBg } from '@/lib/pageTemplates';
+import { getBorderFromTypography, getBorderExcludeWelcomeFromTypography, getCardBg, getOuterBg } from '@/lib/pageTemplates';
 import type { BgPhotoConfig } from '@/lib/pageTemplates';
 import type { PageBackground, BackgroundFit, BackgroundPosition } from '@/types';
 import type { ReactNode } from 'react';
@@ -231,6 +231,7 @@ export default function InvitationPage({ token }: { token: string }) {
 
   const typo = settings.typography || {};
   const borderTemplate = getBorderFromTypography(settings.typography);
+  const excludeWelcomeBorder = getBorderExcludeWelcomeFromTypography(settings.typography);
   const cardBg = getCardBg(settings.typography);
   const outerBg = getOuterBg(settings.typography);
   const rsvpGuests = partyMembers.length > 0 ? partyMembers : (guest ? [guest] : []);
@@ -360,13 +361,13 @@ export default function InvitationPage({ token }: { token: string }) {
         {welcomePage && (
           <div id={welcomePage.id ? `section-${welcomePage.id}` : 'section-welcome'}>
             <SectionBackground page={welcomePage}>
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography}>{renderSection(welcomePage)}</PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder}>{renderSection(welcomePage)}</PageBorder></Reveal>
             </SectionBackground>
           </div>
         )}
         {!welcomePage && (
           <div id="section-welcome">
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography}><WelcomePage settings={settings} typo={typo} onRsvp={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} /></PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder}><WelcomePage settings={settings} typo={typo} onRsvp={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} /></PageBorder></Reveal>
           </div>
         )}
 
