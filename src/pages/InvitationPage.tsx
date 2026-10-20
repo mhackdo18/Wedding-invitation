@@ -20,6 +20,7 @@ import { navigate } from '@/lib/router';
 import { Loader2, Menu, X } from 'lucide-react';
 import { SiteMonogram } from '@/components/public/SiteMonogram';
 import FloatingMusicControl from '@/components/public/FloatingMusicControl';
+import FaqChat from '@/components/public/FaqChat';
 import FallingPetals from '@/components/public/FallingPetals';
 import { Reveal } from '@/components/public/Reveal';
 import { isRsvpClosed, formatDeadlineDate } from '@/lib/timezone';
@@ -428,6 +429,9 @@ export default function InvitationPage({ token }: { token: string }) {
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
       )}
       <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} />
+      {settings.faq_chat_enabled && settings.faq_chat_webhook_url && (
+        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} guestName={guest?.name_on_card || guest?.name} />
+      )}
       </BgPhotoLayer>
     </div>
   );

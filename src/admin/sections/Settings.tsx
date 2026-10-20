@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { SectionHeader, Card, ConfirmButton } from '../ui';
 import type { Collaborator, SiteSettings } from '@/types';
-import { Shield, Users, Plus, Loader2, Trash2, X, Lock, Unlock, Mail, Upload, Image as ImageIcon, Sparkles, Globe } from 'lucide-react';
+import { Shield, Users, Plus, Loader2, Trash2, X, Lock, Unlock, Mail, Upload, Image as ImageIcon, Sparkles, Globe, MessageCircle } from 'lucide-react';
 import { uploadImage } from '@/lib/upload';
 import { FontSelect } from '@/components/admin/FontSelect';
 import { UploadProgress } from '@/components/admin/UploadProgress';
@@ -66,6 +66,10 @@ export default function Settings() {
       portal_text_font: settings.portal_text_font,
       scroll_animation_enabled: settings.scroll_animation_enabled,
       timezone: settings.timezone,
+      faq_chat_enabled: settings.faq_chat_enabled,
+      faq_chat_webhook_url: settings.faq_chat_webhook_url,
+      faq_chat_greeting: settings.faq_chat_greeting,
+      faq_chat_button_label: settings.faq_chat_button_label,
     }).eq('id', settings.id);
     setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2000);
   };
@@ -223,6 +227,31 @@ export default function Settings() {
           <input type="checkbox" checked={settings?.scroll_animation_enabled ?? true} onChange={(e) => updateSettings({ scroll_animation_enabled: e.target.checked })} className="accent-[#8a6d3b]" />
           <span>{settings?.scroll_animation_enabled ? 'Animations enabled' : 'Animations disabled'}</span>
         </label>
+      </Card>
+
+      <Card className="mb-4">
+        <h3 className="font-semibold text-[#3a2e22] mb-3 flex items-center gap-2"><MessageCircle size={16} className="text-[#8a6d3b]" /> FAQ Chat Assistant</h3>
+        <p className="text-xs text-[#8a7a66] mb-3">Connect a floating chat box to your n8n webhook so guests can ask questions and receive answers from your AI agent. Each guest's conversation is saved on their device so they can return to it later.</p>
+        <div className="space-y-3">
+          <label className="flex items-center gap-2 text-sm text-[#5a4430]">
+            <input type="checkbox" checked={settings?.faq_chat_enabled || false} onChange={(e) => updateSettings({ faq_chat_enabled: e.target.checked })} className="accent-[#8a6d3b]" />
+            <span>{settings?.faq_chat_enabled ? 'Chat enabled' : 'Chat disabled'}</span>
+          </label>
+          <div>
+            <label className="admin-label">n8n Webhook URL</label>
+            <input type="url" className="admin-input" value={settings?.faq_chat_webhook_url || ''} onChange={(e) => updateSettings({ faq_chat_webhook_url: e.target.value || null })} placeholder="https://your-n8n.example.com/webhook/wedding-faq" />
+            <p className="text-xs text-[#8a7a66] mt-1">The chat box POSTs <code>{'{ session_id, name, message }'}</code> as JSON to this URL.</p>
+          </div>
+          <div>
+            <label className="admin-label">Greeting Message (optional)</label>
+            <textarea className="admin-input" rows={2} value={settings?.faq_chat_greeting || ''} onChange={(e) => updateSettings({ faq_chat_greeting: e.target.value || null })} placeholder="Hi! Ask me anything about the wedding." />
+            <p className="text-xs text-[#8a7a66] mt-1">Shown when a guest opens the chat panel.</p>
+          </div>
+          <div className="rounded-lg p-3" style={{ background: '#faf6ee', borderColor: '#e6ddcd' }}>
+            <p className="text-[10px] uppercase tracking-wider text-[#a07c4a] mb-2">How replies work</p>
+            <p className="text-xs text-[#5a4430] leading-relaxed">Your n8n flow should insert the answer into the <code>chat_messages</code> table with the same <code>session_id</code> and <code>role = 'bot'</code>. The chat box receives it instantly via Supabase Realtime and shows it to the guest.</p>
+          </div>
+        </div>
       </Card>
 
       <Card className="mb-4">

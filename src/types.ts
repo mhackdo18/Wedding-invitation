@@ -109,8 +109,21 @@ export interface SiteSettings {
   door_monogram_size: number;
   scroll_animation_enabled: boolean;
   timezone: string | null;
+  faq_chat_enabled: boolean;
+  faq_chat_webhook_url: string | null;
+  faq_chat_greeting: string | null;
+  faq_chat_button_label: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  session_id: string;
+  role: 'visitor' | 'bot';
+  name: string | null;
+  message: string;
+  created_at: string;
 }
 
 export interface InvitationButton {
