@@ -70,6 +70,8 @@ export default function Settings() {
       faq_chat_webhook_url: settings.faq_chat_webhook_url,
       faq_chat_greeting: settings.faq_chat_greeting,
       faq_chat_button_label: settings.faq_chat_button_label,
+      faq_chat_auth_username: settings.faq_chat_auth_username,
+      faq_chat_auth_password: settings.faq_chat_auth_password,
     }).eq('id', settings.id);
     setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2000);
   };
@@ -240,7 +242,18 @@ export default function Settings() {
           <div>
             <label className="admin-label">n8n Webhook URL</label>
             <input type="url" className="admin-input" value={settings?.faq_chat_webhook_url || ''} onChange={(e) => updateSettings({ faq_chat_webhook_url: e.target.value || null })} placeholder="https://your-n8n.example.com/webhook/wedding-faq" />
-            <p className="text-xs text-[#8a7a66] mt-1">The chat box POSTs <code>{'{ session_id, name, message }'}</code> as JSON to this URL.</p>
+            <p className="text-xs text-[#8a7a66] mt-1">The chat box sends <code>{'{ session_id, name, message, name_on_card, tags }'}</code> as query params to this URL.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="admin-label">Basic Auth Username (optional)</label>
+              <input type="text" className="admin-input" value={settings?.faq_chat_auth_username || ''} onChange={(e) => updateSettings({ faq_chat_auth_username: e.target.value || null })} placeholder="username" autoComplete="off" />
+              <p className="text-xs text-[#8a7a66] mt-1">Secures your webhook endpoint with HTTP Basic Authentication.</p>
+            </div>
+            <div>
+              <label className="admin-label">Basic Auth Password (optional)</label>
+              <input type="password" className="admin-input" value={settings?.faq_chat_auth_password || ''} onChange={(e) => updateSettings({ faq_chat_auth_password: e.target.value || null })} placeholder="password" autoComplete="new-password" />
+            </div>
           </div>
           <div>
             <label className="admin-label">Greeting Message (optional)</label>

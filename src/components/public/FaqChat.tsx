@@ -37,9 +37,13 @@ interface FaqChatProps {
   webhookUrl: string;
   greeting: string | null;
   guestName?: string | null;
+  guestNameOnCard?: string | null;
+  guestTags?: string[] | null;
+  authUsername?: string | null;
+  authPassword?: string | null;
 }
 
-export default function FaqChat({ webhookUrl, greeting, guestName }: FaqChatProps) {
+export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCard, guestTags, authUsername, authPassword }: FaqChatProps) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -126,17 +130,24 @@ export default function FaqChat({ webhookUrl, greeting, guestName }: FaqChatProp
         session_id: sessionId,
         name,
         message: text,
+        name_on_card: guestNameOnCard || '',
+        tags: (guestTags && guestTags.length > 0) ? guestTags.join(',') : '',
       });
       const sep = webhookUrl.includes('?') ? '&' : '?';
       const url = `${webhookUrl}${sep}${params.toString()}`;
-      const res = await fetch(url, { method: 'GET' });
+      const headers: Record<string, string> = {};
+      if (authUsername) {
+        const token = btoa(`${authUsername}:${authPassword || ''}`);
+        headers['Authorization'] = `Basic ${token}`;
+      }
+      const res = await fetch(url, { method: 'GET', headers });
       if (!res.ok) {
         console.error('[FaqChat] Webhook returned non-OK status', res.status, res.statusText);
       }
     } catch (err) {
       console.error('[FaqChat] Webhook GET failed', err);
     }
-  }, [input, sending, name, webhookUrl]);
+  }, [input, sending, name, webhookUrl, guestNameOnCard, guestTags, authUsername, authPassword]);
 
   const confirmName = () => {
     const n = nameInput.trim();
@@ -264,7 +275,7 @@ export default function FaqChat({ webhookUrl, greeting, guestName }: FaqChatProp
                       : { background: 'rgba(120,90,60,0.10)', color: '#5a4430' }
                   }
                 >
-                  {m.message}
+                  <span style={{ whiteSpace: 'pre-wrap' }}>{m.message}</span>
                 </div>
               </div>
             ))}

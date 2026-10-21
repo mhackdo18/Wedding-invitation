@@ -430,7 +430,7 @@ export default function InvitationPage({ token }: { token: string }) {
       )}
       <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} />
       {settings.faq_chat_enabled && settings.faq_chat_webhook_url && (
-        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} guestName={guest?.name_on_card || guest?.name} />
+        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} guestName={guest?.name_on_card || guest?.name} guestNameOnCard={guest?.name_on_card} guestTags={guest?.tags} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} />
       )}
       </BgPhotoLayer>
     </div>

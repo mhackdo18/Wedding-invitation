@@ -113,6 +113,8 @@ export interface SiteSettings {
   faq_chat_webhook_url: string | null;
   faq_chat_greeting: string | null;
   faq_chat_button_label: string | null;
+  faq_chat_auth_username: string | null;
+  faq_chat_auth_password: string | null;
   created_at: string;
   updated_at: string;
 }
