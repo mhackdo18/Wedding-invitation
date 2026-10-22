@@ -47,11 +47,11 @@ export default function ChatSessions() {
         if (!existing) {
           grouped.set(row.session_id, {
             session_id: row.session_id,
-            name: row.name,
+            name: row.role === 'visitor' ? row.name : null,
             message_count: 1,
             first_message_at: row.created_at,
             last_message_at: row.created_at,
-            preview: row.message,
+            preview: row.role === 'visitor' ? row.message : null,
           });
         } else {
           existing.message_count += 1;
@@ -60,6 +60,12 @@ export default function ChatSessions() {
           }
           if (row.created_at < existing.first_message_at) {
             existing.first_message_at = row.created_at;
+          }
+          if (row.role === 'visitor' && !existing.name && row.name) {
+            existing.name = row.name;
+          }
+          if (row.role === 'visitor' && !existing.preview) {
+            existing.preview = row.message;
           }
         }
       }
