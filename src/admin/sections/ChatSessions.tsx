@@ -179,13 +179,18 @@ export default function ChatSessions() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-3rem)] flex flex-col">
+    <div className="h-[calc(100vh-7rem)] min-h-0 flex flex-col">
       <div className="flex items-center justify-between gap-3 mb-4">
-        <div>
+        <div className="min-w-0">
           <h1 className="text-xl font-bold text-[#2f3338]">Chat Sessions</h1>
           <p className="text-sm text-[#7f858c] mt-0.5">Review guest conversations and send a helpful correction when needed.</p>
+          <div className="flex items-center gap-2 mt-2 text-[11px] text-[#9a8f82]">
+            <span>Remove messages older than</span>
+            <input type="number" min={1} max={365} value={retentionDays} onChange={(event) => setRetentionDays(Math.max(1, Math.min(365, Number(event.target.value) || 30)))} className="admin-input w-14 text-center text-xs py-1" />
+            <span>days</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button onClick={loadSessions} className="btn-ghost flex items-center gap-1.5" title="Refresh conversations">
             <RefreshCw size={14} /> Refresh
           </button>
@@ -200,8 +205,8 @@ export default function ChatSessions() {
       {cleanResult && <p className="text-xs text-[#5a7a4a] mb-3">{cleanResult}</p>}
       {error && <div className="admin-card p-3 mb-3 flex items-center gap-2" style={{ background: '#fdf0f0', borderColor: '#e8b4b4' }}><AlertTriangle size={16} className="text-[#b03a3a]" /><p className="text-sm text-[#b03a3a]">{error}</p></div>}
 
-      <div className="admin-card flex-1 min-h-[620px] overflow-hidden flex flex-col lg:flex-row">
-        <aside className="w-full lg:w-[340px] shrink-0 border-b lg:border-b-0 lg:border-r flex flex-col" style={{ borderColor: '#e6ddcd', background: '#fffdf9' }}>
+      <div className="admin-card flex-1 min-h-0 overflow-hidden flex flex-col lg:flex-row">
+        <aside className="w-full lg:w-[340px] shrink-0 min-h-0 border-b lg:border-b-0 lg:border-r flex flex-col" style={{ borderColor: '#e6ddcd', background: '#fffdf9' }}>
           <div className="p-4 border-b" style={{ borderColor: '#eee7dc' }}>
             <div className="relative">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a0a5aa]" />
@@ -228,7 +233,7 @@ export default function ChatSessions() {
           </div>
         </aside>
 
-        <section className="flex-1 min-w-0 flex flex-col bg-white">
+        <section className="flex-1 min-w-0 min-h-0 flex flex-col bg-white">
           {!selectedSession ? <EmptyState icon={MessageCircle} title="Select a conversation" hint="Choose a guest from the left to read the full conversation." /> : <>
             <header className="px-5 py-4 border-b flex items-center justify-between gap-3" style={{ borderColor: '#eee7dc' }}>
               <div className="flex items-center gap-3 min-w-0"><div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: '#ececeb' }}><UserRound size={17} className="text-white" /></div><div className="min-w-0"><h2 className="font-bold text-[#30343a] truncate">{selectedSession.name || 'Anonymous Guest'}</h2><p className="text-xs text-[#92979c]">{selectedSession.message_count} messages · Started {formatDay(selectedSession.first_message_at)}</p></div></div>
@@ -264,9 +269,6 @@ export default function ChatSessions() {
         </section>
       </div>
 
-      <div className="mt-3 flex items-center justify-end gap-2 text-[11px] text-[#9a8f82]">
-        <span>Remove messages older than</span><input type="number" min={1} max={365} value={retentionDays} onChange={(event) => setRetentionDays(Math.max(1, Math.min(365, Number(event.target.value) || 30)))} className="admin-input w-14 text-center text-xs py-1" /><span>days</span>
-      </div>
     </div>
   );
 }
