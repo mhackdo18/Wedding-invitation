@@ -5,6 +5,7 @@ import type { ChatMessage } from '@/types';
 
 const SESSION_KEY = 'wedding_chat_session';
 const NAME_KEY = 'wedding_chat_name';
+const SESSION_ACTIVITY_KEY = 'wedding_chat_activity';
 
 function newSessionId(): string {
   try {
@@ -62,7 +63,33 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
   const [chatStarted, setChatStarted] = useState(false);
   const [clearing, setClearing] = useState(false);
   const sessionIdRef = useRef<string>(getOrCreateSessionId());
+  const hadConversationRef = useRef(false);
+  const clearingRef = useRef(false);
   const listRef = useRef<HTMLDivElement | null>(null);
+
+  const resetConversation = useCallback(() => {
+    const previousSessionId = sessionIdRef.current;
+    sessionIdRef.current = newSessionId();
+    try {
+      localStorage.removeItem(`${SESSION_ACTIVITY_KEY}:${previousSessionId}`);
+    } catch {}
+    hadConversationRef.current = false;
+    setMessages([]);
+    setLoaded(false);
+    setChatStarted(false);
+    setSending(false);
+    setInput('');
+    setNameInput('');
+    if (guestName) {
+      setName(guestName);
+      saveStoredName(guestName);
+    } else {
+      setName('');
+      try {
+        localStorage.removeItem(NAME_KEY);
+      } catch {}
+    }
+  }, [guestName]);
 
   const displayName = botName || 'Wedding Assistant';
   const welcomeLine = greeting
@@ -88,8 +115,22 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
         .select('*')
         .eq('session_id', sessionId)
         .order('created_at', { ascending: true });
-      setMessages((data as ChatMessage[]) || []);
-      setLoaded(true);
+      const rows = (data as ChatMessage[]) || [];
+      if (rows.length > 0) {
+        hadConversationRef.current = true;
+        setMessages(rows);
+        setLoaded(true);
+      } else {
+        let sessionWasUsed = false;
+        try {
+          sessionWasUsed = localStorage.getItem(`${SESSION_ACTIVITY_KEY}:${sessionId}`) === '1';
+        } catch {}
+        if (hadConversationRef.current || sessionWasUsed) resetConversation();
+        else {
+          setMessages([]);
+          setLoaded(true);
+        }
+      }
     })();
 
     const channel = supabase
@@ -99,16 +140,24 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
         { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${sessionId}` },
         (payload) => {
           const row = payload.new as ChatMessage;
+          hadConversationRef.current = true;
           setMessages((prev) => (prev.some((m) => m.id === row.id) ? prev : [...prev, row]));
           if (row.role === 'bot') setSending(false);
         }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${sessionId}` },
+        () => {
+          if (!clearingRef.current) resetConversation();
+        },
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [open, chatStarted]);
+  }, [open, chatStarted, resetConversation]);
 
   // Auto-scroll to bottom on new messages.
   useEffect(() => {
@@ -120,14 +169,12 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
   const clearChat = useCallback(async () => {
     const sessionId = sessionIdRef.current;
     setClearing(true);
-    await supabase.from('chat_messages').delete().eq('session_id', sessionId);
-    sessionIdRef.current = newSessionId();
-    setMessages([]);
-    setLoaded(false);
-    setChatStarted(false);
-    setSending(false);
+    clearingRef.current = true;
+    const { error } = await supabase.from('chat_messages').delete().eq('session_id', sessionId);
+    if (!error) resetConversation();
+    clearingRef.current = false;
     setClearing(false);
-  }, []);
+  }, [resetConversation]);
 
   const startChat = useCallback(() => {
     setChatStarted(true);
@@ -148,13 +195,18 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
 
     setSending(true);
     setInput('');
+    hadConversationRef.current = true;
 
     const { error } = await supabase.from('chat_messages').insert(row);
     if (error) {
       setSending(false);
       setInput(text);
+      hadConversationRef.current = false;
       return;
     }
+    try {
+      localStorage.setItem(`${SESSION_ACTIVITY_KEY}:${sessionId}`, '1');
+    } catch {}
 
     try {
       const params = new URLSearchParams({
