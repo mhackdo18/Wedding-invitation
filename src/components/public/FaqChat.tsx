@@ -178,10 +178,13 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
     setInput('');
     setNameInput('');
     if (guestName) {
+      // Per-guest invitation: re-capture the provided guest name fresh.
       setName(guestName);
       saveStoredName(guestName);
     } else {
-      setName(loadStoredName());
+      // Public invitation: clear the cached name so the guest is asked again.
+      try { localStorage.removeItem(NAME_KEY); } catch {}
+      setName('');
     }
     setClearing(false);
   }, [guestName]);
