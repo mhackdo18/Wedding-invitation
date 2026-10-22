@@ -64,7 +64,6 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
   const [clearing, setClearing] = useState(false);
   const sessionIdRef = useRef<string>(getOrCreateSessionId());
   const hadConversationRef = useRef(false);
-  const clearingRef = useRef(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
   const resetConversation = useCallback(() => {
@@ -149,7 +148,7 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
         'postgres_changes',
         { event: 'DELETE', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${sessionId}` },
         () => {
-          if (!clearingRef.current) resetConversation();
+          resetConversation();
         },
       )
       .subscribe();
@@ -166,15 +165,26 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
     }
   }, [messages, sending, open, chatStarted]);
 
-  const clearChat = useCallback(async () => {
-    const sessionId = sessionIdRef.current;
+  const clearChat = useCallback(() => {
+    // Generate a new session ID and reset the local conversation state.
+    // Old session data is preserved in the database for admin review.
     setClearing(true);
-    clearingRef.current = true;
-    const { error } = await supabase.from('chat_messages').delete().eq('session_id', sessionId);
-    if (!error) resetConversation();
-    clearingRef.current = false;
+    sessionIdRef.current = newSessionId();
+    hadConversationRef.current = false;
+    setMessages([]);
+    setLoaded(false);
+    setChatStarted(false);
+    setSending(false);
+    setInput('');
+    setNameInput('');
+    if (guestName) {
+      setName(guestName);
+      saveStoredName(guestName);
+    } else {
+      setName(loadStoredName());
+    }
     setClearing(false);
-  }, [resetConversation]);
+  }, [guestName]);
 
   const startChat = useCallback(() => {
     setChatStarted(true);
@@ -299,8 +309,8 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
                 <button
                   onClick={clearChat}
                   disabled={clearing || sending}
-                  aria-label="Clear chat history"
-                  title="Clear chat history"
+                  aria-label="Start new conversation"
+                  title="Start new conversation"
                   className="rounded-full p-1 transition hover:bg-black/5 disabled:opacity-40"
                   style={{ color: '#8a7a66' }}
                 >

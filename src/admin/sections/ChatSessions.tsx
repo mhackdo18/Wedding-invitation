@@ -165,14 +165,14 @@ export default function ChatSessions() {
     setHistory([]);
   };
 
-  const cleanupOldMessages = async () => {
+  const cleanupOldSessions = async () => {
     setCleaning(true);
     setCleanResult(null);
     const { data, error: cleanupError } = await supabase.rpc('cleanup_old_chat_messages', { retention_days: retentionDays });
     if (cleanupError) setError(cleanupError.message);
     else {
       const deleted = typeof data === 'number' ? data : 0;
-      setCleanResult(`${deleted} ${deleted === 1 ? 'message' : 'messages'} removed`);
+      setCleanResult(`${deleted} ${deleted === 1 ? 'message' : 'messages'} removed from inactive sessions`);
       await loadSessions();
     }
     setCleaning(false);
@@ -185,7 +185,7 @@ export default function ChatSessions() {
           <h1 className="text-xl font-bold text-[#2f3338]">Chat Sessions</h1>
           <p className="text-sm text-[#7f858c] mt-0.5">Review guest conversations and send a helpful correction when needed.</p>
           <div className="flex items-center gap-2 mt-2 text-[11px] text-[#9a8f82]">
-            <span>Remove messages older than</span>
+            <span>Delete sessions inactive for</span>
             <input type="number" min={1} max={365} value={retentionDays} onChange={(event) => setRetentionDays(Math.max(1, Math.min(365, Number(event.target.value) || 30)))} className="admin-input w-14 text-center text-xs py-1" />
             <span>days</span>
           </div>
@@ -194,7 +194,7 @@ export default function ChatSessions() {
           <button onClick={loadSessions} className="btn-ghost flex items-center gap-1.5" title="Refresh conversations">
             <RefreshCw size={14} /> Refresh
           </button>
-          <button onClick={cleanupOldMessages} disabled={cleaning || sessions.length === 0} className="btn-ghost flex items-center gap-1.5 disabled:opacity-40" title={`Remove messages older than ${retentionDays} days`}>
+          <button onClick={cleanupOldSessions} disabled={cleaning || sessions.length === 0} className="btn-ghost flex items-center gap-1.5 disabled:opacity-40" title={`Delete sessions inactive for ${retentionDays} days`}>
             {cleaning ? <Loader2 size={14} className="animate-spin" /> : <Eraser size={14} />}
             Clean up
           </button>
