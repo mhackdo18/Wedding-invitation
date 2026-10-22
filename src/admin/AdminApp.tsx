@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { navigate } from '@/lib/router';
 import { supabase } from '@/lib/supabase';
-import { LayoutDashboard, Palette, Calendar, MapPin, ClipboardList, Users, Armchair, Mail, Menu, X, Heart, Image, Settings as SettingsIcon, Crown, LogOut, Inbox as InboxIcon } from 'lucide-react';
+import { LayoutDashboard, Palette, Calendar, MapPin, ClipboardList, Users, Armchair, Mail, Menu, X, Heart, Image, Settings as SettingsIcon, Crown, LogOut, Inbox as InboxIcon, MessageCircle } from 'lucide-react';
 import Dashboard from './sections/Dashboard';
 import PageBuilder from './sections/PageBuilder';
 import EventManager from './sections/EventManager';
@@ -14,6 +14,7 @@ import GalleryManager from './sections/GalleryManager';
 import Settings from './sections/Settings';
 import EntourageManager from './sections/EntourageManager';
 import Inbox from './sections/Inbox';
+import ChatSessions from './sections/ChatSessions';
 
 const NAV = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -27,6 +28,7 @@ const NAV = [
   { key: 'seating', label: 'Seating Chart', icon: Armchair },
   { key: 'invitation', label: 'Invitation', icon: Mail },
   { key: 'inbox', label: 'Inbox', icon: InboxIcon },
+  { key: 'chat-sessions', label: 'Chat Sessions', icon: MessageCircle },
   { key: 'settings', label: 'Settings', icon: SettingsIcon },
 ];
 
@@ -105,6 +107,7 @@ export default function AdminApp({ section }: { section: string }) {
           {active === 'seating' && <SeatingChart />}
           {active === 'invitation' && <InvitationDesigner />}
           {active === 'inbox' && <Inbox />}
+          {active === 'chat-sessions' && <ChatSessions />}
           {active === 'entourage' && <EntourageManager />}
           {active === 'settings' && <Settings />}
         </main>

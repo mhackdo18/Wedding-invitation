@@ -1,22 +1,27 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Trash2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import type { ChatMessage } from '@/types';
 
 const SESSION_KEY = 'wedding_chat_session';
 const NAME_KEY = 'wedding_chat_name';
 
-function getOrCreateSessionId(): string {
+function newSessionId(): string {
   try {
-    let id: string = localStorage.getItem(SESSION_KEY) || '';
-    if (!id) {
-      id = (crypto as any).uuid ? (crypto as any).uuid() : crypto.randomUUID();
-      localStorage.setItem(SESSION_KEY, id);
-    }
+    const id = (crypto as any).uuid ? (crypto as any).uuid() : crypto.randomUUID();
+    localStorage.setItem(SESSION_KEY, id);
     return id;
   } catch {
     return 'session-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
   }
+}
+
+function getOrCreateSessionId(): string {
+  try {
+    const existing = localStorage.getItem(SESSION_KEY);
+    if (existing) return existing;
+  } catch {}
+  return newSessionId();
 }
 
 function loadStoredName(): string {
@@ -41,9 +46,12 @@ interface FaqChatProps {
   guestTags?: string[] | null;
   authUsername?: string | null;
   authPassword?: string | null;
+  botName?: string | null;
+  tableNumber?: string | null;
+  partyName?: string | null;
 }
 
-export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCard, guestTags, authUsername, authPassword }: FaqChatProps) {
+export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCard, guestTags, authUsername, authPassword, botName, tableNumber, partyName }: FaqChatProps) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -51,8 +59,15 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
   const [nameInput, setNameInput] = useState('');
   const [sending, setSending] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [chatStarted, setChatStarted] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const sessionIdRef = useRef<string>(getOrCreateSessionId());
   const listRef = useRef<HTMLDivElement | null>(null);
+
+  const displayName = botName || 'Wedding Assistant';
+  const welcomeLine = greeting
+    ? `Hi, I'm ${displayName}! ${greeting}`
+    : `Hi, I'm ${displayName}! I'm ready to assist you.`;
 
   // On the per-guest invitation pages, the guest name is provided and auto-captured.
   useEffect(() => {
@@ -64,7 +79,7 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
 
   // Load existing conversation history for this session, then subscribe to realtime inserts.
   useEffect(() => {
-    if (!open) return;
+    if (!open || !chatStarted) return;
     const sessionId = sessionIdRef.current;
 
     (async () => {
@@ -93,14 +108,30 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [open]);
+  }, [open, chatStarted]);
 
   // Auto-scroll to bottom on new messages.
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
-  }, [messages, sending, open]);
+  }, [messages, sending, open, chatStarted]);
+
+  const clearChat = useCallback(async () => {
+    const sessionId = sessionIdRef.current;
+    setClearing(true);
+    await supabase.from('chat_messages').delete().eq('session_id', sessionId);
+    sessionIdRef.current = newSessionId();
+    setMessages([]);
+    setLoaded(false);
+    setChatStarted(false);
+    setSending(false);
+    setClearing(false);
+  }, []);
+
+  const startChat = useCallback(() => {
+    setChatStarted(true);
+  }, []);
 
   const sendMessage = useCallback(async () => {
     const text = input.trim();
@@ -132,6 +163,9 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
         message: text,
         name_on_card: guestNameOnCard || '',
         tags: (guestTags && guestTags.length > 0) ? guestTags.join(',') : '',
+        bot_name: botName || '',
+        table_number: tableNumber || '',
+        party_name: partyName || '',
       });
       const sep = webhookUrl.includes('?') ? '&' : '?';
       const url = `${webhookUrl}${sep}${params.toString()}`;
@@ -147,7 +181,7 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
     } catch (err) {
       console.error('[FaqChat] Webhook GET failed', err);
     }
-  }, [input, sending, name, webhookUrl, guestNameOnCard, guestTags, authUsername, authPassword]);
+  }, [input, sending, name, webhookUrl, guestNameOnCard, guestTags, authUsername, authPassword, botName, tableNumber, partyName]);
 
   const confirmName = () => {
     const n = nameInput.trim();
@@ -201,33 +235,58 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
               </div>
               <div>
                 <p className="text-sm font-semibold" style={{ color: '#5a4430' }}>
-                  Wedding Assistant
+                  {displayName}
                 </p>
                 <p className="text-[10px]" style={{ color: '#8a7a66' }}>
                   Typically replies in a moment
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              aria-label="Close chat"
-              className="rounded-full p-1 transition hover:bg-black/5"
-              style={{ color: '#8a7a66' }}
-            >
-              <X size={16} />
-            </button>
+            <div className="flex items-center gap-1">
+              {chatStarted && messages.length > 0 && (
+                <button
+                  onClick={clearChat}
+                  disabled={clearing || sending}
+                  aria-label="Clear chat history"
+                  title="Clear chat history"
+                  className="rounded-full p-1 transition hover:bg-black/5 disabled:opacity-40"
+                  style={{ color: '#8a7a66' }}
+                >
+                  <Trash2 size={16} />
+                </button>
+              )}
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="Close chat"
+                className="rounded-full p-1 transition hover:bg-black/5"
+                style={{ color: '#8a7a66' }}
+              >
+                <X size={16} />
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
           <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-2.5">
-            {greeting && (
-              <div className="flex">
+            {/* Start-chat screen */}
+            {!chatStarted && hasName && (
+              <div className="flex flex-col items-center justify-center h-full gap-3 text-center py-6">
                 <div
-                  className="max-w-[80%] rounded-2xl rounded-bl-md px-3 py-2 text-sm"
-                  style={{ background: 'rgba(120,90,60,0.10)', color: '#5a4430' }}
+                  className="flex h-12 w-12 items-center justify-center rounded-full"
+                  style={{ background: 'rgba(58,46,34,0.85)', color: '#fff' }}
                 >
-                  {greeting}
+                  <MessageCircle size={24} />
                 </div>
+                <p className="text-sm" style={{ color: '#5a4430' }}>
+                  {welcomeLine}
+                </p>
+                <button
+                  onClick={startChat}
+                  className="rounded-full px-5 py-2 text-sm font-medium transition hover:scale-105"
+                  style={{ background: 'rgba(58,46,34,0.85)', color: '#fff' }}
+                >
+                  Start Chat
+                </button>
               </div>
             )}
 
@@ -257,10 +316,15 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
               </div>
             )}
 
-            {loaded && messages.length === 0 && hasName && (
-              <p className="text-center text-xs py-4" style={{ color: '#8a7a66' }}>
-                Ask a question and our assistant will reply.
-              </p>
+            {chatStarted && loaded && messages.length === 0 && hasName && (
+              <div className="flex">
+                <div
+                  className="max-w-[80%] rounded-2xl rounded-bl-md px-3 py-2 text-sm"
+                  style={{ background: 'rgba(120,90,60,0.10)', color: '#5a4430' }}
+                >
+                  <span style={{ whiteSpace: 'pre-wrap' }}>{welcomeLine}</span>
+                </div>
+              </div>
             )}
 
             {messages.map((m) => (
@@ -297,29 +361,31 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
           </div>
 
           {/* Input */}
-          <div
-            className="flex items-center gap-2 px-3 py-2 border-t"
-            style={{ borderColor: 'rgba(120,90,60,0.15)' }}
-          >
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-              placeholder={hasName ? 'Type your question...' : 'Enter your name first'}
-              disabled={!hasName || sending}
-              className="flex-1 rounded-full px-3 py-2 text-sm outline-none disabled:opacity-50"
-              style={{ border: '1px solid rgba(120,90,60,0.25)', background: '#fff', color: '#5a4430' }}
-            />
-            <button
-              onClick={sendMessage}
-              disabled={!hasName || sending || !input.trim()}
-              aria-label="Send message"
-              className="flex h-9 w-9 items-center justify-center rounded-full transition disabled:opacity-40 hover:scale-105"
-              style={{ background: 'rgba(58,46,34,0.85)', color: '#fff' }}
+          {chatStarted && (
+            <div
+              className="flex items-center gap-2 px-3 py-2 border-t"
+              style={{ borderColor: 'rgba(120,90,60,0.15)' }}
             >
-              <Send size={16} />
-            </button>
-          </div>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+                placeholder={hasName ? 'Type your question...' : 'Enter your name first'}
+                disabled={!hasName || sending}
+                className="flex-1 rounded-full px-3 py-2 text-sm outline-none disabled:opacity-50"
+                style={{ border: '1px solid rgba(120,90,60,0.25)', background: '#fff', color: '#5a4430' }}
+              />
+              <button
+                onClick={sendMessage}
+                disabled={!hasName || sending || !input.trim()}
+                aria-label="Send message"
+                className="flex h-9 w-9 items-center justify-center rounded-full transition disabled:opacity-40 hover:scale-105"
+                style={{ background: 'rgba(58,46,34,0.85)', color: '#fff' }}
+              >
+                <Send size={16} />
+              </button>
+            </div>
+          )}
 
           <style>{`
             .typing-dot {

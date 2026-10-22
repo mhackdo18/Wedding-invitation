@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { typeStyle, fluidPx } from '@/lib/typography';
-import type { Invitation, Guest, Party, WeddingEvent, RsvpQuestion, Page, GalleryPhoto, StoryMilestone, TypeStyle } from '@/types';
+import type { Invitation, Guest, Party, WeddingEvent, RsvpQuestion, Page, GalleryPhoto, StoryMilestone, TypeStyle, SeatingTable } from '@/types';
 import EnvelopeIntro from '@/components/public/EnvelopeIntro';
 import DoorReveal from '@/components/public/DoorReveal';
 import WelcomePage from '@/components/public/WelcomePage';
@@ -135,6 +135,7 @@ export default function InvitationPage({ token }: { token: string }) {
   const [pages, setPages] = useState<Page[]>([]);
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [milestones, setMilestones] = useState<StoryMilestone[]>([]);
+  const [tableNumber, setTableNumber] = useState<string | null>(null);
   const [introOpen, setIntroOpen] = useState(false);
   const [doorOpen, setDoorOpen] = useState(false);
   const [doorOpening, setDoorOpening] = useState(false);
@@ -193,6 +194,18 @@ export default function InvitationPage({ token }: { token: string }) {
         if (!active) return;
         setParty(partyResult.data as Party || null);
         setPartyMembers(membersResult.data as Guest[] || []);
+
+        if (g) {
+          const { data: seatData } = await supabase
+            .from('seat_assignments')
+            .select('table:seating_tables(name)')
+            .eq('guest_id', g.id)
+            .maybeSingle();
+          if (active && seatData) {
+            const tbl = (seatData as unknown as { table: SeatingTable | null }).table;
+            setTableNumber(tbl?.name || null);
+          }
+        }
 
         if (storyPage) {
           const { data: milestonesData } = await supabase
@@ -430,7 +443,7 @@ export default function InvitationPage({ token }: { token: string }) {
       )}
       <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} />
       {settings.faq_chat_enabled && settings.faq_chat_webhook_url && (
-        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} guestName={guest?.name_on_card || guest?.name} guestNameOnCard={guest?.name_on_card} guestTags={guest?.tags} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} />
+        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} guestName={guest?.name_on_card || guest?.name} guestNameOnCard={guest?.name_on_card} guestTags={guest?.tags} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} botName={settings.faq_chat_bot_name} tableNumber={tableNumber} partyName={party?.name} />
       )}
       </BgPhotoLayer>
     </div>

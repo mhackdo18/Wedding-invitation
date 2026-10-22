@@ -385,7 +385,7 @@ export default function PublicSite() {
       )}
       <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} />
       {settings.faq_chat_enabled && settings.faq_chat_webhook_url && (
-        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} />
+        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} botName={settings.faq_chat_bot_name} />
       )}
       </BgPhotoLayer>
     </div>

@@ -72,6 +72,7 @@ export default function Settings() {
       faq_chat_button_label: settings.faq_chat_button_label,
       faq_chat_auth_username: settings.faq_chat_auth_username,
       faq_chat_auth_password: settings.faq_chat_auth_password,
+      faq_chat_bot_name: settings.faq_chat_bot_name,
     }).eq('id', settings.id);
     setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2000);
   };
@@ -242,7 +243,12 @@ export default function Settings() {
           <div>
             <label className="admin-label">n8n Webhook URL</label>
             <input type="url" className="admin-input" value={settings?.faq_chat_webhook_url || ''} onChange={(e) => updateSettings({ faq_chat_webhook_url: e.target.value || null })} placeholder="https://your-n8n.example.com/webhook/wedding-faq" />
-            <p className="text-xs text-[#8a7a66] mt-1">The chat box sends <code>{'{ session_id, name, message, name_on_card, tags }'}</code> as query params to this URL.</p>
+            <p className="text-xs text-[#8a7a66] mt-1">The chat box sends <code>{'{ session_id, name, message, name_on_card, tags, bot_name, table_number, party_name }'}</code> as query params to this URL.</p>
+          </div>
+          <div>
+            <label className="admin-label">Bot Name (optional)</label>
+            <input type="text" className="admin-input" value={settings?.faq_chat_bot_name || ''} onChange={(e) => updateSettings({ faq_chat_bot_name: e.target.value || null })} placeholder="Bella" />
+            <p className="text-xs text-[#8a7a66] mt-1">The assistant's name. Shown in the chat header and sent in the webhook payload.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
