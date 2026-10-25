@@ -65,7 +65,7 @@ export default function App() {
   const isFindTable = route.path === 'find-table';
 
   if (!isAdmin && !isCoordinator && settingsLoading) return null;
-  if (!isAdmin && !isCoordinator && !isInvitation && !isGuestPortal && !isFindTable && settings?.password_enabled && !pwGranted) {
+  if (!isAdmin && !isCoordinator && !isGuestPortal && !isFindTable && settings?.password_enabled && !pwGranted) {
     return <PasswordGate settings={settings} onGranted={() => setPwGranted(true)} />;
   }
 
