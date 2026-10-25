@@ -156,6 +156,7 @@ export default function PublicSite() {
   const [introOpen, setIntroOpen] = useState(true);
   const [doorOpen, setDoorOpen] = useState(false);
   const [doorOpening, setDoorOpening] = useState(false);
+  const [revealDone, setRevealDone] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const storyPageRef = useRef<Page | null>(null);
 
@@ -259,12 +260,13 @@ export default function PublicSite() {
       <DoorReveal
         open={introOpen || doorOpen}
         opening={doorOpening}
-        onDone={() => { setDoorOpen(false); setDoorOpening(false); setIntroOpen(false); }}
+        onDone={() => { setDoorOpen(false); setDoorOpening(false); setIntroOpen(false); setRevealDone(true); }}
         settings={settings}
       />
       <EnvelopeIntro
         open={introOpen}
         onClose={() => {
+          setRevealDone(false);
           setDoorOpen(true);
           setTimeout(() => setDoorOpening(true), 700);
         }}
@@ -383,7 +385,7 @@ export default function PublicSite() {
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
       )}
-      <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} />
+      <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} active={revealDone} />
       {settings.faq_chat_enabled && settings.faq_chat_webhook_url && (
         <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} botName={settings.faq_chat_bot_name} />
       )}
