@@ -265,6 +265,7 @@ export default function PublicSite() {
       />
       <EnvelopeIntro
         open={introOpen}
+        onOpen={() => setRevealDone(true)}
         onClose={() => {
           setRevealDone(false);
           setDoorOpen(true);

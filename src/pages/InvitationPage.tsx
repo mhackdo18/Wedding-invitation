@@ -316,6 +316,7 @@ export default function InvitationPage({ token }: { token: string }) {
       />
       <EnvelopeIntro
         open={introOpen}
+        onOpen={() => setRevealDone(true)}
         onClose={() => {
           setRevealDone(false);
           setDoorOpen(true);

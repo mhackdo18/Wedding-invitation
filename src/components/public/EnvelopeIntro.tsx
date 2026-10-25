@@ -7,8 +7,8 @@ import { useScrollLock } from '@/lib/useScrollLock';
 type Phase = 'closed' | 'releasing' | 'opening' | 'rising' | 'open' | 'closing';
 
 export default function EnvelopeIntro({
-  open, onClose, settings, guestName, partyName,
-}: { open: boolean; onClose: () => void; settings: SiteSettings; guestName?: string; partyName?: string }) {
+  open, onClose, onOpen, settings, guestName, partyName,
+}: { open: boolean; onClose: () => void; onOpen?: () => void; settings: SiteSettings; guestName?: string; partyName?: string }) {
   const [phase, setPhase] = useState<Phase>('closed');
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -59,6 +59,7 @@ export default function EnvelopeIntro({
     if (phase !== 'closed') return;
     timers.current.forEach(clearTimeout);
     setPhase('releasing');
+    onOpen?.();
     timers.current = [
       setTimeout(() => setPhase('opening'), 240),
       setTimeout(() => setPhase('rising'), 1300),
