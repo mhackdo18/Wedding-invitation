@@ -13,7 +13,7 @@ export default function FloatingMusicControl({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [muted, setMuted] = useState(false);
   const [ready, setReady] = useState(false);
-  const [userStarted, setUserStarted] = useState(false);
+  const startedRef = useRef(false);
 
   // Create / tear down the audio element whenever the URL changes.
   useEffect(() => {
@@ -23,6 +23,7 @@ export default function FloatingMusicControl({
     audio.preload = 'auto';
     audio.volume = 0.4;
     audioRef.current = audio;
+    startedRef.current = false;
 
     return () => {
       audio.pause();
@@ -30,11 +31,10 @@ export default function FloatingMusicControl({
     };
   }, [musicUrl]);
 
-  // Start playback only once `active` flips on (envelope + door finished).
-  // The preceding tap on the wax seal counts as the user gesture browsers
-  // require, so playback is allowed on mobile/tablet/desktop alike.
+  // Start playback once `active` flips on (wax seal pressed). After that,
+  // the track loops continuously and is not interrupted by the door reveal.
   useEffect(() => {
-    if (!musicUrl || !autoplay || !active || userStarted) return;
+    if (!musicUrl || !autoplay || !active || startedRef.current) return;
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -45,11 +45,10 @@ export default function FloatingMusicControl({
         .play()
         .then(() => {
           if (cancelled) return;
+          startedRef.current = true;
           setReady(true);
-          setUserStarted(true);
         })
         .catch(() => {
-          // Browser blocked autoplay — wait for an explicit user gesture.
           setReady(false);
         });
     };
@@ -60,8 +59,8 @@ export default function FloatingMusicControl({
         audioRef.current
           .play()
           .then(() => {
+            startedRef.current = true;
             setReady(true);
-            setUserStarted(true);
           })
           .catch(() => {});
       }
@@ -79,17 +78,7 @@ export default function FloatingMusicControl({
       document.removeEventListener('touchstart', onInteraction);
       document.removeEventListener('keydown', onInteraction);
     };
-  }, [musicUrl, autoplay, active, userStarted, muted]);
-
-  // When deactivated (e.g. envelope re-opens), pause playback.
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (!active) {
-      audio.pause();
-      setReady(false);
-    }
-  }, [active]);
+  }, [musicUrl, autoplay, active, muted]);
 
   if (!musicUrl) return null;
 
@@ -103,8 +92,8 @@ export default function FloatingMusicControl({
       audio
         .play()
         .then(() => {
+          startedRef.current = true;
           setReady(true);
-          setUserStarted(true);
         })
         .catch(() => {});
     } else if (next) {
