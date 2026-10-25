@@ -14,12 +14,12 @@ interface Snapshot {
 const BACKUP_TABLES = [
   'site_settings', 'pages', 'events', 'venues', 'gallery_photos',
   'story_milestones', 'entourage_members', 'rsvp_questions',
-  'email_settings', 'collaborators',
+  'email_settings', 'collaborators', 'tags',
 ] as const;
 
 const GUEST_TABLES = [
   'parties', 'guests', 'rsvp_answers', 'guest_event_rsvps',
-  'seating_tables', 'seat_assignments', 'invitations',
+  'seating_tables', 'seat_assignments', 'invitations', 'chat_messages',
 ] as const;
 
 const ALL_TABLES = [...BACKUP_TABLES, ...GUEST_TABLES] as const;
@@ -274,7 +274,7 @@ export default function BackupRestore({ onRestored }: { onRestored: () => void }
           </button>
         </div>
       </div>
-      <p className="text-xs text-[#8a7a66] mb-3">Download a complete backup to your computer — all database tables (settings, fonts, colors, pages, guests, RSVPs, events, venues, gallery, seating, invitations) plus all uploaded images (hero photos, gallery, monogram, venue photos, entourage). Upload a backup file to save it as a snapshot here, then use the Restore button to restore it anytime.</p>
+      <p className="text-xs text-[#8a7a66] mb-3">Download a complete backup to your computer — all database tables (settings, fonts, colors, pages, guests, RSVPs, events, venues, gallery, seating, invitations, guest tags, FAQ chat history) plus all uploaded images (hero photos, gallery, monogram, venue photos, entourage). Upload a backup file to save it as a snapshot here, then use the Restore button to restore it anytime.</p>
 
       {isBusy && (
         <div className="mb-4">
