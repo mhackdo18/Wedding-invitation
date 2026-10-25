@@ -325,6 +325,7 @@ export interface Page {
   config: Record<string, unknown>;
   hero_image_url: string | null;
   body_text: string | null;
+  visible_tags: string[];
   created_at: string;
   updated_at: string;
 }

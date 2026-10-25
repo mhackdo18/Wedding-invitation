@@ -196,7 +196,10 @@ export default function PublicSite() {
   const excludeWelcomeBorder = getBorderExcludeWelcomeFromTypography(settings.typography);
   const cardBg = getCardBg(settings.typography);
   const outerBg = getOuterBg(settings.typography);
-  const visiblePages = pages.filter((p) => p.is_visible).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+  const visiblePages = pages
+    .filter((p) => p.is_visible)
+    .filter((p) => !p.visible_tags || p.visible_tags.length === 0)
+    .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
   const mainEvents = events.filter((e) => !e.parent_id).map((e) => ({
     ...e,
     sub_events: events.filter((s) => s.parent_id === e.id),

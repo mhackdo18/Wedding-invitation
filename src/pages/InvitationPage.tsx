@@ -250,7 +250,14 @@ export default function InvitationPage({ token }: { token: string }) {
   const cardBg = getCardBg(settings.typography);
   const outerBg = getOuterBg(settings.typography);
   const rsvpGuests = partyMembers.length > 0 ? partyMembers : (guest ? [guest] : []);
-  const visiblePages = pages.filter((p) => p.is_visible).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+  const visiblePages = pages
+    .filter((p) => p.is_visible)
+    .filter((p) => {
+      if (!p.visible_tags || p.visible_tags.length === 0) return true;
+      if (!guest?.tags || guest.tags.length === 0) return false;
+      return p.visible_tags.some((t) => guest.tags.includes(t));
+    })
+    .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
   const mainEvents = events.filter((e) => !e.parent_id).map((e) => ({
     ...e,
     sub_events: events.filter((s) => s.parent_id === e.id),

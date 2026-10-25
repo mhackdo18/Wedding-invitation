@@ -173,9 +173,9 @@ function PagesTab() {
   const save = async (data: Partial<Page>) => {
     const config = { ...(data.config as object || {}), body_text: data.body_text || null };
     if (editing) {
-      await supabase.from('pages').update({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible, config }).eq('id', editing.id);
+      await supabase.from('pages').update({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible, visible_tags: data.visible_tags || [], config }).eq('id', editing.id);
     } else {
-      await supabase.from('pages').insert({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible ?? true, display_order: pages.length, config });
+      await supabase.from('pages').insert({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible ?? true, visible_tags: data.visible_tags || [], display_order: pages.length, config });
     }
     setAdding(false); setEditing(null); load();
   };
@@ -219,8 +219,9 @@ function PagesTab() {
 }
 
 function PageForm({ page, onCancel, onSave, existingSlugs }: { page: Page | null; onCancel: () => void; onSave: (d: Partial<Page>) => void; existingSlugs: string[] }) {
-  const [form, setForm] = useState<Partial<Page>>(page || { title: '', slug: '', template: 'custom', is_visible: true, body_text: (page?.config as any)?.body_text || '' });
+  const [form, setForm] = useState<Partial<Page>>(page || { title: '', slug: '', template: 'custom', is_visible: true, visible_tags: [], body_text: (page?.config as any)?.body_text || '' });
   const [slugError, setSlugError] = useState('');
+  const [tagInput, setTagInput] = useState('');
   const genSlug = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   // Initialize information config from existing page
@@ -262,6 +263,18 @@ function PageForm({ page, onCancel, onSave, existingSlugs }: { page: Page | null
             <InformationConfigEditor form={form} setForm={setForm} />
           )}
           <PageBackgroundEditor form={form} setForm={setForm} />
+          <div>
+            <label className="admin-label">Guest Tags (visibility)</label>
+            <p className="text-xs text-[#8a7a66] mb-1.5">Only show this section to guests with these tags. Leave empty to show to everyone. Tagged sections are hidden on the public site and shown only on invitation links for guests whose tags match.</p>
+            <TagInput
+              tags={form.visible_tags || []}
+              onAdd={(t) => { if (!(form.visible_tags || []).includes(t)) setForm({ ...form, visible_tags: [...(form.visible_tags || []), t] }); setTagInput(''); }}
+              onRemove={(t) => setForm({ ...form, visible_tags: (form.visible_tags || []).filter((x) => x !== t) })}
+              input={tagInput}
+              setInput={setTagInput}
+              placeholder="VIP, Family, Bridal Party..."
+            />
+          </div>
           <label className="flex items-center gap-2 text-sm text-[#5a4430]">
             <input type="checkbox" checked={form.is_visible ?? true} onChange={(e) => setForm({ ...form, is_visible: e.target.checked })} className="accent-[#8a6d3b]" />
             Visible on public site
