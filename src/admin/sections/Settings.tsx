@@ -2,13 +2,12 @@ import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { SectionHeader, Card, ConfirmButton } from '../ui';
 import type { Collaborator, SiteSettings } from '@/types';
-import { Shield, Users, Plus, Loader2, Trash2, X, Lock, Unlock, Mail, Upload, Image as ImageIcon, Sparkles, Globe, MessageCircle } from 'lucide-react';
+import { Shield, Users, Plus, Loader2, Trash2, X, Lock, Unlock, Mail, Upload, Image as ImageIcon, Sparkles, MessageCircle } from 'lucide-react';
 import { uploadImage } from '@/lib/upload';
 import { FontSelect } from '@/components/admin/FontSelect';
 import { UploadProgress } from '@/components/admin/UploadProgress';
 import { stackFor } from '@/lib/fonts';
 import BackupRestore from './BackupRestore';
-import { getTimezoneOptions } from '@/lib/timezone';
 
 export default function Settings() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
@@ -213,14 +212,6 @@ export default function Settings() {
           <p className="text-sm font-semibold mb-2" style={{ fontFamily: stackFor(settings?.portal_text_font || 'Cormorant Garamond'), color: settings?.portal_text_color || '#3a2e22' }}>Add Yourself to Our Guest List</p>
           <button className="px-4 py-2 text-sm font-semibold rounded-lg" style={{ background: settings?.portal_button_bg_color || '#8a6d3b', color: settings?.portal_button_text_color || '#fff' }}>Add Me to the Guest List</button>
         </div>
-      </Card>
-
-      <Card className="mb-4">
-        <h3 className="font-semibold text-[#3a2e22] mb-3 flex items-center gap-2"><Globe size={16} className="text-[#8a6d3b]" /> Timezone</h3>
-        <p className="text-xs text-[#8a7a66] mb-3">All RSVP submission timestamps in the guest list will be displayed in this timezone so every guest's time is consistent regardless of where they submitted from.</p>
-        <select className="admin-input" value={settings?.timezone || 'UTC'} onChange={(e) => updateSettings({ timezone: e.target.value })}>
-          {getTimezoneOptions().map((tz) => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
-        </select>
       </Card>
 
       <Card className="mb-4">

@@ -38,6 +38,59 @@ export function isRsvpClosed(deadline: string | null, timezone: string | null): 
   return new Date().getTime() >= new Date(deadline).getTime();
 }
 
+// Convert a local "YYYY-MM-DDTHH:MM" string (as produced by a datetime-local input)
+// into a UTC ISO string, interpreting the wall-clock time in the given timezone.
+// This ensures the stored deadline represents the moment the coordinator intended.
+export function localToUtcIso(localString: string, timezone: string | null): string {
+  const tz = timezone || 'UTC';
+  const naive = new Date(localString + ':00'); // interpreted as UTC by Date when no offset
+  if (isNaN(naive.getTime())) return new Date(localString).toISOString();
+  try {
+    // Find the offset of `timezone` at this wall-clock time by formatting a reference
+    // instant and measuring the difference.
+    const asUtc = naive.getTime();
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+    }).formatToParts(naive);
+    const get = (t: string) => parts.find((p) => p.type === t)?.value || '0';
+    const reassembled = Date.UTC(
+      parseInt(get('year'), 10),
+      parseInt(get('month'), 10) - 1,
+      parseInt(get('day'), 10),
+      (parseInt(get('hour'), 10) === 24 ? 0 : parseInt(get('hour'), 10)),
+      parseInt(get('minute'), 10),
+      parseInt(get('second'), 10),
+    );
+    const offset = asUtc - reassembled;
+    return new Date(asUtc + offset).toISOString();
+  } catch {
+    return naive.toISOString();
+  }
+}
+
+// Inverse of localToUtcIso: render a stored UTC ISO deadline back into the
+// "YYYY-MM-DDTHH:MM" format a datetime-local input expects, shown in the given timezone.
+export function utcToLocalInput(isoString: string | null, timezone: string | null): string {
+  if (!isoString) return '';
+  const tz = timezone || 'UTC';
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return '';
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false,
+    }).formatToParts(d);
+    const get = (t: string) => parts.find((p) => p.type === t)?.value || '0';
+    const hh = get('hour') === '24' ? '00' : get('hour');
+    return `${get('year')}-${get('month')}-${get('day')}T${hh}:${get('minute')}`;
+  } catch {
+    return d.toISOString().slice(0, 16);
+  }
+}
+
 export function formatDeadlineLong(deadline: string | null, timezone: string | null): string {
   if (!deadline) return '';
   return formatInTimezone(deadline, timezone, { dateStyle: 'long', timeStyle: 'short' });

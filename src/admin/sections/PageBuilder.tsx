@@ -12,6 +12,7 @@ import { UploadProgress } from '@/components/admin/UploadProgress';
 import TagInput from '@/components/admin/TagInput';
 import { PAGE_BORDER_TEMPLATES, getBorderFromTypography, setBorderInTypography, getBorderColorFromTypography, setBorderColorInTypography, getBorderThicknessFromTypography, setBorderThicknessInTypography, getBorderTemplate, getBorderPaddingFromTypography, setBorderPaddingInTypography, getBorderExcludeWelcomeFromTypography, setBorderExcludeWelcomeInTypography, getCardBg, setCardBg, getOuterBg, setOuterBg } from '@/lib/pageTemplates';
 import type { BgPhotoConfig } from '@/lib/pageTemplates';
+import { getTimezoneOptions, localToUtcIso, utcToLocalInput } from '@/lib/timezone';
 
 const TYPO_KEYS = [
   { key: 'pageTitle', label: 'Page Title' },
@@ -413,7 +414,7 @@ function StylingTab() {
       hero_image_url: draft.hero_image_url,
       page_color: draft.page_color, bg_color: draft.bg_color,
       page_width: draft.page_width, heading_font: draft.heading_font, body_font: draft.body_font,
-      typography: draft.typography, rsvp_intro: draft.rsvp_intro, rsvp_deadline: draft.rsvp_deadline,
+      typography: draft.typography, rsvp_intro: draft.rsvp_intro, rsvp_deadline: draft.rsvp_deadline, timezone: draft.timezone,
       show_rsvp_button: draft.show_rsvp_button, show_rsvp_on_welcome: draft.show_rsvp_on_welcome, show_rsvp_in_navigation: draft.show_rsvp_in_navigation, show_rsvp_section: draft.show_rsvp_section,
       show_rsvp_on_welcome_public: draft.show_rsvp_on_welcome_public, show_rsvp_in_navigation_public: draft.show_rsvp_in_navigation_public, show_rsvp_section_public: draft.show_rsvp_section_public,
       welcome_layout: draft.welcome_layout,
@@ -481,7 +482,14 @@ function StylingTab() {
             <h3 className="font-semibold text-[#3a2e22] mb-3">RSVP &amp; Welcome</h3>
             <div className="space-y-3">
               <div><label className="admin-label">RSVP Intro Text</label><input className="admin-input" value={draft.rsvp_intro || ''} onChange={(e) => update({ rsvp_intro: e.target.value })} /></div>
-              <div><label className="admin-label">RSVP Deadline</label><input type="datetime-local" className="admin-input" value={draft.rsvp_deadline ? new Date(draft.rsvp_deadline).toISOString().slice(0, 16) : ''} onChange={(e) => update({ rsvp_deadline: e.target.value ? new Date(e.target.value).toISOString() : null })} /><p className="text-xs text-[#8a7a66] mt-1">Shown to guests above the RSVP form. Once this deadline passes (in your selected timezone under Settings), RSVP submissions will be automatically closed.</p></div>
+              <div><label className="admin-label">RSVP Deadline</label><input type="datetime-local" className="admin-input" value={utcToLocalInput(draft.rsvp_deadline, draft.timezone)} onChange={(e) => update({ rsvp_deadline: e.target.value ? localToUtcIso(e.target.value, draft.timezone) : null })} /><p className="text-xs text-[#8a7a66] mt-1">Shown to guests above the RSVP form. Once this deadline passes (in the timezone selected below), RSVP submissions will be automatically closed.</p></div>
+              <div>
+                <label className="admin-label">Timezone</label>
+                <select className="admin-input" value={draft.timezone || 'UTC'} onChange={(e) => update({ timezone: e.target.value })}>
+                  {getTimezoneOptions().map((tz) => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
+                </select>
+                <p className="text-xs text-[#8a7a66] mt-1">Used for the RSVP deadline and for displaying RSVP submission timestamps consistently in the guest list.</p>
+              </div>
               <div className="pt-1">
                 <p className="text-xs text-[#8a7a66] mb-2">Control where the RSVP button and section appear. Per-guest settings apply to each guest&rsquo;s personal invitation; Public settings apply to the shared public website.</p>
                 <div className="grid grid-cols-2 gap-3">
