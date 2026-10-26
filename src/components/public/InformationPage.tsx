@@ -7,29 +7,15 @@ import HeroImage from '@/components/public/HeroImage';
 import { Reveal } from '@/components/public/Reveal';
 
 function BlockColumn({ block, typo, col }: { block: InformationBlock; typo: Record<string, TypeStyle>; col: 1 | 2 }) {
-  const subheading = col === 1 ? block.subheading : block.subheading2;
   const bodyHtml = col === 1 ? block.body_html : block.body2_html;
   const photoUrl = col === 1 ? block.photo_url : block.photo2_url;
-  const subFontFamily = col === 1 ? block.subheading_font_family : block.subheading2_font_family;
-  const subFontColor = col === 1 ? block.subheading_font_color : block.subheading2_font_color;
-  const subFontSize = col === 1 ? block.subheading_font_size : block.subheading2_font_size;
   const bodyFontFamily = col === 1 ? block.body_font_family : block.body2_font_family;
   const bodyFontColor = col === 1 ? block.body_font_color : block.body2_font_color;
   const bodyFontSize = col === 1 ? block.body_font_size : block.body2_font_size;
 
   return (
     <div>
-      <div className="p-4">
-        {subheading && (
-          <p style={{
-            fontFamily: subFontFamily ? stackFor(subFontFamily) : 'var(--body-font)',
-            fontSize: subFontSize ? fluidPx(subFontSize) : fluidPx(14),
-            color: subFontColor || '#a0927e',
-            margin: '0 0 8px',
-            textAlign: 'center',
-          }}
-            dangerouslySetInnerHTML={{ __html: subheading }} />
-        )}
+      <div className="p-3">
         {bodyHtml && (
           <div
             style={{ ...typeStyle(typo.storyBody), fontFamily: bodyFontFamily ? stackFor(bodyFontFamily) : undefined, fontSize: bodyFontSize ? fluidPx(bodyFontSize) : fluidPx(14), lineHeight: 1.7, color: bodyFontColor || '#6b5d4f' }}
@@ -68,7 +54,7 @@ export default function InformationPage({ pageId, typo, heroImageUrl, guestTags,
 
   return (
     <section className="px-6 py-8">
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.pageTitle?.color || '#c9b896' }} />
           <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>
@@ -80,7 +66,7 @@ export default function InformationPage({ pageId, typo, heroImageUrl, guestTags,
 
       <HeroImage url={heroImageUrl || ''} alt={config.title || 'Information'} />
 
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-2xl mx-auto space-y-4">
         {visibleBlocks.map((block, i) => (
           <Reveal
             key={i}
@@ -90,7 +76,7 @@ export default function InformationPage({ pageId, typo, heroImageUrl, guestTags,
             className="information-block-emboss overflow-hidden"
           >
             {/* Main header bar — renders the block heading with heading style */}
-            <div style={{ background: 'transparent', padding: '14px 24px', textAlign: 'center' }}>
+            <div style={{ background: 'transparent', padding: '10px 20px', textAlign: 'center' }}>
               {block.heading ? (
                 <div
                   style={{
