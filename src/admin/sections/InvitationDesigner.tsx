@@ -118,6 +118,7 @@ export default function InvitationDesigner() {
         from_name: emailCfg.from_name, subject_line: emailCfg.subject_line, email_body: emailCfg.email_body,
         site_url: emailCfg.site_url, email_photo_url: emailCfg.email_photo_url,
         email_body_html: emailCfg.email_body_html, invitation_button_label: emailCfg.invitation_button_label,
+        preheader_text: emailCfg.preheader_text,
         email_attachments: emailCfg.email_attachments,
         updated_at: new Date().toISOString(),
       }).eq('id', emailCfg.id);
@@ -642,6 +643,22 @@ export default function InvitationDesigner() {
           <Card>
             <h3 className="font-semibold text-[#3a2e22] mb-3">Email Subject</h3>
             <input className="admin-input" value={emailCfg.subject_line || ''} onChange={(e) => updEmail({ subject_line: e.target.value })} placeholder={`You're Invited — ${draft.partner1_name} & ${draft.partner2_name}`} />
+          </Card>
+
+          <Card>
+            <h3 className="font-semibold text-[#3a2e22] mb-3">Preheader Text</h3>
+            <p className="text-xs text-[#8a7a66] mb-3">This short preview line appears in the recipient's inbox list, right after the subject line, before they open the email. Keep it under 100 characters for best results.</p>
+            <input className="admin-input" maxLength={120} value={emailCfg.preheader_text || ''} onChange={(e) => updEmail({ preheader_text: e.target.value })} placeholder="You're cordially invited to celebrate our special day..." />
+          </Card>
+
+          <Card>
+            <h3 className="font-semibold text-[#3a2e22] mb-3">Deliverability Tips</h3>
+            <ul className="text-xs text-[#8a7a66] space-y-1.5 list-disc list-inside">
+              <li>Use a <strong>From Email</strong> domain that matches your SMTP login (e.g. your Gmail address or a domain you own and have authenticated for sending). Mismatched domains trigger spam filters in Gmail and Outlook.</li>
+              <li>For Gmail, use an <strong>App Password</strong>, not your regular password. For Outlook/Microsoft 365, enable "Authenticated SMTP" in the admin center.</li>
+              <li>Keep your guest list to reasonable batches. Sending hundreds at once from a personal account can trigger rate limits.</li>
+              <li>The email body, subject, and preheader should all relate to your wedding — spam filters check for consistency between them.</li>
+            </ul>
           </Card>
 
           <Card>

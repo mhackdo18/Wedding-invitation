@@ -23,6 +23,7 @@ interface EmailConfig {
   email_body_html: string | null;
   invitation_button_label: string | null;
   email_attachments: { name: string; url: string }[] | null;
+  preheader_text: string | null;
 }
 
 async function createTransporter(cfg: EmailConfig) {
@@ -62,7 +63,36 @@ function replaceTags(
     .replace(/\{\{rsvp_link\}\}/g, rsvpLink);
 }
 
-const PARAGRAPH_MARGIN = 'margin:0;'
+const PARAGRAPH_MARGIN = 'margin:0;';
+
+function sanitizeHtml(html: string): string {
+  let result = html;
+  result = result.replace(/<script[\s\S]*?<\/script>/gi, '');
+  result = result.replace(/<style[\s\S]*?<\/style>/gi, '');
+  result = result.replace(/<form[\s\S]*?<\/form>/gi, '');
+  result = result.replace(/<iframe[\s\S]*?<\/iframe>/gi, '');
+  result = result.replace(/<object[\s\S]*?<\/object>/gi, '');
+  result = result.replace(/<embed[\s\S]*?<\/embed>/gi, '');
+  result = result.replace(/\son\w+\s*=\s*"[^"]*"/gi, '');
+  result = result.replace(/\son\w+\s*=\s*'[^']*'/gi, '');
+  result = result.replace(/\son\w+\s*=\s*[^\s>]+/gi, '');
+  result = result.replace(/href\s*=\s*"javascript:[^"]*"/gi, 'href="#"');
+  result = result.replace(/href\s*=\s*'javascript:[^']*'/gi, "href='#'");
+  result = result.replace(/src\s*=\s*"javascript:[^"]*"/gi, 'src=""');
+  result = result.replace(/src\s*=\s*'javascript:[^']*'/gi, "src=''");
+  result = result.replace(/<img(?![^>]*\balt=)/gi, '<img alt=" "');
+  return result;
+}
+
+function absolutizeLinks(html: string, siteUrl: string): string {
+  if (!siteUrl) return html;
+  const base = siteUrl.replace(/\/+$/, '');
+  let result = html.replace(/href\s*=\s*"(\/[^"]*)"/gi, (_m, p: string) => `href="${base}${p}"`);
+  result = result.replace(/href\s*=\s*'(\/[^']*)'/gi, (_m, p: string) => `href='${base}${p}'`);
+  result = result.replace(/href\s*=\s*"(#[^"]*)"/gi, (_m, p: string) => `href="${base}${p}"`);
+  result = result.replace(/href\s*=\s*'(#[^']*)'/gi, (_m, p: string) => `href='${base}${p}'`);
+  return result;
+}
 
 function normalizeBodyHtml(html: string): string {
   let result = html;
@@ -71,7 +101,6 @@ function normalizeBodyHtml(html: string): string {
   result = result.replace(/<br\s*\/?>\s*<br\s*\/?>/gi, '\n\n');
 
   // Convert <div> tags with text-align into <p> tags, preserving alignment
-  // For divs without text-align, unwrap them (move content out)
   let prev: string;
   do {
     prev = result;
@@ -101,11 +130,32 @@ function normalizeBodyHtml(html: string): string {
 
   // Ensure every <p> tag has the margin style
   result = result.replace(/<p(?![^>]*\bmargin\b)/gi, `<p style="${PARAGRAPH_MARGIN}"`);
-
-  // Ensure <p> tags that already have a style but no margin get the margin added
   result = result.replace(/<p\s+style="([^"]*?)"(?![^>]*\bmargin\b)/gi, `<p style="$1${PARAGRAPH_MARGIN}"`);
 
   return result;
+}
+
+function escapeHtml(str: string): string {
+  return (str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function htmlToText(html: string): string {
+  return (html || '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 function buildEmailHtml(
@@ -140,30 +190,67 @@ function buildEmailHtml(
 
   rawBody = rawBody.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
+  // Sanitize and absolutize before normalizing
+  rawBody = sanitizeHtml(rawBody);
+  rawBody = absolutizeLinks(rawBody, cfg.site_url || '');
+
   const bodyHtml = normalizeBodyHtml(rawBody);
 
   const photoHtml = cfg.email_photo_url
-    ? `<img src="${cfg.email_photo_url}" alt="" style="width:100%;max-height:300px;object-fit:contain;margin:24px 0 0;" />`
+    ? `<img src="${cfg.email_photo_url}" alt="Wedding photo" style="width:100%;max-height:300px;object-fit:contain;margin:24px 0 0;" />`
     : "";
 
   const rsvpBtn = rsvpLink
     ? `<div style="text-align:center;margin:28px 0 8px;">
-         <a href="${rsvpLink}" style="display:inline-block;padding:12px 36px;background:#3a3a3a;color:#ffffff;text-decoration:none;font-size:14px;font-weight:normal;font-family:Georgia,serif;border-radius:4px;">${cfg.invitation_button_label || 'Open your invitation'}</a>
+         <a href="${rsvpLink}" style="display:inline-block;padding:12px 36px;background:#3a3a3a;color:#ffffff;text-decoration:none;font-size:14px;font-weight:normal;font-family:Georgia,serif;border-radius:4px;">${escapeHtml(cfg.invitation_button_label || 'Open your invitation')}</a>
        </div>`
     : "";
 
-  return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f5f3ef;font-family:Georgia,'Times New Roman',serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f3ef;padding:24px 0;">
-<tr><td align="center">
-<table width="500" cellpadding="0" cellspacing="0" style="max-width:500px;width:100%;">
+  const preheader = (cfg.preheader_text || '').trim();
+  const preheaderHtml = preheader
+    ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;font-size:1px;line-height:1px;color:#f5f3ef;background:#f5f3ef;">${escapeHtml(preheader)}</div>`
+    : '';
 
-<tr><td style="background:#f0ebe3;padding:18px 30px;text-align:center;">
+  const replyEmail = cfg.from_email || cfg.smtp_user || '';
+  const footerHtml = replyEmail
+    ? `<tr><td style="background:#f0ebe3;padding:14px 30px;text-align:center;">
+         <p style="margin:0;font-size:11px;color:#9a8a76;font-family:Georgia,serif;line-height:1.5;">This is a personal wedding invitation sent via our wedding website. If you received this in error, please reply to ${escapeHtml(replyEmail)}.</p>
+       </td></tr>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>${escapeHtml(cfg.subject_line || 'Wedding Invitation')}</title>
+<!--[if mso]>
+<style type="text/css">
+table,td{font-family:Georgia,'Times New Roman',serif !important;}
+</style>
+<![endif]-->
+<style>
+@media only screen and (max-width:520px){
+  .email-container{width:100% !important;}
+  .email-content{padding:24px 20px !important;}
+  .email-header{padding:14px 20px !important;}
+  .email-footer{padding:12px 20px !important;}
+}
+</style>
+</head>
+<body style="margin:0;padding:0;background:#f5f3ef;font-family:Georgia,'Times New Roman',serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+${preheaderHtml}
+<table width="100%" cellpadding="0" cellspacing="0" border="0" role="article" style="background:#f5f3ef;padding:24px 0;">
+<tr><td align="center">
+<table class="email-container" width="500" cellpadding="0" cellspacing="0" border="0" style="max-width:500px;width:100%;">
+
+<tr><td class="email-header" style="background:#f0ebe3;padding:18px 30px;text-align:center;">
   <span style="font-size:13px;color:${waxSealColor};font-family:Georgia,serif;font-style:italic;">You're invited</span>
 </td></tr>
 
-<tr><td style="background:#ffffff;padding:40px 36px 32px;border-left:1px solid #e8e2d8;border-right:1px solid #e8e2d8;">
+<tr><td class="email-content" style="background:#ffffff;padding:40px 36px 32px;border-left:1px solid #e8e2d8;border-right:1px solid #e8e2d8;">
 
   <div style="text-align:center;margin:0 0 28px;">
     <div style="width:40px;height:2px;background:#c9bfae;margin:0 auto;"></div>
@@ -183,6 +270,8 @@ function buildEmailHtml(
   <span style="color:${waxSealColor};font-size:16px;">&#10022;</span>
 </td></tr>
 
+${footerHtml}
+
 </table>
 </td></tr>
 </table>
@@ -201,9 +290,9 @@ function buildPlainText(
   gatePassword: string,
   nameOnCard: string
 ): string {
-  let rawBody = cfg.email_body
+  let rawBody = cfg.email_body_html
     ? replaceTags(
-        cfg.email_body,
+        cfg.email_body_html,
         guestName,
         partner1,
         partner2,
@@ -217,12 +306,36 @@ function buildPlainText(
     : `Dear ${guestName},\n\nYou are cordially invited to celebrate the wedding of ${partner1} & ${partner2}${weddingDate ? ` on ${weddingDate}` : ""}.\n\nWe would be honoured by your presence.\n\nWith all our love,\n\n${partner1} & ${partner2}`;
 
   rawBody = rawBody.replace(/\*\*(.+?)\*\*/g, '$1');
-  rawBody = rawBody.replace(/<[^>]+>/g, '');
+  let text = htmlToText(rawBody);
 
   if (rsvpLink) {
-    rawBody += `\n\n${cfg.invitation_button_label || 'Open your invitation'}: ${rsvpLink}`;
+    text += `\n\n${cfg.invitation_button_label || 'Open your invitation'}: ${rsvpLink}`;
   }
-  return rawBody;
+
+  const replyEmail = cfg.from_email || cfg.smtp_user || '';
+  if (replyEmail) {
+    text += `\n\nThis is a personal wedding invitation sent via our wedding website. If you received this in error, please reply to ${replyEmail}.`;
+  }
+
+  return text.trim();
+}
+
+function buildMessageId(fromEmail: string): string {
+  const domain = (fromEmail || '').split('@')[1] || 'localhost';
+  const token = crypto.randomUUID();
+  return `<${token}@${domain}>`;
+}
+
+function buildHeaders(cfg: EmailConfig): Record<string, string> {
+  const replyEmail = cfg.from_email || cfg.smtp_user || '';
+  return {
+    "X-Priority": "3",
+    "X-Mailer": "Wedding Invitation Platform",
+    "List-Unsubscribe": `<mailto:${replyEmail}>`,
+    "List-Unsubscribe-Post": "List-Unsubscribe=one-click",
+    "X-Auto-Response-Suppress": "All",
+    "Message-ID": buildMessageId(replyEmail),
+  };
 }
 
 Deno.serve(async (req: Request) => {
@@ -318,13 +431,7 @@ Deno.serve(async (req: Request) => {
           to: test_email,
           subject: cfg.subject_line || "Wedding invitation test",
           replyTo: cfg.from_email || cfg.smtp_user,
-          headers: {
-            "X-Priority": "3",
-            "X-Mailer": "Wedding Invitation Platform",
-            "List-Unsubscribe": `<mailto:${cfg.from_email || cfg.smtp_user}>`,
-            "Auto-Submitted": "auto-generated",
-            "X-Auto-Response-Suppress": "All",
-          },
+          headers: buildHeaders(cfg),
           text: buildPlainText(
             cfg,
             "Sample Guest",
@@ -614,13 +721,7 @@ async function sendToGuests(
           cfg.subject_line ||
           `You're invited to ${partner1} & ${partner2}'s wedding`,
         replyTo: cfg.from_email || cfg.smtp_user,
-        headers: {
-          "X-Priority": "3",
-          "X-Mailer": "Wedding Invitation Platform",
-          "List-Unsubscribe": `<mailto:${cfg.from_email || cfg.smtp_user}>`,
-          "Auto-Submitted": "auto-generated",
-          "X-Auto-Response-Suppress": "All",
-        },
+        headers: buildHeaders(cfg),
         text,
         html,
         attachments: (cfg.email_attachments || []).map((a) => ({

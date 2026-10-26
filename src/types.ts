@@ -301,6 +301,7 @@ export interface EmailSettings {
   email_body_html: string | null;
   invitation_button_label: string;
   email_attachments: EmailAttachment[];
+  preheader_text: string | null;
   created_at: string;
   updated_at: string;
 }
