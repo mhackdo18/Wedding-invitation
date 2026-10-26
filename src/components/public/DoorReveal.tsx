@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { SiteSettings } from '@/types';
 import { stackFor } from '@/lib/fonts';
 import { useScrollLock } from '@/lib/useScrollLock';
+import { formatInTimezone } from '@/lib/timezone';
 
 type DoorPhase = 'closed' | 'opening' | 'done';
 export type DoorStyle = 'classic' | 'arched' | 'paneled' | 'rustic' | 'modern' | 'curtain' | 'curtain-side' | 'royal' | 'glass' | 'velvet' | 'wrought-iron' | 'marble' | 'cathedral' | 'lace' | 'gilded' | 'stone' | 'bamboo';
@@ -484,7 +485,7 @@ export default function DoorReveal({
                 opacity: 0.6,
               }}
             >
-              {new Date(settings.wedding_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              {formatInTimezone(settings.wedding_date, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })}
             </p>
           )}
           <div className="mt-6 flex items-center gap-2" style={{ opacity: 0.5 }}>
@@ -617,7 +618,7 @@ export default function DoorReveal({
                 opacity: 0.6,
               }}
             >
-              {new Date(settings.wedding_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              {formatInTimezone(settings.wedding_date, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })}
             </p>
           )}
           <div className="mt-6 flex items-center gap-2" style={{ opacity: 0.5 }}>
@@ -766,7 +767,7 @@ export default function DoorReveal({
               opacity: 0.6,
             }}
           >
-            {new Date(settings.wedding_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            {formatInTimezone(settings.wedding_date, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
         )}
         <div className="mt-6 flex items-center gap-2" style={{ opacity: 0.5 }}>

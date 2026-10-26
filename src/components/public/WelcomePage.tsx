@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { SiteSettings, TypeStyle } from '@/types';
 import { typeStyle, fluidFontSize, fluidPx } from '@/lib/typography';
 import { stackFor } from '@/lib/fonts';
+import { formatWeddingDate, formatDeadlineDate } from '@/lib/timezone';
 
 function resolveTypo(
   typoStyle: TypeStyle | undefined,
@@ -40,9 +41,7 @@ export default function WelcomePage({
   const mins = Math.floor((diff % 3600000) / 60000);
   const secs = Math.floor((diff % 60000) / 1000);
 
-  const dateStr = settings.wedding_date
-    ? new Date(settings.wedding_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-    : '';
+  const dateStr = formatWeddingDate(settings.wedding_date, settings.timezone);
 
   const layout = settings.welcome_layout || 'centered';
 
@@ -107,7 +106,7 @@ export default function WelcomePage({
         RSVP DEADLINE
       </p>
       <p className="text-sm font-semibold" style={{ color: '#8a6d3b', ...rsvpDeadlineStyle }}>
-        {new Date(settings.rsvp_deadline).toLocaleDateString([], { dateStyle: 'long' })}
+        {formatDeadlineDate(settings.rsvp_deadline, settings.timezone)}
       </p>
     </div>
   ) : null;

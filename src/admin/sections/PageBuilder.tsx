@@ -455,7 +455,7 @@ function StylingTab() {
             <div><label className="admin-label">Partner 1</label><input className="admin-input" value={draft.partner1_name} onChange={(e) => update({ partner1_name: e.target.value })} /></div>
             <div><label className="admin-label">Partner 2</label><input className="admin-input" value={draft.partner2_name} onChange={(e) => update({ partner2_name: e.target.value })} /></div>
           </div>
-          <div><label className="admin-label">Wedding Date &amp; Time</label><input type="datetime-local" className="admin-input" value={draft.wedding_date ? new Date(draft.wedding_date).toISOString().slice(0, 16) : ''} onChange={(e) => update({ wedding_date: e.target.value ? new Date(e.target.value).toISOString() : null })} /></div>
+          <div><label className="admin-label">Wedding Date &amp; Time</label><input type="datetime-local" className="admin-input" value={utcToLocalInput(draft.wedding_date, draft.timezone)} onChange={(e) => update({ wedding_date: e.target.value ? localToUtcIso(e.target.value, draft.timezone) : null })} /><p className="text-xs text-[#8a7a66] mt-1">Interpreted in the timezone selected below (e.g. 15:00 UTC+8 becomes 07:00 UTC). The countdown each guest sees counts down to this moment from their own local time.</p></div>
           <div><label className="admin-label">Venue Line (hero)</label><input className="admin-input" value={draft.venue_line || ''} onChange={(e) => update({ venue_line: e.target.value })} /></div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="admin-label">Pre-title Text</label><input className="admin-input" value={draft.hero_pretitle_text ?? ''} onChange={(e) => update({ hero_pretitle_text: e.target.value || null })} placeholder="Together with their families" /><p className="text-xs text-[#8a7a66] mt-1">Leave blank for default</p></div>
@@ -486,13 +486,9 @@ function StylingTab() {
               <div>
                 <label className="admin-label">Timezone</label>
                 <select className="admin-input" value={draft.timezone || 'UTC'} onChange={(e) => update({ timezone: e.target.value })}>
-                  {getTimezoneOptions().map((tz) =>
-                    tz.value.startsWith('__group__')
-                      ? <optgroup key={tz.value} label={tz.label.replace(/^—\s*|\s*—$/g, '')} />
-                      : <option key={tz.value} value={tz.value}>{tz.label}</option>
-                  )}
+                  {getTimezoneOptions().map((tz) => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
                 </select>
-                <p className="text-xs text-[#8a7a66] mt-1">Used for the RSVP deadline and for displaying RSVP submission timestamps consistently in the guest list.</p>
+                <p className="text-xs text-[#8a7a66] mt-1">Used for the RSVP deadline and for wedding date timezone.</p>
               </div>
               <div className="pt-1">
                 <p className="text-xs text-[#8a7a66] mb-2">Control where the RSVP button and section appear. Per-guest settings apply to each guest&rsquo;s personal invitation; Public settings apply to the shared public website.</p>

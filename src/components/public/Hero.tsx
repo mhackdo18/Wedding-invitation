@@ -1,14 +1,11 @@
 import type { SiteSettings, TypeStyle } from '@/types';
 import { typeStyle, fluidPx } from '@/lib/typography';
+import { formatWeddingDate } from '@/lib/timezone';
 
 export default function Hero({
   settings, typo,
 }: { settings: SiteSettings; typo: Record<string, TypeStyle> }) {
-  const dateStr = settings.wedding_date
-    ? new Date(settings.wedding_date).toLocaleDateString('en-US', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-      })
-    : '';
+  const dateStr = formatWeddingDate(settings.wedding_date, settings.timezone);
 
   return (
     <header className="text-center px-6 pt-12 pb-8 relative overflow-hidden">

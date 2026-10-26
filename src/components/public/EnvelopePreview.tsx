@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { RotateCcw } from 'lucide-react';
 import type { SiteSettings } from '@/types';
 import { stackFor } from '@/lib/fonts';
+import { formatInTimezone } from '@/lib/timezone';
 
 type Phase = 'closed' | 'releasing' | 'opening' | 'rising' | 'open';
 
@@ -105,7 +106,10 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
   const weddingDate = settings.wedding_date ? new Date(settings.wedding_date) : null;
   const rsvpDeadlineDate = settings.rsvp_deadline ? new Date(settings.rsvp_deadline) : null;
   const rsvpDeadlineStr = rsvpDeadlineDate
-    ? rsvpDeadlineDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    ? formatInTimezone(settings.rsvp_deadline, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })
+    : '';
+  const weddingDateStr = weddingDate
+    ? formatInTimezone(settings.wedding_date, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })
     : '';
   const bodyText = (settings.invitation_paper_body || `Dear Guest,\n\nWe joyfully request the pleasure of your company as we celebrate our union.`)
     .replace(/\{\{guest_name\}\}/g, 'Sample Guest')
@@ -113,7 +117,7 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
     .replace(/\{\{partner1_name\}\}/g, settings.partner1_name)
     .replace(/\{\{partner2_name\}\}/g, settings.partner2_name)
     .replace(/\{\{rsvp_deadline\}\}/g, rsvpDeadlineStr)
-    .replace(/\{\{wedding_date\}\}/g, weddingDate ? weddingDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '')
+    .replace(/\{\{wedding_date\}\}/g, weddingDateStr)
     .replace(/\{\{party_name\}\}/g, 'The Smith Family')
     .replace(/\{\{gate_password\}\}/g, settings.public_password || '')
     .replace(/\{\{rsvp_link\}\}/g, '#');
@@ -231,7 +235,7 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
               )}
               {weddingDate && (
                 <p style={{ fontSize: 11, color: paperText, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-                  {weddingDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                  {formatInTimezone(settings.wedding_date, settings.timezone, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                 </p>
               )}
               {rsvpDeadlineDate && (

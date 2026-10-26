@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { RotateCcw } from 'lucide-react';
 import type { SiteSettings } from '@/types';
 import { stackFor } from '@/lib/fonts';
+import { formatDeadlineDate, formatWeddingDate } from '@/lib/timezone';
 import { useScrollLock } from '@/lib/useScrollLock';
 
 type Phase = 'closed' | 'releasing' | 'opening' | 'rising' | 'open' | 'closing';
@@ -32,10 +33,10 @@ export default function EnvelopeIntro({
   const initials = `${(settings.partner1_name || 'A')[0] || ''}${(settings.partner2_name || 'B')[0] || ''}`;
 
   const rsvpDeadline = settings.rsvp_deadline
-    ? new Date(settings.rsvp_deadline).toLocaleDateString([], { dateStyle: 'long' })
+    ? formatDeadlineDate(settings.rsvp_deadline, settings.timezone)
     : '';
   const weddingDateStr = settings.wedding_date
-    ? new Date(settings.wedding_date).toLocaleDateString([], { dateStyle: 'long' })
+    ? formatWeddingDate(settings.wedding_date, settings.timezone)
     : '';
 
   const nameOnCard = (guestName || '').trim();
