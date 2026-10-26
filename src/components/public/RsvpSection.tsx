@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { WeddingEvent, RsvpQuestion, SiteSettings, TypeStyle, Guest } from '@/types';
-import { typeStyle, fluidPx } from '@/lib/typography';
+import { fluidPx } from '@/lib/typography';
 import { Check, Loader2, Clock } from 'lucide-react';
 import { isRsvpClosed } from '@/lib/timezone';
+import { resolveRsvpDesign, rsvpButtonStyle, rsvpTextStyle } from '@/lib/rsvpDesign';
 
 export default function RsvpSection({
   events, questions, settings, typo,
@@ -20,6 +21,7 @@ export default function RsvpSection({
   const [error, setError] = useState('');
 
   const rsvpClosed = isRsvpClosed(settings.rsvp_deadline, settings.timezone);
+  const design = resolveRsvpDesign(settings.rsvp_design);
   const update = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
   const submit = async () => {
@@ -80,7 +82,7 @@ export default function RsvpSection({
 
   if (rsvpClosed) {
     return (
-      <section className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
+      <section className="px-6 py-10 text-center" style={{ borderTop: `1px solid ${design.cardBorderColor}`, background: design.cardBackgroundColor }}>
         <Clock size={36} className="mx-auto mb-3" style={{ color: '#b03a3a' }} />
         <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0 }}>
           RSVP Has Closed
@@ -94,16 +96,16 @@ export default function RsvpSection({
 
   if (done) {
     return (
-      <section className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
+      <section className="px-6 py-10 text-center" style={{ borderTop: `1px solid ${design.cardBorderColor}`, background: design.cardBackgroundColor }}>
         <div className="w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-3" style={{ background: '#e8dfc8' }}>
           <Check size={28} style={{ color: '#5a7a4a' }} />
         </div>
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.rsvpTitle) }}>Thank you!</h2>
+          <h2 style={{ ...rsvpTextStyle(design, 'thankYouTitle'), margin: 0 }}>Thank you!</h2>
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
         </div>
-        <p style={{ fontSize: fluidPx(15), color: '#6b5d4f', marginTop: 6 }}>
+        <p style={{ ...rsvpTextStyle(design, 'thankYouMessage'), marginTop: 6 }}>
           {settings.rsvp_thank_you_message || 'Your response has been received. We can\u2019t wait to celebrate with you.'}
         </p>
       </section>
@@ -111,16 +113,14 @@ export default function RsvpSection({
   }
 
   return (
-    <section className="px-6 py-8" id="rsvp" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
+    <section className="px-6 py-8" id="rsvp" style={{ borderTop: `1px solid ${design.cardBorderColor}`, background: design.cardBackgroundColor }}>
       <div className="text-center mb-4">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
-          <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.rsvpTitle) }}>
-            RSVP
-          </h2>
+          <h2 style={{ ...rsvpTextStyle(design, 'title'), margin: 0 }}>RSVP</h2>
           <span className="h-px w-8" style={{ background: typo.rsvpTitle?.color || '#c9b896' }} />
         </div>
-        <p style={{ fontSize: fluidPx(13), color: '#8a7a66', marginTop: 4 }}>
+        <p style={{ ...rsvpTextStyle(design, 'intro'), marginTop: 4 }}>
           {settings.rsvp_intro}
         </p>
 
@@ -148,12 +148,8 @@ export default function RsvpSection({
                   <div className="flex gap-1.5">
                     {['yes', 'no'].map((st) => (
                       <button key={st} onClick={() => setEventStatus((s) => ({ ...s, [ev.id]: st }))}
-                        className="px-3 py-1 rounded-full text-xs font-semibold transition"
-                        style={{
-                          background: eventStatus[ev.id] === st ? (st === 'yes' ? '#5a7a4a' : '#b03a3a') : 'transparent',
-                          color: eventStatus[ev.id] === st ? '#fff' : '#8a7a66',
-                          border: `1px solid ${eventStatus[ev.id] === st ? 'transparent' : '#d6cdbf'}`,
-                        }}>
+                        className="transition"
+                        style={{ ...rsvpButtonStyle(design), padding: '7px 12px', background: eventStatus[ev.id] === st ? design.button.backgroundColor : design.inputBackgroundColor, color: eventStatus[ev.id] === st ? design.button.color : design.text.guestName?.color, borderColor: eventStatus[ev.id] === st ? design.button.borderColor : design.inputBorderColor }}>
                         {st === 'yes' ? 'Attending' : 'Not'}
                       </button>
                     ))}
@@ -166,15 +162,15 @@ export default function RsvpSection({
 
         {questions.map((q) => (
           <Field key={q.id} label={q.label + (q.required ? ' *' : '')}>
-            <QuestionInput q={q} value={form[q.field_key] || ''} onChange={(v) => update(q.field_key, v)} />
+            <QuestionInput q={q} value={form[q.field_key] || ''} design={design} onChange={(v) => update(q.field_key, v)} />
           </Field>
         ))}
 
         {error && <p className="text-sm" style={{ color: '#b03a3a' }}>{error}</p>}
 
         <button onClick={submit} disabled={submitting}
-          className="w-full py-3 rounded-lg font-semibold text-white transition flex items-center justify-center gap-2"
-          style={{ background: '#8a6d3b' }}>
+          className="w-full transition flex items-center justify-center gap-2"
+          style={rsvpButtonStyle(design)}>
           {submitting ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : 'Send RSVP'}
         </button>
       </div>
@@ -191,21 +187,17 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function QuestionInput({ q, value, onChange }: { q: RsvpQuestion; value: string; onChange: (v: string) => void }) {
-  const inputCls = 'w-full rounded-lg border px-3 py-2 text-sm bg-white/70';
-  const borderStyle = { borderColor: '#d6cdbf' };
+function QuestionInput({ q, value, design, onChange }: { q: RsvpQuestion; value: string; design: ReturnType<typeof resolveRsvpDesign>; onChange: (v: string) => void }) {
+  const inputCls = 'w-full rounded-lg border px-3 py-2 text-sm';
+  const borderStyle = { borderColor: '#d6cdbf', background: '#ffffff' };
 
   if (q.input_type === 'radio' || q.input_type === 'select') {
     return (
       <div className="flex flex-wrap gap-2">
         {q.options.map((opt) => (
           <button key={opt} onClick={() => onChange(opt)}
-            className="px-3 py-1.5 rounded-full text-xs font-medium transition"
-            style={{
-              background: value === opt ? '#8a6d3b' : 'transparent',
-              color: value === opt ? '#fff' : '#6b5d4f',
-              border: `1px solid ${value === opt ? 'transparent' : '#d6cdbf'}`,
-            }}>
+            className="transition"
+            style={{ ...rsvpButtonStyle(design), padding: '7px 12px', background: value === opt ? design.button.backgroundColor : design.inputBackgroundColor, color: value === opt ? design.button.color : design.text.guestName?.color, borderColor: value === opt ? design.button.borderColor : design.inputBorderColor }}>
             {opt}
           </button>
         ))}

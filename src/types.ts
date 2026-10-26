@@ -1,3 +1,5 @@
+import type { RsvpDesign } from '@/lib/rsvpDesign';
+
 export interface SiteSettings {
   id: string;
   partner1_name: string;
@@ -14,6 +16,7 @@ export interface SiteSettings {
   body_font: string;
   typography: Record<string, TypeStyle>;
   rsvp_intro: string | null;
+  rsvp_design: RsvpDesign;
   rsvp_deadline: string | null;
   show_rsvp_button: boolean;
   show_rsvp_on_welcome: boolean;

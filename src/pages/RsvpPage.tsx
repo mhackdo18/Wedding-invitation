@@ -9,6 +9,7 @@ import RsvpWizard from '@/components/public/RsvpWizard';
 import { Reveal } from '@/components/public/Reveal';
 import { isRsvpClosed, formatDeadlineLong } from '@/lib/timezone';
 import { Clock } from 'lucide-react';
+import { resolveRsvpDesign, rsvpButtonStyle, rsvpTextStyle } from '@/lib/rsvpDesign';
 
 export default function RsvpPage() {
   const { settings, loading } = useSiteSettings();
@@ -81,6 +82,7 @@ export default function RsvpPage() {
   }
 
   const typo = settings.typography || {};
+  const design = resolveRsvpDesign(settings.rsvp_design);
   const tz = settings.timezone || 'UTC';
   const rsvpDeadlineStr = settings.rsvp_deadline
     ? formatDeadlineLong(settings.rsvp_deadline, tz)
@@ -90,10 +92,10 @@ export default function RsvpPage() {
   // If a guest is selected, show the wizard
   if (selectedGuests) {
     return (
-      <div className="min-h-screen" style={{ background: 'var(--bg-color)' }}>
-        <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)' }}>
+      <div className="min-h-screen" style={{ background: design.pageBackgroundColor }}>
+        <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)', background: design.cardBackgroundColor, borderColor: design.cardBorderColor }}>
           <div className="px-6 pt-6">
-            <button onClick={() => setSelectedGuests(null)} className="inline-flex items-center gap-1.5 text-xs" style={{ color: '#8a7a66' }}>
+            <button onClick={() => setSelectedGuests(null)} className="inline-flex items-center gap-1.5 text-xs" style={{ ...rsvpButtonStyle(design), padding: '7px 12px' }}>
               <ArrowLeft size={12} /> Back to search
             </button>
           </div>
@@ -135,17 +137,18 @@ export default function RsvpPage() {
 
   // Guest search step
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-color)' }}>
-      <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)' }}>
+    <div className="min-h-screen" style={{ background: design.pageBackgroundColor }}>
+      <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)', background: design.cardBackgroundColor, borderColor: design.cardBorderColor }}>
         <div className="px-6 pt-8 pb-4 text-center">
           <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up">
           <button onClick={() => navigate('/')} className="inline-flex items-center gap-1.5 text-xs mb-4" style={{ color: '#8a7a66' }}>
             <ArrowLeft size={12} /> Back
           </button>
-          <h1 style={{ ...typeStyle(typo.rsvpTitle), fontFamily: 'var(--heading-font)', fontSize: fluidPx(32), color: '#5a4430', margin: 0 }}>
+          <p style={{ ...rsvpTextStyle(design, 'pretitle'), margin: 0, letterSpacing: '0.3em', textTransform: 'uppercase' }}>RSVP</p>
+          <h1 style={{ ...typeStyle(typo.rsvpTitle), ...rsvpTextStyle(design, 'title'), margin: 0 }}>
             RSVP
           </h1>
-          <p style={{ fontSize: fluidPx(14), color: '#8a7a66', marginTop: 6 }}>{settings.rsvp_intro}</p>
+          <p style={{ ...rsvpTextStyle(design, 'intro'), marginTop: 6 }}>{settings.rsvp_intro}</p>
           {rsvpDeadlineStr && (
             <div className="mt-3">
               <p className="text-base sm:text-lg font-semibold" style={{ color: rsvpClosed ? '#b03a3a' : '#8a6d3b' }}>
@@ -161,13 +164,13 @@ export default function RsvpPage() {
 
         <div className="px-6 pb-8">
           <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up" delay={80}>
-          <p className="text-center text-sm mb-4" style={{ color: '#5a4430' }}>Find your name to begin:</p>
+          <p className="text-center mb-4" style={rsvpTextStyle(design, 'instruction')}>Find your name to begin:</p>
           <div className="max-w-sm mx-auto">
             <div className="grid grid-cols-2 gap-2">
               <div className="relative">
                 <input
-                  className="w-full rounded-full border pl-4 pr-4 py-3 text-sm bg-white/80 outline-none focus:border-[#b59a6b]"
-                  style={{ borderColor: '#d6cdbf' }}
+                  className="w-full rounded-full border pl-4 pr-4 py-3 text-sm outline-none focus:border-[#b59a6b]"
+                  style={{ borderColor: design.inputBorderColor, background: design.inputBackgroundColor }}
                   placeholder="First name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -176,8 +179,8 @@ export default function RsvpPage() {
               </div>
               <div className="relative">
                 <input
-                  className="w-full rounded-full border pl-4 pr-4 py-3 text-sm bg-white/80 outline-none focus:border-[#b59a6b]"
-                  style={{ borderColor: '#d6cdbf' }}
+                  className="w-full rounded-full border pl-4 pr-4 py-3 text-sm outline-none focus:border-[#b59a6b]"
+                  style={{ borderColor: design.inputBorderColor, background: design.inputBackgroundColor }}
                   placeholder="Last name"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
@@ -186,7 +189,7 @@ export default function RsvpPage() {
               </div>
             </div>
             <div className="text-center mt-3">
-              <button onClick={searchGuest} className="btn-primary inline-flex items-center gap-1.5">
+              <button onClick={searchGuest} className="inline-flex items-center gap-1.5" style={rsvpButtonStyle(design)}>
                 <Search size={16} /> Search
               </button>
             </div>
@@ -196,7 +199,7 @@ export default function RsvpPage() {
           {searched && (
             <div className="max-w-sm mx-auto mt-4 space-y-2">
               {foundGuests.length === 0 ? (
-                <p className="text-center text-sm text-[#8a7a66]">
+                <p className="text-center" style={rsvpTextStyle(design, 'questionHint')}>
                   No match found. Please make sure your first and last name match exactly as on your invitation, or check with the couple.
                 </p>
               ) : (
@@ -204,9 +207,9 @@ export default function RsvpPage() {
                   <Reveal key={g.id} enabled={!!settings.scroll_animation_enabled} animation="fade-up" delay={idx * 60}>
                   <button onClick={() => selectGuest(g)}
                     className="w-full text-left rounded-lg border p-3 transition hover:border-[#8a6d3b]"
-                    style={{ borderColor: '#d6cdbf', background: '#fff' }}>
-                    <span style={{ fontSize: fluidPx(14), fontWeight: 600, color: '#5a4430' }}>{g.name}</span>
-                    {g.party_id && <span className="text-xs text-[#a07c4a] block">RSVP for your full party</span>}
+                    style={{ borderColor: design.cardBorderColor, background: design.cardBackgroundColor }}>
+                    <span style={rsvpTextStyle(design, 'guestName')}>{g.name}</span>
+                    {g.party_id && <span className="block" style={rsvpTextStyle(design, 'guestStatus')}>RSVP for your full party</span>}
                   </button>
                   </Reveal>
                 ))

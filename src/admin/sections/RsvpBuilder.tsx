@@ -8,6 +8,7 @@ import TagInput from '@/components/admin/TagInput';
 import { uploadImage } from '@/lib/upload';
 import type { SiteSettings } from '@/types';
 import { UploadProgress } from '@/components/admin/UploadProgress';
+import RsvpDesignEditor from '@/components/admin/RsvpDesignEditor';
 
 const QUESTION_TYPES = [
   { value: 'attendance', label: 'Attendance (Yes/No)' },
@@ -265,6 +266,7 @@ function RsvpSettingsPanel() {
       rsvp_intro: settings.rsvp_intro,
       rsvp_thank_you_message: settings.rsvp_thank_you_message?.trim() || null,
       rsvp_hero_image_url: settings.rsvp_hero_image_url,
+      rsvp_design: settings.rsvp_design,
     }).eq('id', settings.id).select().single();
     if (!error && data) setSettings(data as SiteSettings);
     setSaving(false);
@@ -300,6 +302,9 @@ function RsvpSettingsPanel() {
       </button>
       {!collapsed && (
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: '#e6ddcd' }}>
+          <div className="pt-3">
+            <RsvpDesignEditor value={settings.rsvp_design} onChange={(rsvp_design) => patch({ rsvp_design })} />
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-3">
             <div>
               <label className="admin-label">Intro Message</label>
@@ -374,7 +379,7 @@ function TreePreview({ subs, depth }: { subs: ConditionalSubQuestion[]; depth: n
               {sub.guest_tags?.length > 0 && <span className="inline-flex items-center gap-0.5" style={{ color: '#8a6d3b' }}><Tag size={6} /> {sub.guest_tags.join(',')}</span>}
             </div>
           </div>
-          {sub.conditional_sub_questions?.length > 0 && (
+          {sub.conditional_sub_questions && sub.conditional_sub_questions.length > 0 && (
             <TreePreview subs={sub.conditional_sub_questions} depth={depth + 1} />
           )}
         </div>
@@ -384,18 +389,19 @@ function TreePreview({ subs, depth }: { subs: ConditionalSubQuestion[]; depth: n
 }
 
 function QuestionForm({ q, onCancel, onSave, mainEvents, saveError }: { q: RsvpQuestion | null; onCancel: () => void; onSave: (q: Partial<RsvpQuestion>) => void; mainEvents: WeddingEvent[]; saveError: string | null }) {
-  const initialType = q?.question_type || (q?.is_attendance ? 'attendance' : q?.input_type || 'text');
+  const source: Partial<RsvpQuestion> = q || {};
+  const initialType = source.question_type || (source.is_attendance ? 'attendance' : source.input_type || 'text');
   const [form, setForm] = useState<Partial<RsvpQuestion>>(q ? { ...q } : {
     label: '', field_key: '',
     question_type: initialType, input_type: 'text',
     sub_question: '',
     options: [], required: false,
     event_id: null,
-    yes_text: q?.yes_text || 'Joyfully Accepts', no_text: q?.no_text || 'Regretfully Declines',
-    yes_label: q?.yes_label || '', no_label: q?.no_label || '',
-    is_attendance: q?.is_attendance || false,
-    guest_tags: q?.guest_tags || [],
-    terms_body: q?.terms_body || '', accept_label: q?.accept_label || '',
+    yes_text: source.yes_text || 'Joyfully Accepts', no_text: source.no_text || 'Regretfully Declines',
+    yes_label: source.yes_label || '', no_label: source.no_label || '',
+    is_attendance: source.is_attendance || false,
+    guest_tags: source.guest_tags || [],
+    terms_body: source.terms_body || '', accept_label: source.accept_label || '',
     conditional_sub_questions: [],
     column_name: '',
   });
