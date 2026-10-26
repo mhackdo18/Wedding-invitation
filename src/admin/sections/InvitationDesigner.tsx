@@ -731,7 +731,10 @@ export default function InvitationDesigner() {
             </div>
             <div className="rounded-lg overflow-hidden border" style={{ borderColor: '#e6ddcd', background: '#f5f3ef', maxHeight: 500, overflowY: 'auto' }}>
               <div className="p-4 max-w-md mx-auto">
-                <p className="text-xs text-[#8a7a66] mb-2"><strong>Subject:</strong> {emailCfg.subject_line || `You're Invited`}</p>
+                <p className="text-xs text-[#8a7a66] mb-1"><strong>Subject:</strong> {emailCfg.subject_line || `You're Invited`}</p>
+                {emailCfg.preheader_text && (
+                  <p className="text-xs text-[#8a7a66] mb-2 italic"><strong>Preheader:</strong> {emailCfg.preheader_text}</p>
+                )}
                 <hr className="mb-3" style={{ borderColor: '#e6ddcd' }} />
                 <table width="100%" cellPadding={0} cellSpacing={0} style={{ background: '#f5f3ef', padding: '24px 0' }}>
                 <tbody><tr><td align="center">

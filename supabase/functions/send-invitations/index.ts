@@ -207,8 +207,9 @@ function buildEmailHtml(
     : "";
 
   const preheader = (cfg.preheader_text || '').trim();
+  const preheaderPad = '\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b';
   const preheaderHtml = preheader
-    ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;font-size:1px;line-height:1px;color:#f5f3ef;background:#f5f3ef;">${escapeHtml(preheader)}</div>`
+    ? `<div style="max-height:0;overflow:hidden;opacity:0;mso-hide:all;font-size:1px;line-height:1px;color:#f5f3ef;background:#f5f3ef;">${escapeHtml(preheader)}${preheaderPad}</div>`
     : '';
 
   const replyEmail = cfg.from_email || cfg.smtp_user || '';
@@ -242,9 +243,9 @@ table,td{font-family:Georgia,'Times New Roman',serif !important;}
 </head>
 <body style="margin:0;padding:0;background:#f5f3ef;font-family:Georgia,'Times New Roman',serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 ${preheaderHtml}
-<table width="100%" cellpadding="0" cellspacing="0" border="0" role="article" style="background:#f5f3ef;padding:24px 0;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background:#f5f3ef;padding:24px 0;">
 <tr><td align="center">
-<table class="email-container" width="500" cellpadding="0" cellspacing="0" border="0" style="max-width:500px;width:100%;">
+<table class="email-container" width="500" cellpadding="0" cellspacing="0" border="0" role="presentation" style="max-width:500px;width:100%;">
 
 <tr><td class="email-header" style="background:#f0ebe3;padding:18px 30px;text-align:center;">
   <span style="font-size:13px;color:${waxSealColor};font-family:Georgia,serif;font-style:italic;">You're invited</span>
@@ -335,6 +336,8 @@ function buildHeaders(cfg: EmailConfig): Record<string, string> {
     "List-Unsubscribe-Post": "List-Unsubscribe=one-click",
     "X-Auto-Response-Suppress": "All",
     "Message-ID": buildMessageId(replyEmail),
+    "Content-Language": "en-US",
+    "X-Content-Type-Options": "nosniff",
   };
 }
 
