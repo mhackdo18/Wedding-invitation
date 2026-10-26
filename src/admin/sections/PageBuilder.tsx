@@ -173,9 +173,9 @@ function PagesTab() {
   const save = async (data: Partial<Page>) => {
     const config = { ...(data.config as object || {}), body_text: data.body_text || null };
     if (editing) {
-      await supabase.from('pages').update({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible, visible_tags: data.visible_tags || [], config }).eq('id', editing.id);
+      await supabase.from('pages').update({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible, show_on_public: data.show_on_public, visible_tags: data.visible_tags || [], config }).eq('id', editing.id);
     } else {
-      await supabase.from('pages').insert({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible ?? true, visible_tags: data.visible_tags || [], display_order: pages.length, config });
+      await supabase.from('pages').insert({ title: data.title, slug: data.slug, template: data.template, is_visible: data.is_visible ?? true, show_on_public: data.show_on_public ?? true, visible_tags: data.visible_tags || [], display_order: pages.length, config });
     }
     setAdding(false); setEditing(null); load();
   };
@@ -219,7 +219,7 @@ function PagesTab() {
 }
 
 function PageForm({ page, onCancel, onSave, existingSlugs }: { page: Page | null; onCancel: () => void; onSave: (d: Partial<Page>) => void; existingSlugs: string[] }) {
-  const [form, setForm] = useState<Partial<Page>>(page || { title: '', slug: '', template: 'custom', is_visible: true, visible_tags: [], body_text: (page?.config as any)?.body_text || '' });
+  const [form, setForm] = useState<Partial<Page>>(page || { title: '', slug: '', template: 'custom', is_visible: true, show_on_public: true, visible_tags: [], body_text: (page?.config as any)?.body_text || '' });
   const [slugError, setSlugError] = useState('');
   const [tagInput, setTagInput] = useState('');
   const genSlug = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -276,8 +276,14 @@ function PageForm({ page, onCancel, onSave, existingSlugs }: { page: Page | null
             />
           </div>
           <label className="flex items-center gap-2 text-sm text-[#5a4430]">
-            <input type="checkbox" checked={form.is_visible ?? true} onChange={(e) => setForm({ ...form, is_visible: e.target.checked })} className="accent-[#8a6d3b]" />
-            Visible on public site
+            <input type="checkbox" checked={!(form.is_visible ?? true)} onChange={(e) => setForm({ ...form, is_visible: !e.target.checked })} className="accent-[#8a6d3b]" />
+            Hide from all sites
+            <span className="text-xs text-[#8a7a66]">(hides this page from both the public site and per-guest invitations; same as the eye icon)</span>
+          </label>
+          <label className="flex items-center gap-2 text-sm text-[#5a4430]">
+            <input type="checkbox" checked={form.show_on_public ?? true} onChange={(e) => setForm({ ...form, show_on_public: e.target.checked })} className="accent-[#8a6d3b]" />
+            Show on public site
+            <span className="text-xs text-[#8a7a66]">(uncheck to hide from the public site only; per-guest invitations are unaffected)</span>
           </label>
         </div>
         <div className="flex gap-2 mt-4 shrink-0">

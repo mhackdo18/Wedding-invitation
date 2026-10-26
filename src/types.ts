@@ -321,6 +321,7 @@ export interface Page {
   title: string;
   template: 'welcome' | 'story' | 'gallery' | 'schedule' | 'rsvp' | 'find-table' | 'venue' | 'entourage' | 'document' | 'custom' | 'information';
   is_visible: boolean;
+  show_on_public: boolean;
   display_order: number;
   config: Record<string, unknown>;
   hero_image_url: string | null;
