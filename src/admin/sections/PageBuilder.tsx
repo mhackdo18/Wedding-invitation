@@ -486,7 +486,11 @@ function StylingTab() {
               <div>
                 <label className="admin-label">Timezone</label>
                 <select className="admin-input" value={draft.timezone || 'UTC'} onChange={(e) => update({ timezone: e.target.value })}>
-                  {getTimezoneOptions().map((tz) => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
+                  {getTimezoneOptions().map((tz) =>
+                    tz.value.startsWith('__group__')
+                      ? <optgroup key={tz.value} label={tz.label.replace(/^—\s*|\s*—$/g, '')} />
+                      : <option key={tz.value} value={tz.value}>{tz.label}</option>
+                  )}
                 </select>
                 <p className="text-xs text-[#8a7a66] mt-1">Used for the RSVP deadline and for displaying RSVP submission timestamps consistently in the guest list.</p>
               </div>

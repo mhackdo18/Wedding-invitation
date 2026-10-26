@@ -1,3 +1,7 @@
+// A small curated list of commonly-used timezones shown at the top of the
+// selector for convenience, followed by every IANA timezone the browser knows
+// (via Intl.supportedValuesOf) grouped by region.
+
 const COMMON_TIMEZONES: { label: string; value: string }[] = [
   { label: 'UTC', value: 'UTC' },
   { label: 'US Eastern (New York)', value: 'America/New_York' },
@@ -29,8 +33,52 @@ const COMMON_TIMEZONES: { label: string; value: string }[] = [
   { label: 'South Africa (Johannesburg)', value: 'Africa/Johannesburg' },
 ];
 
+const COMMON_VALUES = new Set(COMMON_TIMEZONES.map((t) => t.value));
+
+function prettifyRegion(area: string): string {
+  return area.charAt(0).toUpperCase() + area.slice(1);
+}
+
+function buildAllTimezones(): { label: string; value: string }[] {
+  const all: { label: string; value: string }[] = [...COMMON_TIMEZONES];
+  let supported: string[] = [];
+  try {
+    supported = (Intl as any).supportedValuesOf?.('timeZone') as string[] | undefined;
+  } catch {
+    supported = [];
+  }
+  if (!supported || supported.length === 0) return all;
+
+  // Group the non-common IANA zones by their area (the part before the first '/').
+  const byArea = new Map<string, string[]>();
+  for (const tz of supported) {
+    if (COMMON_VALUES.has(tz) || tz === 'UTC') continue;
+    const slash = tz.indexOf('/');
+    const area = slash > 0 ? tz.slice(0, slash) : 'Other';
+    const rest = slash > 0 ? tz.slice(slash + 1) : tz;
+    if (!byArea.has(area)) byArea.set(area, []);
+    byArea.get(area)!.push(rest);
+  }
+
+  const sortedAreas = [...byArea.keys()].sort();
+  for (const area of sortedAreas) {
+    const locations = byArea.get(area)!.sort();
+    // Group header as a disabled-style option (label only, value repeats area).
+    all.push({ label: `— ${prettifyRegion(area)} —`, value: `__group__${area}` });
+    for (const loc of locations) {
+      const value = `${area}/${loc}`;
+      const label = loc.replace(/_/g, ' ');
+      all.push({ label, value });
+    }
+  }
+  return all;
+}
+
+let cachedOptions: { label: string; value: string }[] | null = null;
+
 export function getTimezoneOptions() {
-  return COMMON_TIMEZONES;
+  if (!cachedOptions) cachedOptions = buildAllTimezones();
+  return cachedOptions;
 }
 
 export function isRsvpClosed(deadline: string | null, timezone: string | null): boolean {
@@ -43,11 +91,12 @@ export function isRsvpClosed(deadline: string | null, timezone: string | null): 
 // This ensures the stored deadline represents the moment the coordinator intended.
 export function localToUtcIso(localString: string, timezone: string | null): string {
   const tz = timezone || 'UTC';
-  const naive = new Date(localString + ':00'); // interpreted as UTC by Date when no offset
+  // Append ":00Z" so the Date constructor treats the wall-clock time as a UTC
+  // reference instant. Without the "Z", browsers parse it as local time, which
+  // would make the stored instant depend on the coordinator's browser timezone.
+  const naive = new Date(localString + ':00Z');
   if (isNaN(naive.getTime())) return new Date(localString).toISOString();
   try {
-    // Find the offset of `timezone` at this wall-clock time by formatting a reference
-    // instant and measuring the difference.
     const asUtc = naive.getTime();
     const parts = new Intl.DateTimeFormat('en-US', {
       timeZone: tz,
