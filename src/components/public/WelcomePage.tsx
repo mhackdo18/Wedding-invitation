@@ -24,8 +24,8 @@ function resolveTypo(
 }
 
 export default function WelcomePage({
-  settings, typo, onRsvp,
-}: { settings: SiteSettings; typo: Record<string, TypeStyle>; onRsvp: () => void }) {
+  settings, typo, onRsvp, rsvpButtonVisible,
+}: { settings: SiteSettings; typo: Record<string, TypeStyle>; onRsvp: () => void; rsvpButtonVisible?: boolean }) {
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -112,7 +112,9 @@ export default function WelcomePage({
     </div>
   ) : null;
 
-  const ctaButton = settings.show_rsvp_on_welcome !== false ? (
+  const showRsvpBtn = rsvpButtonVisible !== undefined ? rsvpButtonVisible : settings.show_rsvp_on_welcome !== false;
+
+  const ctaButton = showRsvpBtn ? (
     <div className="mt-6 flex flex-col items-center">
       {rsvpDeadline}
       <button onClick={onRsvp} className="mt-2 font-semibold transition hover:opacity-90" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '10px 28px', fontSize: fluidPx(15) }}>
@@ -225,7 +227,7 @@ export default function WelcomePage({
           )}
           {dateStr && <p style={{ ...dateStyle, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 8 }}>{dateStr}</p>}
           {settings.venue_line && <p style={{ ...venueStyle, marginTop: 4 }}>{settings.venue_line}</p>}
-          {settings.show_rsvp_on_welcome !== false && (
+          {showRsvpBtn && (
             <div className="mt-6">
               <button onClick={onRsvp} style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', color: settings.cta_text_color || '#fff', border: '1px solid rgba(255,255,255,0.35)', borderRadius: settings.cta_radius, padding: '10px 28px', fontSize: fluidPx(14), fontWeight: 600, letterSpacing: '0.08em' }}>
                 {settings.cta_text}
@@ -254,7 +256,7 @@ export default function WelcomePage({
             {settings.venue_line && <p style={{ ...venueStyle }}>{settings.venue_line}</p>}
           </div>
           <div className="flex items-center gap-4 mt-4">
-            {settings.show_rsvp_on_welcome !== false && <button onClick={onRsvp} style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '8px 20px', fontSize: fluidPx(13), fontWeight: 600 }}>{settings.cta_text}</button>}
+            {showRsvpBtn && <button onClick={onRsvp} style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '8px 20px', fontSize: fluidPx(13), fontWeight: 600 }}>{settings.cta_text}</button>}
             {countdown}
           </div>
         </div>

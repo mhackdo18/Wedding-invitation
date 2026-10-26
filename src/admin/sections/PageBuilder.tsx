@@ -415,6 +415,7 @@ function StylingTab() {
       page_width: draft.page_width, heading_font: draft.heading_font, body_font: draft.body_font,
       typography: draft.typography, rsvp_intro: draft.rsvp_intro, rsvp_deadline: draft.rsvp_deadline,
       show_rsvp_button: draft.show_rsvp_button, show_rsvp_on_welcome: draft.show_rsvp_on_welcome, show_rsvp_in_navigation: draft.show_rsvp_in_navigation, show_rsvp_section: draft.show_rsvp_section,
+      show_rsvp_on_welcome_public: draft.show_rsvp_on_welcome_public, show_rsvp_in_navigation_public: draft.show_rsvp_in_navigation_public, show_rsvp_section_public: draft.show_rsvp_section_public,
       welcome_layout: draft.welcome_layout,
       cta_text: draft.cta_text, cta_bg_color: draft.cta_bg_color, cta_text_color: draft.cta_text_color,
       cta_radius: draft.cta_radius, cta_size: draft.cta_size,
@@ -481,10 +482,26 @@ function StylingTab() {
             <div className="space-y-3">
               <div><label className="admin-label">RSVP Intro Text</label><input className="admin-input" value={draft.rsvp_intro || ''} onChange={(e) => update({ rsvp_intro: e.target.value })} /></div>
               <div><label className="admin-label">RSVP Deadline</label><input type="datetime-local" className="admin-input" value={draft.rsvp_deadline ? new Date(draft.rsvp_deadline).toISOString().slice(0, 16) : ''} onChange={(e) => update({ rsvp_deadline: e.target.value ? new Date(e.target.value).toISOString() : null })} /><p className="text-xs text-[#8a7a66] mt-1">Shown to guests above the RSVP form. Once this deadline passes (in your selected timezone under Settings), RSVP submissions will be automatically closed.</p></div>
-              <div className="space-y-2 pt-1">
-                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_on_welcome !== false} onChange={(e) => update({ show_rsvp_on_welcome: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP button on Welcome page</label>
-                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_in_navigation !== false} onChange={(e) => update({ show_rsvp_in_navigation: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP button in navigation</label>
-                <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_section !== false} onChange={(e) => update({ show_rsvp_section: e.target.checked })} className="accent-[#8a6d3b]" /> Show RSVP section on bottom page</label>
+              <div className="pt-1">
+                <p className="text-xs text-[#8a7a66] mb-2">Control where the RSVP button and section appear. Per-guest settings apply to each guest&rsquo;s personal invitation; Public settings apply to the shared public website.</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg border p-3" style={{ borderColor: '#e6ddcd', background: '#fffdf8' }}>
+                    <p className="text-xs font-semibold text-[#8a6d3b] mb-2 uppercase tracking-wide">Per Guest Invitation</p>
+                    <div className="space-y-2">
+                      <label className="flex items-start gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_on_welcome !== false} onChange={(e) => update({ show_rsvp_on_welcome: e.target.checked })} className="accent-[#8a6d3b] mt-0.5" /><span>RSVP button on Welcome page</span></label>
+                      <label className="flex items-start gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_in_navigation !== false} onChange={(e) => update({ show_rsvp_in_navigation: e.target.checked })} className="accent-[#8a6d3b] mt-0.5" /><span>RSVP button in navigation</span></label>
+                      <label className="flex items-start gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_section !== false} onChange={(e) => update({ show_rsvp_section: e.target.checked })} className="accent-[#8a6d3b] mt-0.5" /><span>RSVP section on bottom page</span></label>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border p-3" style={{ borderColor: '#e6ddcd', background: '#fffdf8' }}>
+                    <p className="text-xs font-semibold text-[#8a6d3b] mb-2 uppercase tracking-wide">Public Page</p>
+                    <div className="space-y-2">
+                      <label className="flex items-start gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_on_welcome_public !== false} onChange={(e) => update({ show_rsvp_on_welcome_public: e.target.checked })} className="accent-[#8a6d3b] mt-0.5" /><span>RSVP button on Welcome page</span></label>
+                      <label className="flex items-start gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_in_navigation_public !== false} onChange={(e) => update({ show_rsvp_in_navigation_public: e.target.checked })} className="accent-[#8a6d3b] mt-0.5" /><span>RSVP button in navigation</span></label>
+                      <label className="flex items-start gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={draft.show_rsvp_section_public !== false} onChange={(e) => update({ show_rsvp_section_public: e.target.checked })} className="accent-[#8a6d3b] mt-0.5" /><span>RSVP section on bottom page</span></label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </Card>

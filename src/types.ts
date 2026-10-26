@@ -19,6 +19,9 @@ export interface SiteSettings {
   show_rsvp_on_welcome: boolean;
   show_rsvp_in_navigation: boolean;
   show_rsvp_section: boolean;
+  show_rsvp_on_welcome_public: boolean;
+  show_rsvp_in_navigation_public: boolean;
+  show_rsvp_section_public: boolean;
   welcome_layout: string;
   cta_text: string;
   cta_bg_color: string;

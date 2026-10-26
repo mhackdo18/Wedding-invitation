@@ -291,7 +291,7 @@ export default function PublicSite() {
                 {p.title}
               </button>
             ))}
-            {settings.show_rsvp_in_navigation !== false && (
+            {settings.show_rsvp_in_navigation_public !== false && (
               <button onClick={() => navigate('/rsvp')} className="ml-2 font-semibold transition" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                 {settings.cta_text}
               </button>
@@ -308,9 +308,9 @@ export default function PublicSite() {
             </SectionBackground>
           </div>
         )}
-        {!welcomePage && (
+          {!welcomePage && (
           <div id="section-welcome">
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder}><WelcomePage settings={settings} typo={typo} onRsvp={() => navigate('/rsvp')} /></PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder}><WelcomePage settings={settings} typo={typo} onRsvp={() => navigate('/rsvp')} rsvpButtonVisible={settings.show_rsvp_on_welcome_public !== false} /></PageBorder></Reveal>
           </div>
         )}
 
@@ -323,7 +323,7 @@ export default function PublicSite() {
         ))}
 
         {/* RSVP CTA section at the bottom of scroll */}
-        {settings.show_rsvp_section !== false && (
+        {settings.show_rsvp_section_public !== false && (
           <Reveal enabled={!!settings.scroll_animation_enabled} animation="scale-in">
           <section className="px-6 py-10 text-center">
             <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(24), color: '#5a4430', margin: 0 }}>Join us!</h2>
@@ -338,7 +338,7 @@ export default function PublicSite() {
             </p>
           </div>
         )}
-            {settings.show_rsvp_on_welcome !== false && (
+            {settings.show_rsvp_on_welcome_public !== false && (
               <button onClick={() => navigate('/rsvp')} className="mt-4 font-semibold transition hover:opacity-90" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                 {settings.cta_text}
               </button>
@@ -378,7 +378,7 @@ export default function PublicSite() {
                 </button>
               ))}
             </div>
-            {settings.show_rsvp_in_navigation !== false && (
+            {settings.show_rsvp_in_navigation_public !== false && (
               <button onClick={() => navigate('/rsvp')} className="mt-3 w-full text-center font-semibold" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
                 {settings.cta_text}
               </button>
