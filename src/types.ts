@@ -75,6 +75,10 @@ export interface SiteSettings {
   invitation_paper_heading_font: string | null;
   invitation_paper_heading_color: string | null;
   invitation_paper_show_names: boolean | null;
+  invitation_paper_show_date: boolean;
+  invitation_paper_date_font: string | null;
+  invitation_paper_date_color: string | null;
+  invitation_paper_divider_color: string | null;
   invitation_paper_body_font: string | null;
   invitation_paper_body: string | null;
   invitation_paper_buttons: InvitationButton[];

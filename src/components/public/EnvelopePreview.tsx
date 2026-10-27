@@ -102,6 +102,10 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
   const paperBorderColor = settings.invitation_paper_border_color || '#e6ddcd';
   const headingFont = settings.invitation_paper_heading_font || 'Great Vibes';
   const headingColor = settings.invitation_paper_heading_color || settings.invitation_paper_text_color || '#5a4430';
+  const showWeddingDate = settings.invitation_paper_show_date !== false;
+  const dateFont = settings.invitation_paper_date_font || 'Cormorant Garamond';
+  const dateColor = settings.invitation_paper_date_color || settings.invitation_paper_text_color || '#5a4430';
+  const dividerColor = settings.invitation_paper_divider_color || '#b59a6b';
   const bodyFont = settings.invitation_paper_body_font || 'Cormorant Garamond';
   const weddingDate = settings.wedding_date ? new Date(settings.wedding_date) : null;
   const rsvpDeadlineDate = settings.rsvp_deadline ? new Date(settings.rsvp_deadline) : null;
@@ -222,9 +226,9 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
           <div className="overflow-hidden flex flex-col" style={{ maxHeight: fullscreen ? 'calc(100svh - 6rem)' : 380, background: paperBg, border: `1px solid ${paperBorderColor}`, borderRadius: 4, boxShadow: '0 24px 48px rgba(25,18,10,0.22), 0 5px 12px rgba(25,18,10,0.12)' }}>
             <div className="flex-1 min-h-0 p-6 flex flex-col text-center overflow-y-auto items-center thin-scroll">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <span className="h-px w-8" style={{ background: 'rgba(181,154,107,0.3)' }} />
-                <span style={{ color: '#b59a6b', fontSize: 12 }}>&#10022;</span>
-                <span className="h-px w-8" style={{ background: 'rgba(181,154,107,0.3)' }} />
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
+                <span style={{ color: dividerColor, fontSize: 12 }}>&#10022;</span>
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
               </div>
               {settings.invitation_paper_show_names !== false && (
                 <>
@@ -233,8 +237,8 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
                   <h2 className="leading-tight mb-4 w-full" style={{ fontFamily: stackFor(headingFont), fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', color: headingColor }}>{settings.partner2_name}</h2>
                 </>
               )}
-              {weddingDate && (
-                <p style={{ fontSize: 11, color: paperText, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+              {showWeddingDate && weddingDate && (
+                <p style={{ fontFamily: stackFor(dateFont), fontSize: 11, color: dateColor, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
                   {formatInTimezone(settings.wedding_date, settings.timezone, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                 </p>
               )}
@@ -243,7 +247,7 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
                   RSVP by {rsvpDeadlineStr}
                 </p>
               )}
-              <div className="h-px w-12 mx-auto my-3" style={{ background: 'rgba(181,154,107,0.3)' }} />
+              <div className="h-px w-12 mx-auto my-3" style={{ background: dividerColor, opacity: 0.3 }} />
               <div className="text-sm mb-4 leading-relaxed w-full text-left [&_p]:mb-2 [&_p:last-child]:mb-0" style={{ fontFamily: stackFor(bodyFont), color: paperText, opacity: 0.85 }} dangerouslySetInnerHTML={{ __html: bodyText }} />
             </div>
           </div>
