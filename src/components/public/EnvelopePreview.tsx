@@ -114,6 +114,7 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
   const weddingDateStr = weddingDate
     ? formatInTimezone(settings.wedding_date, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })
     : '';
+  const showBodyDivider = settings.invitation_paper_show_names !== false || (showWeddingDate && !!weddingDate);
   const bodyText = (settings.invitation_paper_body || `Dear Guest,\n\nWe joyfully request the pleasure of your company as we celebrate our union.`)
     .replace(/\{\{guest_name\}\}/g, 'Sample Guest')
     .replace(/\{\{name_on_card\}\}/g, 'Sample Name')
@@ -241,7 +242,9 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
                   {formatInTimezone(settings.wedding_date, settings.timezone, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                 </p>
               )}
-              <div className="h-px w-12 mx-auto my-3" style={{ background: dividerColor, opacity: 0.3 }} />
+              {showBodyDivider && (
+                <div className="h-px w-12 mx-auto my-3" style={{ background: dividerColor, opacity: 0.3 }} />
+              )}
               <div className="text-sm mb-4 leading-relaxed w-full text-left [&_p]:mb-2 [&_p:last-child]:mb-0" style={{ fontFamily: stackFor(bodyFont), color: paperText, opacity: 0.85 }} dangerouslySetInnerHTML={{ __html: bodyText }} />
             </div>
           </div>
