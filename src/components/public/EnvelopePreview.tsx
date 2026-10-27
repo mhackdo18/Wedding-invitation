@@ -108,8 +108,7 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
   const dividerColor = settings.invitation_paper_divider_color || '#b59a6b';
   const bodyFont = settings.invitation_paper_body_font || 'Cormorant Garamond';
   const weddingDate = settings.wedding_date ? new Date(settings.wedding_date) : null;
-  const rsvpDeadlineDate = settings.rsvp_deadline ? new Date(settings.rsvp_deadline) : null;
-  const rsvpDeadlineStr = rsvpDeadlineDate
+  const rsvpDeadlineStr = settings.rsvp_deadline
     ? formatInTimezone(settings.rsvp_deadline, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })
     : '';
   const weddingDateStr = weddingDate
@@ -240,11 +239,6 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
               {showWeddingDate && weddingDate && (
                 <p style={{ fontFamily: stackFor(dateFont), fontSize: 11, color: dateColor, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
                   {formatInTimezone(settings.wedding_date, settings.timezone, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-                </p>
-              )}
-              {rsvpDeadlineDate && (
-                <p style={{ fontSize: 10, color: paperText, opacity: 0.6, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>
-                  RSVP by {rsvpDeadlineStr}
                 </p>
               )}
               <div className="h-px w-12 mx-auto my-3" style={{ background: dividerColor, opacity: 0.3 }} />

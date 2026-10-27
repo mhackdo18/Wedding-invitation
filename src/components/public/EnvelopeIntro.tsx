@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { RotateCcw } from 'lucide-react';
 import type { SiteSettings } from '@/types';
 import { stackFor } from '@/lib/fonts';
-import { formatDeadlineDate, formatWeddingDate } from '@/lib/timezone';
+import { formatDeadlineDate, formatInTimezone } from '@/lib/timezone';
 import { useScrollLock } from '@/lib/useScrollLock';
 
 type Phase = 'closed' | 'releasing' | 'opening' | 'rising' | 'open' | 'closing';
@@ -36,7 +36,7 @@ export default function EnvelopeIntro({
     ? formatDeadlineDate(settings.rsvp_deadline, settings.timezone)
     : '';
   const weddingDateStr = settings.wedding_date
-    ? formatWeddingDate(settings.wedding_date, settings.timezone)
+    ? formatInTimezone(settings.wedding_date, settings.timezone, { month: 'long', day: 'numeric', year: 'numeric' })
     : '';
 
   const nameOnCard = (guestName || '').trim();
@@ -169,6 +169,13 @@ export default function EnvelopeIntro({
   const paperBg = settings.invitation_paper_background_color || '#fffef8';
   const paperBorder = settings.invitation_paper_border_color || 'rgba(180,160,130,0.4)';
   const paperBorderStyle = settings.invitation_paper_border_style || 'solid';
+  const showWeddingDate = settings.invitation_paper_show_date !== false;
+  const dateFontStack = stackFor(settings.invitation_paper_date_font || 'Cormorant Garamond');
+  const dateColor = settings.invitation_paper_date_color || letterTextColor;
+  const dividerColor = settings.invitation_paper_divider_color || '#b59a6b';
+  const formattedWeddingDate = settings.wedding_date
+    ? formatInTimezone(settings.wedding_date, settings.timezone, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+    : '';
 
   const showFlapName = settings.invitation_flap_show_name !== false;
   const flapNameTemplate = settings.invitation_flap_name_text || '';
@@ -464,9 +471,9 @@ export default function EnvelopeIntro({
             }}>
               {/* Decorative top */}
               <div className="flex items-center justify-center gap-3 mb-4">
-                <span className="h-px w-8" style={{ background: 'rgba(181,154,107,0.3)' }} />
-                <span style={{ color: '#b59a6b', fontSize: 12 }}>&#10022;</span>
-                <span className="h-px w-8" style={{ background: 'rgba(181,154,107,0.3)' }} />
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
+                <span style={{ color: dividerColor, fontSize: 12 }}>&#10022;</span>
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
               </div>
 
               {/* Partner names */}
@@ -483,18 +490,20 @@ export default function EnvelopeIntro({
               )}
 
               {/* Date and venue */}
-              {weddingDate && (
+              {(showWeddingDate && weddingDate) || settings.venue_line ? (
                 <div className="mb-4 w-full">
-                  <p style={{ fontSize: 12, color: '#8a7a66', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                    {weddingDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-                  </p>
+                  {showWeddingDate && weddingDate && (
+                    <p style={{ fontFamily: dateFontStack, fontSize: 12, color: dateColor, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                      {formattedWeddingDate}
+                    </p>
+                  )}
                   {settings.venue_line && (
-                    <p style={{ fontSize: 14, color: '#8a7a66', marginTop: 4 }}>{settings.venue_line}</p>
+                    <p style={{ fontSize: 14, color: letterTextColor, opacity: 0.7, marginTop: 4 }}>{settings.venue_line}</p>
                   )}
                 </div>
-              )}
+              ) : null}
 
-              <div className="h-px w-16 mx-auto my-4" style={{ background: 'rgba(181,154,107,0.3)' }} />
+              <div className="h-px w-16 mx-auto my-4" style={{ background: dividerColor, opacity: 0.3 }} />
 
               {/* Letter body */}
               <div
@@ -524,9 +533,9 @@ export default function EnvelopeIntro({
 
               {/* Decorative bottom */}
               <div className="flex items-center justify-center gap-3 mt-6 w-full">
-                <span className="h-px w-8" style={{ background: 'rgba(181,154,107,0.2)' }} />
-                <span style={{ color: 'rgba(181,154,107,0.5)', fontSize: 12 }}>&#10022;</span>
-                <span className="h-px w-8" style={{ background: 'rgba(181,154,107,0.2)' }} />
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.2 }} />
+                <span style={{ color: dividerColor, opacity: 0.5, fontSize: 12 }}>&#10022;</span>
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.2 }} />
               </div>
             </div>
           </div>
