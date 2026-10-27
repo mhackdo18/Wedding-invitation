@@ -176,6 +176,7 @@ export default function EnvelopeIntro({
   const formattedWeddingDate = settings.wedding_date
     ? formatInTimezone(settings.wedding_date, settings.timezone, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
     : '';
+  const showBodyDivider = settings.invitation_paper_show_names !== false || (showWeddingDate && !!weddingDate);
 
   const showFlapName = settings.invitation_flap_show_name !== false;
   const flapNameTemplate = settings.invitation_flap_name_text || '';
@@ -503,7 +504,9 @@ export default function EnvelopeIntro({
                 </div>
               ) : null}
 
-              <div className="h-px w-16 mx-auto my-4" style={{ background: dividerColor, opacity: 0.3 }} />
+              {showBodyDivider && (
+                <div className="h-px w-16 mx-auto my-4" style={{ background: dividerColor, opacity: 0.3 }} />
+              )}
 
               {/* Letter body */}
               <div
