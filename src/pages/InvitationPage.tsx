@@ -312,7 +312,7 @@ export default function InvitationPage({ token }: { token: string }) {
   const otherPages = visiblePages.filter((p) => p.template !== 'welcome');
 
   return (
-    <div className="min-h-[100dvh]" style={{ background: 'var(--bg-color)' }}>
+    <div className="min-h-[100dvh]" style={{ background: 'var(--bg-color)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <BgPhotoLayer bg={outerBg}>
       <DoorReveal
         open={introOpen || doorOpen}
@@ -405,7 +405,7 @@ export default function InvitationPage({ token }: { token: string }) {
 
         <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-in">
         {/* Footer */}
-        <footer className="text-center py-8" style={{ background: settings.footer_bg_color && settings.footer_bg_color !== 'transparent' ? settings.footer_bg_color : 'transparent' }}>
+        <footer className="text-center pt-8 pb-28 lg:pb-10" style={{ background: settings.footer_bg_color && settings.footer_bg_color !== 'transparent' ? settings.footer_bg_color : 'transparent' }}>
           {settings.footer_monogram_url ? (
             <img src={settings.footer_monogram_url} alt="Monogram" className="w-16 h-16 rounded-full object-cover mx-auto mb-3" />
           ) : (
@@ -424,7 +424,7 @@ export default function InvitationPage({ token }: { token: string }) {
         ...navItems.map((p) => ({ key: p.id, label: p.title, onSelect: () => scrollToSection(p.template, p.id) })),
         ...(settings.show_rsvp_in_navigation !== false ? [{ key: 'rsvp', label: settings.cta_text, onSelect: () => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }), accent: true }] : []),
       ]} bottomOffset={20} />
-      <div className="h-10" />
+
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
       )}

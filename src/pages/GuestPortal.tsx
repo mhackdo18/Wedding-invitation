@@ -24,7 +24,7 @@ export default function GuestPortal() {
 
   if (loading) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center" style={{ background: 'var(--bg-color)' }}>
+      <div className="min-h-[100dvh] flex items-center justify-center" style={{ background: 'var(--bg-color)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <Loader2 className="animate-spin" style={{ color: '#8a6d3b' }} />
       </div>
     );
@@ -78,7 +78,7 @@ export default function GuestPortal() {
   const textFont = settings?.portal_text_font ? stackFor(settings.portal_text_font) : 'var(--heading-font)';
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center px-4 py-8" style={{ background: portalBg }}>
+    <div className="min-h-[100dvh] flex items-center justify-center px-4 py-8" style={{ background: portalBg, paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="w-full max-w-sm">
         <Reveal enabled={!!settings?.scroll_animation_enabled} animation="fade-up">
         <div className="text-center mb-6">
