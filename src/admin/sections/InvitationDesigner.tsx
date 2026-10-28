@@ -94,6 +94,8 @@ export default function InvitationDesigner() {
       invitation_paper_heading_font: draft.invitation_paper_heading_font,
       invitation_paper_heading_color: draft.invitation_paper_heading_color,
       invitation_paper_show_names: draft.invitation_paper_show_names,
+      invitation_paper_show_monogram: draft.invitation_paper_show_monogram,
+      invitation_paper_monogram_size: draft.invitation_paper_monogram_size,
       invitation_paper_show_date: draft.invitation_paper_show_date,
       invitation_paper_date_font: draft.invitation_paper_date_font,
       invitation_paper_date_color: draft.invitation_paper_date_color,
@@ -551,6 +553,20 @@ export default function InvitationDesigner() {
               <span>Show partner names heading on the letter</span>
             </label>
           </Card>
+
+          <Card>
+            <h3 className="font-semibold text-[#3a2e22] mb-3">Letter Monogram</h3>
+            <label className="flex items-center gap-2 mb-3 text-sm text-[#5a4430]">
+              <input type="checkbox" className="accent-[#8a6d3b]" checked={draft.invitation_paper_show_monogram !== false} onChange={(e) => upd({ invitation_paper_show_monogram: e.target.checked })} />
+              Show monogram at the top of the letter
+            </label>
+            <p className="text-xs text-[#8a7a66] mb-3">Displays your uploaded site monogram at the top of the letter for each guest and on the public invitation page.</p>
+            {draft.invitation_paper_show_monogram !== false && (
+              <div>
+                <label className="admin-label">Monogram Size — {draft.invitation_paper_monogram_size ?? 48}px</label>
+                <input type="range" min={32} max={96} value={draft.invitation_paper_monogram_size ?? 48} onChange={(e) => upd({ invitation_paper_monogram_size: parseInt(e.target.value) })} className="w-full accent-[#8a6d3b]" />
+              </div>
+            )}
 
           <Card>
             <h3 className="font-semibold text-[#3a2e22] mb-3">Wedding Date</h3>

@@ -4,6 +4,7 @@ import type { SiteSettings } from '@/types';
 import { stackFor } from '@/lib/fonts';
 import { formatDeadlineDate, formatInTimezone } from '@/lib/timezone';
 import { useScrollLock } from '@/lib/useScrollLock';
+import { SiteMonogram } from '@/components/public/SiteMonogram';
 
 type Phase = 'closed' | 'releasing' | 'opening' | 'rising' | 'open' | 'closing';
 
@@ -470,6 +471,7 @@ export default function EnvelopeIntro({
               border: paperBorderStyle === 'none' ? 'none' : paperBorderStyle === 'double' ? `3px double ${paperBorder}` : `1px ${paperBorderStyle} ${paperBorder}`,
               borderRadius: 2,
             }}>
+              {settings.invitation_paper_show_monogram !== false && <SiteMonogram settings={settings} size={settings.invitation_paper_monogram_size ?? 48} className="mb-4" />}
               {/* Decorative top */}
               <div className="flex items-center justify-center gap-3 mb-4">
                 <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />

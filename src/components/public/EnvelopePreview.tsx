@@ -3,6 +3,7 @@ import { RotateCcw } from 'lucide-react';
 import type { SiteSettings } from '@/types';
 import { stackFor } from '@/lib/fonts';
 import { formatInTimezone } from '@/lib/timezone';
+import { SiteMonogram } from '@/components/public/SiteMonogram';
 
 type Phase = 'closed' | 'releasing' | 'opening' | 'rising' | 'open';
 
@@ -225,6 +226,7 @@ export default function EnvelopePreview({ settings, fullscreen, onClose }: Props
         }}>
           <div className="overflow-hidden flex flex-col" style={{ maxHeight: fullscreen ? 'calc(100svh - 6rem)' : 380, background: paperBg, border: `1px solid ${paperBorderColor}`, borderRadius: 4, boxShadow: '0 24px 48px rgba(25,18,10,0.22), 0 5px 12px rgba(25,18,10,0.12)' }}>
             <div className="flex-1 min-h-0 p-6 flex flex-col text-center overflow-y-auto items-center thin-scroll">
+              {settings.invitation_paper_show_monogram !== false && <SiteMonogram settings={settings} size={settings.invitation_paper_monogram_size ?? 48} className="mb-4" />}
               <div className="flex items-center justify-center gap-3 mb-4">
                 <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
                 <span style={{ color: dividerColor, fontSize: 12 }}>&#10022;</span>
