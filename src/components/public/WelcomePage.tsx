@@ -299,7 +299,7 @@ export default function WelcomePage({
           <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
         )}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,6,3,0.75) 0%, rgba(10,6,3,0.1) 55%, transparent 100%)' }} />
-        <div className="relative text-center px-6 pb-14 flex flex-col items-center w-full" style={{ maxHeight: '100dvh' }}>
+        <div className="relative text-center px-6 flex flex-col items-center w-full" style={{ paddingBottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px))' }}>
           {pretitleText && <p style={{ ...pretitleStyle, letterSpacing: '0.3em', textTransform: 'uppercase', textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>{pretitleText}</p>}
           {renderNames('inline', { fontSize: titleStyle.fontSize || 'clamp(2.5rem, 10vw, 5rem)', lineHeight: 1.1 })}
           {marriedText && (

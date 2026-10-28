@@ -35,8 +35,14 @@ html, body {
 }
 
 #root {
+  min-height: 100vh;
   min-height: 100dvh;
-  min-height: 100vh; /* fallback */
+}
+
+/* Phones: the card is the whole screen, so the area under Safari's bars and overscroll must match it */
+@media (max-width: 1023px) {
+  html, body { background: var(--page-color); }
+  .embossed-card { box-shadow: none; }
 }
 
 /* Fluid root font scaling on <html> handles base sizing.

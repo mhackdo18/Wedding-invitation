@@ -257,7 +257,7 @@ export default function PublicSite() {
   const otherPages = visiblePages.filter((p) => p.template !== 'welcome');
 
   return (
-    <div className="min-h-[100dvh]" style={{ background: 'var(--bg-color)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <div className="min-h-[100dvh]" style={{ background: 'var(--bg-color)' }}>
       <BgPhotoLayer bg={outerBg}>
       <DoorReveal
         open={introOpen || doorOpen}
@@ -276,7 +276,7 @@ export default function PublicSite() {
         settings={settings}
       />
 
-      <div className="mx-auto w-full embossed-card scroll-edge lg:max-w-[var(--page-width)]" style={{ fontFamily: 'var(--body-font)', overflow: (introOpen || doorOpen) && !revealDone ? 'hidden' : undefined, maxHeight: (introOpen || doorOpen) && !revealDone ? '100dvh' : undefined }}>
+      <div className="mx-auto w-full embossed-card scroll-edge lg:max-w-[var(--page-width)]" style={{ fontFamily: 'var(--body-font)', paddingBottom: 'env(safe-area-inset-bottom, 0px)', overflow: (introOpen || doorOpen) && !revealDone ? 'hidden' : undefined, maxHeight: (introOpen || doorOpen) && !revealDone ? '100dvh' : undefined }}>
         <BgPhotoLayer bg={cardBg}>
         {/* Sticky Navigation */}
         <nav className="sticky top-0 z-20 hidden lg:flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>

@@ -2,7 +2,7 @@
   "name": "Our Wedding Invitation",
   "short_name": "Wedding",
   "description": "You are cordially invited to celebrate our wedding day with us.",
-  "start_url": "/#/admin",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#faf6ee",
   "theme_color": "#8a6d3b",
