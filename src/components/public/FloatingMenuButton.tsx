@@ -8,7 +8,13 @@ export interface FloatingMenuItem {
   accent?: boolean;
 }
 
-export default function FloatingMenuButton({ items }: { items: FloatingMenuItem[] }) {
+export default function FloatingMenuButton({
+  items,
+  bottomOffset = 20,
+}: {
+  items: FloatingMenuItem[];
+  bottomOffset?: number;
+}) {
   const [open, setOpen] = useState(false);
 
   if (items.length === 0) return null;
@@ -25,8 +31,12 @@ export default function FloatingMenuButton({ items }: { items: FloatingMenuItem[
       )}
       {open && (
         <div
-          className="fixed right-[5rem] bottom-[8.75rem] z-50 w-56 max-h-[60vh] overflow-y-auto rounded-2xl p-2 shadow-2xl lg:hidden"
-          style={{ background: 'var(--page-color, #FBF7F0)', border: '1px solid rgba(120,90,60,0.2)' }}
+          className="fixed right-[4.5rem] z-50 w-52 max-h-[60vh] overflow-y-auto rounded-2xl p-2 shadow-2xl lg:hidden"
+          style={{
+            bottom: bottomOffset,
+            background: 'var(--page-color, #FBF7F0)',
+            border: '1px solid rgba(120,90,60,0.2)',
+          }}
         >
           {items.map((item) => (
             <button
@@ -44,10 +54,16 @@ export default function FloatingMenuButton({ items }: { items: FloatingMenuItem[
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? 'Close menu' : 'Open menu'}
         aria-expanded={open}
-        className="fixed bottom-[8.75rem] right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition hover:scale-105 lg:hidden"
-        style={{ background: 'rgba(58,46,34,0.85)', backdropFilter: 'blur(8px)', color: '#fff' }}
+        className="fixed right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition active:scale-95 lg:hidden"
+        style={{
+          bottom: bottomOffset,
+          background: 'rgba(58,46,34,0.88)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          color: '#fff',
+        }}
       >
-        {open ? <X size={20} /> : <Menu size={20} />}
+        {open ? <X size={18} /> : <Menu size={18} />}
       </button>
     </>
   );

@@ -5,10 +5,12 @@ export default function FloatingMusicControl({
   musicUrl,
   autoplay = true,
   active = true,
+  bottomOffset = 20,
 }: {
   musicUrl: string | null;
   autoplay?: boolean;
   active?: boolean;
+  bottomOffset?: number;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [muted, setMuted] = useState(false);
@@ -105,13 +107,19 @@ export default function FloatingMusicControl({
     <button
       onClick={toggleMute}
       aria-label={muted ? 'Unmute background music' : 'Mute background music'}
-      className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition hover:scale-105"
-      style={{ background: 'rgba(58,46,34,0.85)', backdropFilter: 'blur(8px)', color: '#fff' }}
+      className="fixed right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition active:scale-95"
+      style={{
+        bottom: bottomOffset,
+        background: 'rgba(58,46,34,0.88)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        color: '#fff',
+      }}
     >
-      {muted ? <VolumeX size={20} /> : ready ? <Volume2 size={20} /> : <Music size={20} />}
+      {muted ? <VolumeX size={18} /> : ready ? <Volume2 size={18} /> : <Music size={18} />}
       {!muted && ready && (
         <span
-          className="absolute inset-0 rounded-full"
+          className="absolute inset-0 rounded-full pointer-events-none"
           style={{ animation: 'pulse-ring 2s ease-out infinite', border: '2px solid rgba(255,255,255,0.3)' }}
         />
       )}

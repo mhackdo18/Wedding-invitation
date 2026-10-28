@@ -75,7 +75,7 @@ export default function PasswordGate({ settings, onGranted }: { settings: SiteSe
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-8" style={pageStyle}>
+    <div className="min-h-[100dvh] flex items-center justify-center px-6 py-8" style={pageStyle}>
       <div className="rounded-xl p-8 max-w-sm w-full text-center shadow-xl" style={{ background: cardBg }}>
         {showMonogram && <SiteMonogram settings={settings} size={monogramSize} className="mx-auto mb-5" />}
         {showNames && <h1 style={{ fontFamily: titleFont, fontSize: fluidPx(28), color: titleColor, margin: '0 0 4px' }}>{settings.partner1_name} &amp; {settings.partner2_name}</h1>}
