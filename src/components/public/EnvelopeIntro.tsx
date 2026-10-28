@@ -538,9 +538,9 @@ export default function EnvelopeIntro({
 
               {/* Decorative bottom */}
               <div className="flex items-center justify-center gap-3 mt-6 w-full">
-                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.2 }} />
-                <span style={{ color: dividerColor, opacity: 0.5, fontSize: 12 }}>&#10022;</span>
-                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.2 }} />
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
+                <span style={{ color: dividerColor, fontSize: 12 }}>&#10022;</span>
+                <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
               </div>
             </div>
           </div>
