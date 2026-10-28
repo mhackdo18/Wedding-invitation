@@ -356,31 +356,6 @@ export default function InvitationPage({ token }: { token: string }) {
           <button onClick={() => setMobileNav(true)} className="md:hidden text-[#5a4430]"><Menu size={18} /></button>
         </nav>
 
-        {/* Mobile nav drawer */}
-        {mobileNav && (
-          <div className="md:hidden fixed inset-0 z-40">
-            <div className="absolute inset-0 bg-black/30" onClick={() => setMobileNav(false)} />
-            <div className="absolute right-0 top-0 bottom-0 w-56 flex flex-col p-4" style={{ background: 'var(--page-color)' }}>
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-semibold text-[#5a4430] text-sm">Menu</span>
-                <button onClick={() => setMobileNav(false)}><X size={18} className="text-[#8a7a66]" /></button>
-              </div>
-              <div className="space-y-1">
-                {navItems.map((p) => (
-                  <button key={p.id} onClick={() => scrollToSection(p.template, p.id)} className="w-full text-left px-3 py-2 rounded-lg text-sm" style={{ color: '#8a7a66' }}>
-                    {p.title}
-                  </button>
-                ))}
-              </div>
-              {settings.show_rsvp_in_navigation !== false && (
-                <button onClick={() => { setMobileNav(false); document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }); }} className="mt-3 w-full text-center font-semibold" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
-                  {settings.cta_text}
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-
         {/* Render all page sections */}
         {welcomePage && (
           <div id={welcomePage.id ? `section-${welcomePage.id}` : 'section-welcome'}>
@@ -447,6 +422,29 @@ export default function InvitationPage({ token }: { token: string }) {
         </Reveal>
         </BgPhotoLayer>
       </div>
+      {mobileNav && (
+        <div className="md:hidden fixed inset-0 z-40">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setMobileNav(false)} />
+          <div className="absolute right-0 top-0 bottom-0 w-56 overflow-hidden p-4" style={{ background: 'var(--page-color)' }}>
+            <div className="flex items-center justify-between mb-4">
+              <span className="font-semibold text-[#5a4430] text-sm">Menu</span>
+              <button onClick={() => setMobileNav(false)} aria-label="Close menu"><X size={18} className="text-[#8a7a66]" /></button>
+            </div>
+            <div className="space-y-1">
+              {navItems.map((p) => (
+                <button key={p.id} onClick={() => scrollToSection(p.template, p.id)} className="w-full text-left px-3 py-2 rounded-lg text-sm" style={{ color: '#8a7a66' }}>
+                  {p.title}
+                </button>
+              ))}
+            </div>
+            {settings.show_rsvp_in_navigation !== false && (
+              <button onClick={() => { setMobileNav(false); document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }); }} className="mt-3 w-full text-center font-semibold" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
+                {settings.cta_text}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
       <div className="h-10" />
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
