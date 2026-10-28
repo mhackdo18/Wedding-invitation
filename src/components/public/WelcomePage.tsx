@@ -237,7 +237,7 @@ export default function WelcomePage({
   // --- Fullscreen Cinematic ---
   if (layout === 'fullscreen') {
     return (
-      <header className="relative overflow-hidden flex items-end justify-center" style={{ minHeight: '80vh' }}>
+      <header className="relative overflow-hidden flex items-end justify-center" style={{ minHeight: 'calc(var(--stable-vh, 100svh) * 0.8)' }}>
         {settings.hero_image_url && (
           <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
         )}
@@ -294,7 +294,7 @@ export default function WelcomePage({
   // --- Full Viewport ---
   if (layout === 'viewport_full') {
     return (
-      <header className="relative overflow-hidden flex items-end justify-center" style={{ minHeight: '100dvh' }}>
+      <header className="relative overflow-hidden flex items-end justify-center" style={{ minHeight: 'var(--stable-vh, 100svh)' }}>
         {settings.hero_image_url && (
           <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
         )}
