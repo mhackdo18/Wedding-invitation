@@ -75,6 +75,7 @@ const WELCOME_LAYOUTS = [
   { value: 'split_diagonal', label: 'Diagonal Split', hint: 'Diagonal image/text split, modern angle' },
   { value: 'names_top', label: 'Names on Top', hint: 'Partner names on one line above hero image, dates and countdown below' },
   { value: 'invitation_cover', label: 'Invitation Cover', hint: 'Rounded photo cover with music controls, script names, and invitation message' },
+  { value: 'viewport_full', label: 'Full Viewport', hint: 'Fills entire screen on mobile, cinematic photo with all content in one view' },
 ];
 
 type Tab = 'pages' | 'story' | 'styling';
@@ -419,6 +420,7 @@ function StylingTab() {
       show_rsvp_on_welcome_public: draft.show_rsvp_on_welcome_public, show_rsvp_in_navigation_public: draft.show_rsvp_in_navigation_public, show_rsvp_section_public: draft.show_rsvp_section_public,
       welcome_layout: draft.welcome_layout,
       cta_text: draft.cta_text, cta_bg_color: draft.cta_bg_color, cta_text_color: draft.cta_text_color,
+      hero_image_fit: draft.hero_image_fit, hero_image_position: draft.hero_image_position,
       cta_radius: draft.cta_radius, cta_size: draft.cta_size,
       footer_monogram_url: draft.footer_monogram_url,
       footer_text: draft.footer_text, footer_bg_color: draft.footer_bg_color,
@@ -472,6 +474,33 @@ function StylingTab() {
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleHeroUpload(f); e.target.value = ''; }} />
             {draft.hero_image_url && <button type="button" onClick={() => update({ hero_image_url: null })} className="text-xs text-[#b03a3a] mt-1">Remove photo</button>}
           </div>
+          {draft.hero_image_url && (
+            <div className="grid grid-cols-2 gap-3 mt-3">
+              <div>
+                <label className="admin-label">Photo Fit</label>
+                <select className="admin-input" value={draft.hero_image_fit || 'cover'} onChange={(e) => update({ hero_image_fit: e.target.value })}>
+                  <option value="cover">Cover (fills frame, may crop)</option>
+                  <option value="contain">Contain (full photo visible)</option>
+                  <option value="fill">Stretch (exact fill)</option>
+                  <option value="center">Natural (centered, no resize)</option>
+                </select>
+              </div>
+              <div>
+                <label className="admin-label">Photo Position</label>
+                <select className="admin-input" value={draft.hero_image_position || 'center'} onChange={(e) => update({ hero_image_position: e.target.value })}>
+                  <option value="center">Center</option>
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                  <option value="top-left">Top Left</option>
+                  <option value="top-right">Top Right</option>
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="bottom-right">Bottom Right</option>
+                </select>
+              </div>
+            </div>
+          )}
         </div>
       </Card>
 

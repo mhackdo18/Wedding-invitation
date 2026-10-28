@@ -276,7 +276,7 @@ export default function PublicSite() {
         settings={settings}
       />
 
-      <div className="mx-auto w-full embossed-card scroll-edge lg:max-w-[var(--page-width)]" style={{ fontFamily: 'var(--body-font)' }}>
+      <div className="mx-auto w-full embossed-card scroll-edge lg:max-w-[var(--page-width)]" style={{ fontFamily: 'var(--body-font)', overflow: (introOpen || doorOpen) && !revealDone ? 'hidden' : undefined, maxHeight: (introOpen || doorOpen) && !revealDone ? '100dvh' : undefined }}>
         <BgPhotoLayer bg={cardBg}>
         {/* Sticky Navigation */}
         <nav className="sticky top-0 z-20 hidden lg:flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>

@@ -4,6 +4,34 @@ import { typeStyle, fluidFontSize, fluidPx } from '@/lib/typography';
 import { stackFor } from '@/lib/fonts';
 import { formatWeddingDate, formatDeadlineDate } from '@/lib/timezone';
 
+const HERO_FIT_MAP: Record<string, string> = {
+  cover: 'cover',
+  contain: 'contain',
+  fill: '100% 100%',
+  center: 'auto',
+};
+
+const HERO_POS_MAP: Record<string, string> = {
+  center: 'center',
+  top: 'top',
+  bottom: 'bottom',
+  left: 'left',
+  right: 'right',
+  'top-left': 'top left',
+  'top-right': 'top right',
+  'bottom-left': 'bottom left',
+  'bottom-right': 'bottom right',
+};
+
+function heroBgStyle(url: string, fit?: string | null, pos?: string | null): React.CSSProperties {
+  return {
+    backgroundImage: `url(${url})`,
+    backgroundSize: HERO_FIT_MAP[fit || 'cover'] || 'cover',
+    backgroundPosition: HERO_POS_MAP[pos || 'center'] || 'center',
+    backgroundRepeat: 'no-repeat',
+  };
+}
+
 function resolveTypo(
   typoStyle: TypeStyle | undefined,
   fallback: { font?: string; size?: number | string; weight?: number; color?: string },
@@ -48,7 +76,7 @@ export default function WelcomePage({
   const pretitleText = settings.hero_pretitle_text ?? 'Together with their families';
   const marriedText = settings.hero_married_text ?? 'ARE GETTING MARRIED';
 
-  const isDarkLayout = ['centered', 'fullscreen', 'magazine', 'dark_luxe'].includes(layout);
+  const isDarkLayout = ['centered', 'fullscreen', 'viewport_full', 'magazine', 'dark_luxe'].includes(layout);
 
   // Resolve all typography styles with layout-appropriate fallbacks
   const titleStyle = resolveTypo(typo.heroTitle, {
@@ -151,7 +179,7 @@ export default function WelcomePage({
       <header className="relative overflow-hidden" style={{ minHeight: 460 }}>
         {settings.hero_image_url && (
           <>
-            <div className="absolute inset-0" style={{ backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+            <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
             <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.38)' }} />
           </>
         )}
@@ -172,7 +200,7 @@ export default function WelcomePage({
     return (
       <header className="flex flex-col sm:flex-row" style={{ minHeight: 380 }}>
         {settings.hero_image_url && (
-          <div className="sm:w-1/2" style={{ backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: 220 }} />
+          <div className="sm:w-1/2" style={{ ...heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position), minHeight: 220 }} />
         )}
         <div className={`px-8 py-12 text-center flex flex-col items-center justify-center ${settings.hero_image_url ? 'sm:w-1/2' : 'w-full'}`}>
           {pretitleText && <p style={{ ...pretitleStyle, letterSpacing: '0.3em', textTransform: 'uppercase' }}>{pretitleText}</p>}
@@ -211,7 +239,7 @@ export default function WelcomePage({
     return (
       <header className="relative overflow-hidden flex items-end justify-center" style={{ minHeight: '80vh' }}>
         {settings.hero_image_url && (
-          <div className="absolute inset-0" style={{ backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+          <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
         )}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,6,3,0.75) 0%, rgba(10,6,3,0.1) 55%, transparent 100%)' }} />
         <div className="relative text-center px-6 pb-14 flex flex-col items-center">
@@ -244,7 +272,7 @@ export default function WelcomePage({
     return (
       <header className="relative overflow-hidden" style={{ minHeight: 440 }}>
         {settings.hero_image_url && (
-          <div className="absolute inset-0" style={{ backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+          <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
         )}
         <div className="absolute bottom-0 left-0 right-0 px-8 py-8" style={{ background: 'linear-gradient(to top, rgba(10,6,3,0.88) 0%, rgba(10,6,3,0.55) 65%, transparent 100%)' }}>
           {pretitleText && <p style={{ ...pretitleStyle, letterSpacing: '0.35em', textTransform: 'uppercase', marginBottom: 6 }}>{pretitleText}</p>}
@@ -258,6 +286,39 @@ export default function WelcomePage({
             {showRsvpBtn && <button onClick={onRsvp} style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: '8px 20px', fontSize: fluidPx(13), fontWeight: 600 }}>{settings.cta_text}</button>}
             {countdown}
           </div>
+        </div>
+      </header>
+    );
+  }
+
+  // --- Full Viewport ---
+  if (layout === 'viewport_full') {
+    return (
+      <header className="relative overflow-hidden flex items-end justify-center" style={{ minHeight: '100dvh' }}>
+        {settings.hero_image_url && (
+          <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
+        )}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,6,3,0.75) 0%, rgba(10,6,3,0.1) 55%, transparent 100%)' }} />
+        <div className="relative text-center px-6 pb-14 flex flex-col items-center w-full" style={{ maxHeight: '100dvh' }}>
+          {pretitleText && <p style={{ ...pretitleStyle, letterSpacing: '0.3em', textTransform: 'uppercase', textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>{pretitleText}</p>}
+          {renderNames('inline', { fontSize: titleStyle.fontSize || 'clamp(2.5rem, 10vw, 5rem)', lineHeight: 1.1 })}
+          {marriedText && (
+            <div className="flex items-center justify-center gap-3 mt-3">
+              <span className="h-px w-10" style={{ background: 'rgba(255,255,255,0.3)' }} />
+              <span style={{ ...marriedStyle, letterSpacing: '0.2em' }}>{marriedText}</span>
+              <span className="h-px w-10" style={{ background: 'rgba(255,255,255,0.3)' }} />
+            </div>
+          )}
+          {dateStr && <p style={{ ...dateStyle, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 8 }}>{dateStr}</p>}
+          {settings.venue_line && <p style={{ ...venueStyle, marginTop: 4 }}>{settings.venue_line}</p>}
+          {showRsvpBtn && (
+            <div className="mt-5">
+              <button onClick={onRsvp} style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', color: settings.cta_text_color || '#fff', border: '1px solid rgba(255,255,255,0.35)', borderRadius: settings.cta_radius, padding: '10px 28px', fontSize: fluidPx(14), fontWeight: 600, letterSpacing: '0.08em' }}>
+                {settings.cta_text}
+              </button>
+            </div>
+          )}
+          {countdown}
         </div>
       </header>
     );
@@ -296,7 +357,7 @@ export default function WelcomePage({
       <header className="flex flex-col sm:flex-row" style={{ minHeight: 400, background: '#f5f0e8' }}>
         {settings.hero_image_url && (
           <div className="w-full sm:w-2/5 relative overflow-hidden" style={{ minHeight: 200 }}>
-            <div className="absolute inset-0" style={{ backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+            <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
             <div className="absolute inset-0" style={{ background: 'rgba(50,70,40,0.15)' }} />
           </div>
         )}
@@ -428,7 +489,7 @@ export default function WelcomePage({
   if (layout === 'dark_luxe') {
     return (
       <header className="px-8 py-16 text-center relative overflow-hidden" style={{ background: '#0a0a0a', minHeight: 400 }}>
-        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: settings.hero_image_url ? `url(${settings.hero_image_url})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: settings.hero_image_url ? `url(${settings.hero_image_url})` : 'none', backgroundSize: HERO_FIT_MAP[settings.hero_image_fit || 'cover'] || 'cover', backgroundPosition: HERO_POS_MAP[settings.hero_image_position || 'center'] || 'center' }} />
         <div className="relative">
           {pretitleText && <p style={{ ...pretitleStyle, letterSpacing: '0.4em', textTransform: 'uppercase' }}>{pretitleText}</p>}
           <h1 style={{ ...titleStyle, margin: '12px 0', lineHeight: 1.1, textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>{settings.partner1_name}</h1>
@@ -475,7 +536,7 @@ export default function WelcomePage({
     return (
       <header className="relative overflow-hidden flex flex-col sm:flex-row" style={{ minHeight: 400 }}>
         {settings.hero_image_url && (
-          <div className="sm:w-1/2 relative" style={{ backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: 200, clipPath: 'polygon(0 0, 100% 0, 75% 100%, 0% 100%)' }} />
+          <div className="sm:w-1/2 relative" style={{ ...heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position), minHeight: 200, clipPath: 'polygon(0 0, 100% 0, 75% 100%, 0% 100%)' }} />
         )}
         <div className={`px-10 py-12 flex flex-col justify-center ${settings.hero_image_url ? 'sm:w-1/2' : 'w-full'}`}>
           {pretitleText && <p style={{ ...pretitleStyle, letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: 10 }}>{pretitleText}</p>}
@@ -502,7 +563,7 @@ export default function WelcomePage({
           </h1>
         </div>
         {settings.hero_image_url && (
-          <div className="relative flex-1" style={{ minHeight: 380, backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+          <div className="relative flex-1" style={{ minHeight: 380, ...heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position) }} />
         )}
         <div className="relative text-center px-6 pt-5 pb-8" style={{ background: 'transparent' }}>
           {dateStr && <p style={{ ...dateStyle, letterSpacing: '0.04em' }}>{dateStr}</p>}
@@ -520,7 +581,7 @@ export default function WelcomePage({
       <header className="relative overflow-hidden text-center" style={{ background: '#f8f8f6' }}>
         <div className="relative overflow-hidden" style={{ height: 'clamp(390px, 62vh, 620px)', borderRadius: '0 0 45% 45% / 0 0 14% 14%' }}>
           {settings.hero_image_url ? (
-            <div className="absolute inset-0" style={{ backgroundImage: `url(${settings.hero_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+            <div className="absolute inset-0" style={heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position)} />
           ) : <div className="absolute inset-0" style={{ background: '#d9d5ca' }} />}
         </div>
         <div className="px-7 pb-10 pt-8">
@@ -551,8 +612,7 @@ export default function WelcomePage({
     <header className="text-center px-6 pt-12 pb-8 relative overflow-hidden">
       {settings.hero_image_url && (
         <div className="absolute inset-0 opacity-25" style={{
-          backgroundImage: `url(${settings.hero_image_url})`,
-          backgroundSize: 'cover', backgroundPosition: 'center',
+          ...heroBgStyle(settings.hero_image_url, settings.hero_image_fit, settings.hero_image_position),
           maskImage: 'linear-gradient(to bottom, black, transparent)',
           WebkitMaskImage: 'linear-gradient(to bottom, black, transparent)',
         }} />

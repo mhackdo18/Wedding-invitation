@@ -26,6 +26,8 @@ export interface SiteSettings {
   show_rsvp_in_navigation_public: boolean;
   show_rsvp_section_public: boolean;
   welcome_layout: string;
+  hero_image_fit: string | null;
+  hero_image_position: string | null;
   cta_text: string;
   cta_bg_color: string;
   cta_text_color: string;
