@@ -124,7 +124,7 @@ export default function EntourageManager() {
   const removeSection = (i: number) => update((d) => { d.sections.splice(i, 1); });
 
   const makeColumns = (count: number): EntourageColumn[] => {
-    const base = { names: [], label_font_family: 'inherit', label_font_color: '#8a6d3b', label_font_size: 11, name_font_family: 'inherit', name_font_color: '#5a4430', name_font_size: 14 } as EntourageColumn;
+    const base: EntourageColumn = { label: '', side: 'neutral', names: [], label_font_family: 'inherit', label_font_color: '#8a6d3b', label_font_size: 11, name_font_family: 'inherit', name_font_color: '#5a4430', name_font_size: 14 };
     if (count === 1) return [{ ...base, label: 'Names', side: 'neutral' }];
     if (count === 3) return [
       { ...base, label: "Groom's Side", side: 'groom' },

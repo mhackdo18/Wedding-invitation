@@ -167,7 +167,7 @@ export default function GuestPortal() {
           </>
         )}
       </div>
-      <FloatingMusicControl musicUrl={settings?.music_url} />
+      <FloatingMusicControl musicUrl={settings?.music_url ?? null} />
     </div>
   );
 }

@@ -462,6 +462,7 @@ export interface InformationBlock {
 export interface InformationConfig {
   title: string;
   blocks: InformationBlock[];
+  [key: string]: unknown;
 }
 
 export interface Party {

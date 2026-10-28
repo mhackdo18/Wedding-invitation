@@ -843,6 +843,7 @@ function DoorPanel({
 }) {
   const isLeft = side === 'left';
   const adjust = adjustColor;
+  const doorBase = adjust(doorColor, -12);
 
   const decorativeElements: React.ReactNode[] = [];
 

@@ -4,7 +4,7 @@ import { SectionHeader, Card, EmptyState, ConfirmButton } from '../ui';
 import type { SeatingTable, SeatAssignment, Guest, Party } from '@/types';
 import { Armchair, Plus, Loader2, Trash2, X, Users, Circle, Square, Minus, UserCircle, Check, Search, Edit2 } from 'lucide-react';
 
-const SHAPES = [
+const SHAPES: { value: 'round' | 'rectangular' | 'banquet'; label: string; icon: typeof Circle }[] = [
   { value: 'round', label: 'Round', icon: Circle },
   { value: 'rectangular', label: 'Rectangular', icon: Square },
   { value: 'banquet', label: 'Long Banquet', icon: Minus },
@@ -173,7 +173,7 @@ export default function SeatingChart() {
 
 function TableForm({ table, onCancel, onSave }: { table?: SeatingTable | null; onCancel: () => void; onSave: (name: string, shape: string, cap: number) => void }) {
   const [name, setName] = useState(table?.name || '');
-  const [shape, setShape] = useState(table?.shape || 'round');
+  const [shape, setShape] = useState<'round' | 'rectangular' | 'banquet'>(table?.shape || 'round');
   const [cap, setCap] = useState(table?.capacity || 8);
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(30,20,12,0.4)' }} onClick={onCancel}>

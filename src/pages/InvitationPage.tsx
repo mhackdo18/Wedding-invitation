@@ -276,21 +276,21 @@ export default function InvitationPage({ token }: { token: string }) {
       case 'welcome':
         return <WelcomePage settings={settings} typo={typo} onRsvp={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} />;
       case 'story':
-        return <StoryPage settings={settings} typo={typo} milestones={milestones} heroImageUrl={p.hero_image_url} />;
+        return <StoryPage settings={settings} typo={typo} milestones={milestones} heroImageUrl={p.hero_image_url ?? undefined} />;
       case 'venue':
-        return <VenueSection typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <VenueSection typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'schedule':
-        return <Schedule events={mainEvents} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <Schedule events={mainEvents} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'gallery':
-        return <Gallery photos={photos} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <Gallery photos={photos} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'find-table':
-        return <FindYourTable heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <FindYourTable heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'entourage':
-        return <EntouragePage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <EntouragePage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'information':
-        return <InformationPage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url} guestTags={guest?.tags} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <InformationPage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} guestTags={guest?.tags} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'document':
-        return <DocumentViewer page={p} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <DocumentViewer page={p} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'custom':
         return (
           <section className="px-6 py-8" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>

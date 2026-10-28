@@ -220,7 +220,7 @@ function PagesTab() {
 }
 
 function PageForm({ page, onCancel, onSave, existingSlugs }: { page: Page | null; onCancel: () => void; onSave: (d: Partial<Page>) => void; existingSlugs: string[] }) {
-  const [form, setForm] = useState<Partial<Page>>(page || { title: '', slug: '', template: 'custom', is_visible: true, show_on_public: true, visible_tags: [], body_text: (page?.config as any)?.body_text || '' });
+  const [form, setForm] = useState<Partial<Page>>(page || { title: '', slug: '', template: 'custom', is_visible: true, show_on_public: true, visible_tags: [], body_text: ((page as Page | null)?.config as Record<string, unknown> | undefined)?.body_text as string || '' });
   const [slugError, setSlugError] = useState('');
   const [tagInput, setTagInput] = useState('');
   const genSlug = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -228,7 +228,7 @@ function PageForm({ page, onCancel, onSave, existingSlugs }: { page: Page | null
   // Initialize information config from existing page
   useEffect(() => {
     if (page?.template === 'information' && page.config && !form.config) {
-      const cfg = page.config as InformationConfig;
+      const cfg = page.config as unknown as InformationConfig;
       if (cfg.blocks) setForm((f) => ({ ...f, config: cfg }));
     }
   }, [page]);
@@ -588,7 +588,7 @@ function StylingTab() {
               {PAGE_BORDER_TEMPLATES.map((t) => {
                 const selected = (getBorderFromTypography(draft.typography) || 'plain') === t.value;
                 return (
-                  <button key={t.value} onClick={() => update({ typography: setBorderInTypography(draft.typography, t.value) })}
+                  <button key={t.value} onClick={() => update({ typography: setBorderInTypography(draft.typography, t.value) as Record<string, TypeStyle> })}
                     className="group text-left rounded-lg border overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md"
                     style={{ borderColor: selected ? '#8a6d3b' : '#e6ddcd', boxShadow: selected ? '0 0 0 2px rgba(138,109,59,0.14)' : undefined }}>
                     <div className="aspect-[4/3] flex items-center justify-center relative" style={{ background: 'transparent' }}>
@@ -608,12 +608,12 @@ function StylingTab() {
             </div>
             <div className="space-y-2 mb-3 rounded-lg border p-3" style={{ borderColor: '#e6ddcd', background: '#fffdf8' }}>
               <label className="flex items-center gap-2 text-sm text-[#5a4430]">
-                <input type="checkbox" checked={getBorderExcludeWelcomeFromTypography(draft.typography)} onChange={(e) => update({ typography: setBorderExcludeWelcomeInTypography(draft.typography, e.target.checked) })} className="accent-[#8a6d3b]" />
+                <input type="checkbox" checked={getBorderExcludeWelcomeFromTypography(draft.typography)} onChange={(e) => update({ typography: setBorderExcludeWelcomeInTypography(draft.typography, e.target.checked) as Record<string, TypeStyle> })} className="accent-[#8a6d3b]" />
                 Exclude the Welcome page from the border
               </label>
               <div>
                 <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Content Padding</label><span className="text-xs text-[#8a7a66]">{getBorderPaddingFromTypography(draft.typography) ?? 10}px</span></div>
-                <input type="range" min={0} max={32} step={1} value={getBorderPaddingFromTypography(draft.typography) ?? 10} onChange={(e) => update({ typography: setBorderPaddingInTypography(draft.typography, parseInt(e.target.value, 10)) })} className="w-full" />
+                <input type="range" min={0} max={32} step={1} value={getBorderPaddingFromTypography(draft.typography) ?? 10} onChange={(e) => update({ typography: setBorderPaddingInTypography(draft.typography, parseInt(e.target.value, 10)) as Record<string, TypeStyle> })} className="w-full" />
                 <p className="text-[10px] text-[#8a7a66] mt-1">Controls the space between each page’s content and its border.</p>
               </div>
             </div>
@@ -630,16 +630,16 @@ function StylingTab() {
                     <div>
                       <label className="admin-label">Border Color</label>
                       <div className="flex items-center gap-2">
-                        <input type="color" value={color} onChange={(e) => update({ typography: setBorderColorInTypography(draft.typography, e.target.value) })} className="w-8 h-8 rounded border cursor-pointer shrink-0" style={{ borderColor: '#d6cdbf' }} />
-                        <input className="admin-input !py-1.5 !text-xs flex-1" value={color} onChange={(e) => update({ typography: setBorderColorInTypography(draft.typography, e.target.value) })} placeholder={tpl.defaultColor} />
+                        <input type="color" value={color} onChange={(e) => update({ typography: setBorderColorInTypography(draft.typography, e.target.value) as Record<string, TypeStyle> })} className="w-8 h-8 rounded border cursor-pointer shrink-0" style={{ borderColor: '#d6cdbf' }} />
+                        <input className="admin-input !py-1.5 !text-xs flex-1" value={color} onChange={(e) => update({ typography: setBorderColorInTypography(draft.typography, e.target.value) as Record<string, TypeStyle> })} placeholder={tpl.defaultColor} />
                       </div>
                     </div>
                     <div>
                       <div className="flex justify-between mb-1"><label className="admin-label !mb-0">Thickness</label><span className="text-xs text-[#8a7a66]">{thickness}px</span></div>
-                      <input type="range" min={0.5} max={8} step={0.5} value={thickness} onChange={(e) => update({ typography: setBorderThicknessInTypography(draft.typography, parseFloat(e.target.value)) })} className="w-full" />
+                      <input type="range" min={0.5} max={8} step={0.5} value={thickness} onChange={(e) => update({ typography: setBorderThicknessInTypography(draft.typography, parseFloat(e.target.value)) as Record<string, TypeStyle> })} className="w-full" />
                     </div>
                   </div>
-                  <button type="button" onClick={() => update({ typography: { ...draft.typography, _borderColor: undefined, _borderThickness: undefined, _borderPadding: undefined } })} className="text-xs text-[#b03a3a] hover:underline">Reset to default color &amp; thickness</button>
+                  <button type="button" onClick={() => update({ typography: { ...draft.typography, _borderColor: undefined, _borderThickness: undefined, _borderPadding: undefined } as unknown as Record<string, TypeStyle> })} className="text-xs text-[#b03a3a] hover:underline">Reset to default color &amp; thickness</button>
                 </div>
               );
             })()}
@@ -676,8 +676,8 @@ function StylingTab() {
                 <div><label className="admin-label">Background Color</label><div className="flex gap-2 items-center"><input type="color" value={draft.bg_color} onChange={(e) => update({ bg_color: e.target.value })} className="w-10 h-9 rounded border border-[#d6cdbf] cursor-pointer" /><input className="admin-input" value={draft.bg_color} onChange={(e) => update({ bg_color: e.target.value })} /></div></div>
               </div>
               <div><div className="flex justify-between mb-1"><label className="admin-label !mb-0">Page Width</label><span className="text-xs text-[#8a7a66]">{draft.page_width}px</span></div><input type="range" min={320} max={1100} step={10} value={draft.page_width} onChange={(e) => update({ page_width: parseInt(e.target.value) })} className="w-full" /></div>
-              <BgPhotoEditor label="Page Color (Card) Background Photo" bg={getCardBg(draft.typography)} onChange={(p) => update({ typography: setCardBg(draft.typography, p) })} />
-              <BgPhotoEditor label="Outer Background Photo" bg={getOuterBg(draft.typography)} onChange={(p) => update({ typography: setOuterBg(draft.typography, p) })} />
+              <BgPhotoEditor label="Page Color (Card) Background Photo" bg={getCardBg(draft.typography)} onChange={(p) => update({ typography: setCardBg(draft.typography, p) as Record<string, TypeStyle> })} />
+              <BgPhotoEditor label="Outer Background Photo" bg={getOuterBg(draft.typography)} onChange={(p) => update({ typography: setOuterBg(draft.typography, p) as Record<string, TypeStyle> })} />
             </div>
           </Card>
 
@@ -1140,7 +1140,7 @@ function PageBackgroundEditor({ form, setForm }: { form: Partial<Page>; setForm:
 }
 
 function InformationConfigEditor({ form, setForm }: { form: Partial<Page>; setForm: (f: Partial<Page>) => void }) {
-  const cfg = (form.config as InformationConfig) || { title: form.title || 'Information', blocks: [] };
+  const cfg = (form.config as unknown as InformationConfig) || { title: form.title || 'Information', blocks: [] };
   const [uploading, setUploading] = useState<number | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 

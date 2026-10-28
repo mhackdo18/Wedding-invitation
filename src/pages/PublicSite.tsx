@@ -219,28 +219,28 @@ export default function PublicSite() {
       case 'welcome':
         return <WelcomePage settings={settings} typo={typo} onRsvp={() => navigate('/rsvp')} />;
       case 'story':
-        return <StoryPage settings={settings} typo={typo} milestones={milestones} heroImageUrl={p.hero_image_url} />;
+        return <StoryPage settings={settings} typo={typo} milestones={milestones} heroImageUrl={p.hero_image_url ?? undefined} />;
       case 'venue':
-        return <VenueSection typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <VenueSection typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'schedule':
-        return <Schedule events={mainEvents} typo={typo} partner1={settings.partner1_name} partner2={settings.partner2_name} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <Schedule events={mainEvents} typo={typo} partner1={settings.partner1_name} partner2={settings.partner2_name} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'gallery':
-        return <Gallery photos={photos} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <Gallery photos={photos} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'find-table':
-        return <FindYourTable heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <FindYourTable heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'entourage':
-        return <EntouragePage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <EntouragePage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'information':
-        return <InformationPage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <InformationPage pageId={p.id} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'document':
-        return <DocumentViewer page={p} typo={typo} heroImageUrl={p.hero_image_url} animEnabled={!!settings.scroll_animation_enabled} />;
+        return <DocumentViewer page={p} typo={typo} heroImageUrl={p.hero_image_url ?? undefined} animEnabled={!!settings.scroll_animation_enabled} />;
       case 'custom':
         return (
           <section className="px-6 py-8" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
             <div className="text-center mb-6">
               <h2 style={{ fontFamily: 'var(--heading-font)', fontSize: fluidPx(26), color: '#5a4430', margin: 0, ...typeStyle(typo.pageTitle) }}>{p.title}</h2>
             </div>
-            <HeroImage url={p.hero_image_url} alt={p.title} />
+            <HeroImage url={p.hero_image_url || ''} alt={p.title} />
             <div
               className="text-sm leading-relaxed text-[#6b5d4f] max-w-md mx-auto text-center"
               dangerouslySetInnerHTML={{ __html: (p as any).body_text || (p as any).config?.body_text || 'Add your content in the Page Builder.' }}

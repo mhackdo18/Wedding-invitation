@@ -487,14 +487,14 @@ export default function GuestList() {
       const addSubValues = (subs: ConditionalSubQuestion[], qid: string) => {
         for (const sub of subs) {
           const raw = answers[g.id]?.[qid];
-          const { followups } = raw ? parseAnswer(raw) : { value: '', followups: {} as Record<string, string> };
+          const { followups } = raw ? parseAnswer(raw) : { value: '', followups: {} as Record<string, string> } as { value: string; followups: Record<string, string> };
           qValues.push(followups[sub.field_key] || '');
           if (sub.conditional_sub_questions?.length) addSubValues(sub.conditional_sub_questions, qid);
         }
       };
       questions.forEach(q => {
         const raw = answers[g.id]?.[q.id];
-        const { value } = raw ? parseAnswer(raw) : { value: '', followups: {} };
+        const { value } = raw ? parseAnswer(raw) : { value: '', followups: {} } as { value: string; followups: Record<string, string> };
         qValues.push(value);
         addSubValues(q.conditional_sub_questions || [], q.id);
       });

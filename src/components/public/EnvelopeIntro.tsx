@@ -174,6 +174,7 @@ export default function EnvelopeIntro({
   const dateFontStack = stackFor(settings.invitation_paper_date_font || 'Cormorant Garamond');
   const dateColor = settings.invitation_paper_date_color || letterTextColor;
   const dividerColor = settings.invitation_paper_divider_color || '#b59a6b';
+  const weddingDate = settings.wedding_date ? new Date(settings.wedding_date) : null;
   const formattedWeddingDate = settings.wedding_date
     ? formatInTimezone(settings.wedding_date, settings.timezone, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
     : '';
@@ -186,7 +187,6 @@ export default function EnvelopeIntro({
     : (guestName || partyName || 'Guest');
   const flapNameFont = settings.invitation_flap_name_font || 'Great Vibes';
   const flapNameColor = settings.invitation_flap_name_color || adjustColor(env, -45);
-  const weddingDate = settings.wedding_date ? new Date(settings.wedding_date) : null;
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-3 py-5 sm:px-4 sm:py-8 overflow-y-auto" style={{ background: 'rgba(40,28,18,0.82)', backdropFilter: useTextures ? 'blur(6px)' : 'none', opacity: isClosing ? 0 : 1, transition: 'opacity 0.6s ease' }}>
