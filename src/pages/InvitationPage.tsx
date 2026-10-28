@@ -17,9 +17,10 @@ import DocumentViewer from '@/components/public/DocumentViewer';
 import HeroImage from '@/components/public/HeroImage';
 import RsvpWizard from '@/components/public/RsvpWizard';
 import { navigate } from '@/lib/router';
-import { Loader2, Menu, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { SiteMonogram } from '@/components/public/SiteMonogram';
 import FloatingMusicControl from '@/components/public/FloatingMusicControl';
+import FloatingMenuButton from '@/components/public/FloatingMenuButton';
 import FaqChat from '@/components/public/FaqChat';
 import FallingPetals from '@/components/public/FallingPetals';
 import { Reveal } from '@/components/public/Reveal';
@@ -140,7 +141,6 @@ export default function InvitationPage({ token }: { token: string }) {
   const [doorOpen, setDoorOpen] = useState(false);
   const [doorOpening, setDoorOpening] = useState(false);
   const [revealDone, setRevealDone] = useState(false);
-  const [mobileNav, setMobileNav] = useState(false);
   const [invLoading, setInvLoading] = useState(true);
   const storyPageRef = useRef<Page | null>(null);
 
@@ -266,7 +266,6 @@ export default function InvitationPage({ token }: { token: string }) {
   const scrollToSection = (template: string, pageId?: string) => {
     const id = pageId ? `section-${pageId}` : `section-${template}`;
     if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setMobileNav(false);
   };
 
   const navItems = visiblePages.filter((p) => p.template !== 'rsvp');
@@ -334,14 +333,14 @@ export default function InvitationPage({ token }: { token: string }) {
         partyName={party?.name}
       />
 
-      <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)' }}>
+      <div className="mx-auto w-full embossed-card scroll-edge fade-up lg:max-w-[var(--page-width)]" style={{ fontFamily: 'var(--body-font)' }}>
         <BgPhotoLayer bg={cardBg}>
         {/* Sticky Navigation */}
-        <nav className="sticky top-0 z-20 flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
+        <nav className="sticky top-0 z-20 hidden lg:flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
           <button onClick={() => scrollToSection('welcome')} className="flex items-center shrink-0" aria-label="Back to welcome">
             <SiteMonogram settings={settings} size={36} />
           </button>
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navItems.map((p) => (
               <button key={p.id} onClick={() => scrollToSection(p.template, p.id)} className="px-3 py-1.5 text-xs font-medium rounded-full transition" style={{ color: '#8a7a66' }}>
                 {p.title}
@@ -353,7 +352,6 @@ export default function InvitationPage({ token }: { token: string }) {
               </button>
             )}
           </div>
-          <button onClick={() => setMobileNav(true)} className="md:hidden text-[#5a4430]"><Menu size={18} /></button>
         </nav>
 
         {/* Render all page sections */}
@@ -422,29 +420,10 @@ export default function InvitationPage({ token }: { token: string }) {
         </Reveal>
         </BgPhotoLayer>
       </div>
-      {mobileNav && (
-        <div className="md:hidden fixed inset-0 z-40">
-          <div className="absolute inset-0 bg-black/30" onClick={() => setMobileNav(false)} />
-          <div className="absolute right-0 top-0 bottom-0 w-56 overflow-hidden p-4" style={{ background: 'var(--page-color)' }}>
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-semibold text-[#5a4430] text-sm">Menu</span>
-              <button onClick={() => setMobileNav(false)} aria-label="Close menu"><X size={18} className="text-[#8a7a66]" /></button>
-            </div>
-            <div className="space-y-1">
-              {navItems.map((p) => (
-                <button key={p.id} onClick={() => scrollToSection(p.template, p.id)} className="w-full text-left px-3 py-2 rounded-lg text-sm" style={{ color: '#8a7a66' }}>
-                  {p.title}
-                </button>
-              ))}
-            </div>
-            {settings.show_rsvp_in_navigation !== false && (
-              <button onClick={() => { setMobileNav(false); document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }); }} className="mt-3 w-full text-center font-semibold" style={{ background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius, padding: `${ctaSize.py}px ${ctaSize.px}px`, fontSize: ctaSize.fontSize }}>
-                {settings.cta_text}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+      <FloatingMenuButton items={[
+        ...navItems.map((p) => ({ key: p.id, label: p.title, onSelect: () => scrollToSection(p.template, p.id) })),
+        ...(settings.show_rsvp_in_navigation !== false ? [{ key: 'rsvp', label: settings.cta_text, onSelect: () => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }), accent: true }] : []),
+      ]} />
       <div className="h-10" />
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
