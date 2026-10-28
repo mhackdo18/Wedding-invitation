@@ -74,6 +74,13 @@ export default function PasswordGate({ settings, onGranted }: { settings: SiteSe
     backgroundPosition: 'center',
   };
 
+  // Sync browser theme-color to match the gate background
+  useEffect(() => {
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', pageBg);
+    document.body.style.background = pageBg;
+    return () => { document.body.style.background = ''; };
+  }, [pageBg]);
+
   return (
     <div className="min-h-[100dvh] flex items-center justify-center px-6 py-8" style={{ ...pageStyle, paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="rounded-xl p-8 max-w-sm w-full text-center shadow-xl" style={{ background: cardBg }}>

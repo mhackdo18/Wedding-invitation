@@ -89,4 +89,7 @@ export function applySettingsVars(s: SiteSettings | null) {
   root.setProperty('--body-font', s.body_font);
   buildBgLayerVars('card', getCardBg(s.typography));
   buildBgLayerVars('outer', getOuterBg(s.typography));
+  // Sync Safari/Chrome theme-color to match the page background
+  const themeColor = s.bg_color || '#3a1a14';
+  document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', themeColor);
 }

@@ -23,17 +23,20 @@ body {
   margin: 0;
   font-family: var(--body-font);
   background: var(--bg-color);
+  min-height: 100dvh;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 /* Mobile edge-to-edge: fill entire viewport including safe-area insets */
-@supports (height: 100dvh) {
-  html, body { height: 100%; }
+html, body {
+  height: 100%;
 }
 
 #root {
   min-height: 100dvh;
+  min-height: 100vh; /* fallback */
 }
 
 /* Fluid root font scaling on <html> handles base sizing.
