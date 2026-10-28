@@ -109,7 +109,7 @@ export default function FloatingMusicControl({
       aria-label={muted ? 'Unmute background music' : 'Mute background music'}
       className="fixed right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition active:scale-95"
       style={{
-        bottom: bottomOffset,
+        bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))`,
         background: 'rgba(58,46,34,0.88)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',

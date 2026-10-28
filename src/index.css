@@ -27,6 +27,15 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Mobile edge-to-edge: fill entire viewport including safe-area insets */
+@supports (height: 100dvh) {
+  html, body { height: 100%; }
+}
+
+#root {
+  min-height: 100dvh;
+}
+
 /* Fluid root font scaling on <html> handles base sizing.
    Component-level clamp() values (from fluidPx/typeStyle) enforce
    per-element minimums of 12px to preserve readability on mobile. */

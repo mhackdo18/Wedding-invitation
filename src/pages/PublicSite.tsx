@@ -184,7 +184,7 @@ export default function PublicSite() {
 
   if (loading || !settings) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-color)' }}>
+      <div className="min-h-[100dvh] flex items-center justify-center" style={{ background: 'var(--bg-color)' }}>
         <div className="skeleton w-48 h-6 rounded" />
       </div>
     );

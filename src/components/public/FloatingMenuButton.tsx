@@ -33,7 +33,7 @@ export default function FloatingMenuButton({
         <div
           className="fixed right-[4.5rem] z-50 w-52 max-h-[60vh] overflow-y-auto rounded-2xl p-2 shadow-2xl lg:hidden"
           style={{
-            bottom: bottomOffset,
+            bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))`,
             background: 'var(--page-color, #FBF7F0)',
             border: '1px solid rgba(120,90,60,0.2)',
           }}
@@ -56,7 +56,7 @@ export default function FloatingMenuButton({
         aria-expanded={open}
         className="fixed right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition active:scale-95 lg:hidden"
         style={{
-          bottom: bottomOffset,
+          bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))`,
           background: 'rgba(58,46,34,0.88)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',

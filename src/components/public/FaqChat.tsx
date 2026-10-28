@@ -271,7 +271,7 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? 'Close FAQ chat' : 'Open FAQ chat'}
         className="fixed right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition active:scale-95"
-        style={{ ...buttonStyle, bottom: bottomOffset, backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+        style={{ ...buttonStyle, bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))`, backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
       >
         {open ? <X size={20} /> : <MessageCircle size={20} />}
       </button>
@@ -281,7 +281,7 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
         <div
           className="fixed right-3 z-50 flex flex-col rounded-2xl shadow-2xl sm:w-80 sm:h-[28rem] w-[calc(100vw-1.5rem)] h-[65vh]"
           style={{
-            bottom: bottomOffset + 56,
+            bottom: `calc(${bottomOffset + 56}px + env(safe-area-inset-bottom, 0px))`,
             background: 'var(--page-color, #FBF7F0)',
             border: '1px solid rgba(120,90,60,0.2)',
             fontFamily: 'var(--body-font)',

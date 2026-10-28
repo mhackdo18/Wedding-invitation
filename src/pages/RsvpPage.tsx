@@ -75,7 +75,7 @@ export default function RsvpPage() {
 
   if (loading || !settings) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-color)' }}>
+      <div className="min-h-[100dvh] flex items-center justify-center" style={{ background: 'var(--bg-color)' }}>
         <Loader2 className="animate-spin" style={{ color: '#8a6d3b' }} />
       </div>
     );
@@ -92,7 +92,7 @@ export default function RsvpPage() {
   // If a guest is selected, show the wizard
   if (selectedGuests) {
     return (
-      <div className="min-h-screen" style={{ background: design.pageBackgroundColor }}>
+      <div className="min-h-[100dvh]" style={{ background: design.pageBackgroundColor }}>
         <div className="mx-auto embossed-card scroll-edge fade-up" style={{ maxWidth: 'var(--page-width)', fontFamily: 'var(--body-font)', background: design.cardBackgroundColor, borderColor: design.cardBorderColor }}>
           <div className="px-6 pt-6">
             <button onClick={() => setSelectedGuests(null)} className="inline-flex items-center gap-1.5 text-xs" style={{ ...rsvpButtonStyle(design), padding: '7px 12px' }}>

@@ -225,7 +225,7 @@ export default function InvitationPage({ token }: { token: string }) {
 
   if (loading || !settings || invLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-color)' }}>
+      <div className="min-h-[100dvh] flex items-center justify-center" style={{ background: 'var(--bg-color)' }}>
         <Loader2 className="animate-spin" style={{ color: '#8a6d3b' }} />
       </div>
     );
