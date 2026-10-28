@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { SiteSettings } from '@/types';
 import { Lock, Loader2 } from 'lucide-react';
@@ -56,36 +56,43 @@ export default function PasswordGate({ settings, onGranted }: { settings: SiteSe
   };
 
   const titleFont = settings.gate_title_font ? stackFor(settings.gate_title_font) : 'var(--heading-font)';
+  const textFont = settings.gate_text_font ? stackFor(settings.gate_text_font) : titleFont;
   const titleColor = settings.gate_title_color || '#5a4430';
+  const textColor = settings.gate_text_color || titleColor;
   const btnBg = settings.gate_button_bg_color || settings.cta_bg_color || '#8a6d3b';
   const btnText = settings.gate_button_text_color || settings.cta_text_color || '#fff';
   const btnRadius = settings.gate_button_radius ?? 8;
-  const pageBg = settings.bg_color || '#f4efe6';
-  const cardBg = settings.page_color || '#fffaf2';
+  const pageBg = settings.gate_bg_color || settings.bg_color || '#f4efe6';
+  const cardBg = settings.gate_card_color || settings.page_color || '#fffaf2';
+  const showNames = settings.gate_show_partner_names !== false;
+  const showMonogram = settings.gate_show_monogram !== false;
+  const monogramSize = settings.gate_monogram_size ?? 72;
+  const pageStyle: CSSProperties = {
+    backgroundColor: pageBg,
+    backgroundImage: settings.gate_background_image_url ? `linear-gradient(rgba(24,16,12,0.12), rgba(24,16,12,0.12)), url(${settings.gate_background_image_url})` : undefined,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6" style={{ background: pageBg }}>
-      <div className="rounded-xl p-8 max-w-sm w-full text-center" style={{ background: cardBg }}>
-        <div className="w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4" style={{ background: 'rgba(138,109,59,0.10)' }}>
-          <Lock size={24} style={{ color: titleColor }} />
-        </div>
-        <h1 style={{ fontFamily: titleFont, fontSize: fluidPx(28), color: titleColor, margin: '0 0 4px' }}>
-          {settings.partner1_name} &amp; {settings.partner2_name}
-        </h1>
-        <p style={{ fontSize: fluidPx(13), color: titleColor, opacity: 0.7, marginBottom: 20 }}>
-          Enter the password to view our wedding invitation
+    <div className="min-h-screen flex items-center justify-center px-6 py-8" style={pageStyle}>
+      <div className="rounded-xl p-8 max-w-sm w-full text-center shadow-xl" style={{ background: cardBg }}>
+        {showMonogram && <SiteMonogram settings={settings} size={monogramSize} className="mx-auto mb-5" />}
+        {showNames && <h1 style={{ fontFamily: titleFont, fontSize: fluidPx(28), color: titleColor, margin: '0 0 4px' }}>{settings.partner1_name} &amp; {settings.partner2_name}</h1>}
+        <p style={{ fontFamily: textFont, fontSize: fluidPx(13), color: textColor, margin: '0 0 20px' }}>
+          {settings.gate_message || 'Enter the password to view our wedding invitation'}
         </p>
         <form onSubmit={submit} className="space-y-3">
           <input
             type="password"
             autoFocus
             className="w-full rounded-lg border px-4 py-3 text-sm outline-none text-center"
-            style={{ borderColor: 'rgba(120,90,60,0.2)', background: 'rgba(255,255,255,0.6)', color: titleColor }}
+            style={{ borderColor: 'rgba(120,90,60,0.2)', background: 'rgba(255,255,255,0.6)', color: textColor }}
             placeholder="Password"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
           />
-          {error && <p style={{ fontSize: fluidPx(13), color: '#b03a3a' }}>{error}</p>}
+          {error && <p style={{ fontFamily: textFont, fontSize: fluidPx(13), color: '#b03a3a' }}>{error}</p>}
           <button
             type="submit"
             disabled={checking || !pw.trim()}
@@ -95,7 +102,9 @@ export default function PasswordGate({ settings, onGranted }: { settings: SiteSe
             {checking ? <Loader2 size={16} className="animate-spin mx-auto" /> : 'Enter Site'}
           </button>
         </form>
-        <SiteMonogram settings={settings} size={14} className="mx-auto mt-6" />
+        <div className="w-14 h-14 rounded-full mx-auto mt-5 flex items-center justify-center" style={{ background: 'rgba(138,109,59,0.10)' }}>
+          <Lock size={24} style={{ color: titleColor }} />
+        </div>
       </div>
     </div>
   );

@@ -91,6 +91,16 @@ export interface SiteSettings {
   gate_button_bg_color: string | null;
   gate_button_text_color: string | null;
   gate_button_radius: number | null;
+  gate_message: string | null;
+  gate_text_color: string | null;
+  gate_text_font: string | null;
+  gate_bg_color: string | null;
+  gate_card_color: string | null;
+  gate_background_image_url: string | null;
+  gate_show_partner_names: boolean | null;
+  gate_show_monogram: boolean | null;
+  gate_monogram_position: 'top' | 'bottom' | null;
+  gate_monogram_size: number | null;
   portal_button_bg_color: string | null;
   portal_button_text_color: string | null;
   portal_bg_color: string | null;

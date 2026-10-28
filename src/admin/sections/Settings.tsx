@@ -7,6 +7,7 @@ import { uploadImage } from '@/lib/upload';
 import { FontSelect } from '@/components/admin/FontSelect';
 import { UploadProgress } from '@/components/admin/UploadProgress';
 import { stackFor } from '@/lib/fonts';
+import { SiteMonogram } from '@/components/public/SiteMonogram';
 import BackupRestore from './BackupRestore';
 
 export default function Settings() {
@@ -20,8 +21,11 @@ export default function Settings() {
   const [monogramProgress, setMonogramProgress] = useState(0);
   const [uploadingThankYouHero, setUploadingThankYouHero] = useState(false);
   const [thankYouHeroProgress, setThankYouHeroProgress] = useState(0);
+  const [uploadingGateBackground, setUploadingGateBackground] = useState(false);
+  const [gateBackgroundProgress, setGateBackgroundProgress] = useState(0);
   const monogramRef = useRef<HTMLInputElement>(null);
   const thankYouHeroRef = useRef<HTMLInputElement>(null);
+  const gateBackgroundRef = useRef<HTMLInputElement>(null);
 
   const load = async () => {
     setLoading(true);
@@ -58,6 +62,16 @@ export default function Settings() {
       gate_button_bg_color: settings.gate_button_bg_color,
       gate_button_text_color: settings.gate_button_text_color,
       gate_button_radius: settings.gate_button_radius,
+      gate_message: settings.gate_message,
+      gate_text_color: settings.gate_text_color,
+      gate_text_font: settings.gate_text_font,
+      gate_bg_color: settings.gate_bg_color,
+      gate_card_color: settings.gate_card_color,
+      gate_background_image_url: settings.gate_background_image_url,
+      gate_show_partner_names: settings.gate_show_partner_names,
+      gate_show_monogram: settings.gate_show_monogram,
+      gate_monogram_position: settings.gate_monogram_position,
+      gate_monogram_size: settings.gate_monogram_size,
       portal_button_bg_color: settings.portal_button_bg_color,
       portal_button_text_color: settings.portal_button_text_color,
       portal_bg_color: settings.portal_bg_color,
@@ -96,6 +110,16 @@ export default function Settings() {
     setThankYouHeroProgress(0);
   };
 
+  const uploadGateBackground = async (file: File) => {
+    if (uploadingGateBackground) return;
+    setUploadingGateBackground(true);
+    setGateBackgroundProgress(0);
+    const url = await uploadImage(file, 'gate-background', setGateBackgroundProgress);
+    if (url) updateSettings({ gate_background_image_url: url });
+    setUploadingGateBackground(false);
+    setGateBackgroundProgress(0);
+  };
+
   const addCollab = async (email: string, role: string) => {
     await supabase.from('collaborators').insert({ email, role });
     setAddingCollab(false); load();
@@ -130,42 +154,41 @@ export default function Settings() {
               <div className="border-t pt-3" style={{ borderColor: '#e6ddcd' }}>
                 <p className="text-xs font-semibold text-[#5a4430] mb-2">Gate Appearance</p>
               </div>
+              <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={settings?.gate_show_partner_names !== false} onChange={(e) => updateSettings({ gate_show_partner_names: e.target.checked })} className="accent-[#8a6d3b]" /> Show partner names</label>
+              <label className="flex items-center gap-2 text-sm text-[#5a4430]"><input type="checkbox" checked={settings?.gate_show_monogram !== false} onChange={(e) => updateSettings({ gate_show_monogram: e.target.checked })} className="accent-[#8a6d3b]" /> Show monogram</label>
               <div>
                 <label className="admin-label">Title Font</label>
                 <FontSelect value={settings?.gate_title_font || undefined} onChange={(f) => updateSettings({ gate_title_font: f })} previewText="Our Wedding" previewSize={18} />
               </div>
               <div>
-                <label className="admin-label">Title &amp; Text Color</label>
-                <div className="flex items-center gap-2">
-                  <input type="color" value={settings?.gate_title_color || '#5a4430'} onChange={(e) => updateSettings({ gate_title_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} />
-                  <input type="text" value={settings?.gate_title_color || ''} onChange={(e) => updateSettings({ gate_title_color: e.target.value })} placeholder="#5a4430" className="admin-input flex-1" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="admin-label">Button Background</label>
-                  <div className="flex items-center gap-2">
-                    <input type="color" value={settings?.gate_button_bg_color || '#8a6d3b'} onChange={(e) => updateSettings({ gate_button_bg_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} />
-                    <input type="text" value={settings?.gate_button_bg_color || ''} onChange={(e) => updateSettings({ gate_button_bg_color: e.target.value })} placeholder="#8a6d3b" className="admin-input flex-1" />
-                  </div>
-                </div>
-                <div>
-                  <label className="admin-label">Button Text Color</label>
-                  <div className="flex items-center gap-2">
-                    <input type="color" value={settings?.gate_button_text_color || '#ffffff'} onChange={(e) => updateSettings({ gate_button_text_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} />
-                    <input type="text" value={settings?.gate_button_text_color || ''} onChange={(e) => updateSettings({ gate_button_text_color: e.target.value })} placeholder="#ffffff" className="admin-input flex-1" />
-                  </div>
-                </div>
+                <label className="admin-label">Title &amp; Icon Color</label>
+                <div className="flex items-center gap-2"><input type="color" value={settings?.gate_title_color || '#5a4430'} onChange={(e) => updateSettings({ gate_title_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} /><input type="text" value={settings?.gate_title_color || ''} onChange={(e) => updateSettings({ gate_title_color: e.target.value })} placeholder="#5a4430" className="admin-input flex-1" /></div>
               </div>
               <div>
-                <label className="admin-label">Button Corner Radius: {settings?.gate_button_radius ?? 8}px</label>
-                <input type="range" min={0} max={30} value={settings?.gate_button_radius ?? 8} onChange={(e) => updateSettings({ gate_button_radius: parseInt(e.target.value) })} className="w-full accent-[#8a6d3b]" />
+                <label className="admin-label">Message</label>
+                <textarea className="admin-input" rows={2} value={settings?.gate_message || ''} onChange={(e) => updateSettings({ gate_message: e.target.value })} placeholder="Enter the password to view our wedding invitation" />
               </div>
-              <div className="rounded-lg p-3 mt-2" style={{ background: settings?.bg_color || '#f4efe6' }}>
-                <p className="text-[10px] uppercase tracking-wider text-[#a07c4a] mb-1">Preview</p>
-                <h3 style={{ fontFamily: stackFor(settings?.gate_title_font || 'Cormorant Garamond'), fontSize: 22, color: settings?.gate_title_color || '#5a4430', margin: 0 }}>{settings?.partner1_name} &amp; {settings?.partner2_name}</h3>
-                <button className="mt-2 px-4 py-2 text-sm font-semibold" style={{ background: settings?.gate_button_bg_color || '#8a6d3b', color: settings?.gate_button_text_color || '#fff', borderRadius: settings?.gate_button_radius ?? 8 }}>Enter Site</button>
+              <div>
+                <label className="admin-label">Message Font</label>
+                <FontSelect value={settings?.gate_text_font || undefined} onChange={(f) => updateSettings({ gate_text_font: f })} previewText="Enter the password to view our wedding invitation" previewSize={14} previewColor={settings?.gate_text_color || '#5a4430'} />
               </div>
+              <div>
+                <label className="admin-label">Message Text Color</label>
+                <div className="flex items-center gap-2"><input type="color" value={settings?.gate_text_color || '#5a4430'} onChange={(e) => updateSettings({ gate_text_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} /><input type="text" value={settings?.gate_text_color || ''} onChange={(e) => updateSettings({ gate_text_color: e.target.value })} placeholder="#5a4430" className="admin-input flex-1" /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="admin-label">Page Background</label><div className="flex items-center gap-2"><input type="color" value={settings?.gate_bg_color || '#f4efe6'} onChange={(e) => updateSettings({ gate_bg_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} /><input type="text" value={settings?.gate_bg_color || ''} onChange={(e) => updateSettings({ gate_bg_color: e.target.value })} placeholder="#f4efe6" className="admin-input flex-1" /></div></div>
+                <div><label className="admin-label">Card Background</label><div className="flex items-center gap-2"><input type="color" value={settings?.gate_card_color || '#fffaf2'} onChange={(e) => updateSettings({ gate_card_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} /><input type="text" value={settings?.gate_card_color || ''} onChange={(e) => updateSettings({ gate_card_color: e.target.value })} placeholder="#fffaf2" className="admin-input flex-1" /></div></div>
+              </div>
+              <div>
+                <label className="admin-label">Background Picture</label>
+                <div className="flex items-center gap-3">{settings?.gate_background_image_url && <div className="relative"><img src={settings.gate_background_image_url} alt="Gate background" className="w-24 h-16 rounded-lg object-cover border" style={{ borderColor: '#e6ddcd' }} /><button type="button" onClick={() => updateSettings({ gate_background_image_url: null })} className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#b03a3a' }}><X size={10} className="text-white" /></button></div>}<label className={`cursor-pointer ${uploadingGateBackground ? 'pointer-events-none opacity-50' : ''}`}><span className="btn-ghost inline-flex items-center gap-1.5 text-sm">{uploadingGateBackground ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}{settings?.gate_background_image_url ? 'Replace' : 'Upload Picture'}</span><input ref={gateBackgroundRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadGateBackground(f); e.target.value = ''; }} /></label></div>
+                {uploadingGateBackground && <UploadProgress percent={gateBackgroundProgress} />}
+              </div>
+              <div><label className="admin-label">Monogram Size: {settings?.gate_monogram_size ?? 72}px</label><input type="range" min={48} max={120} value={settings?.gate_monogram_size ?? 72} onChange={(e) => updateSettings({ gate_monogram_size: parseInt(e.target.value) })} className="w-full accent-[#8a6d3b]" /></div>
+              <div className="grid grid-cols-2 gap-3"><div><label className="admin-label">Button Background</label><div className="flex items-center gap-2"><input type="color" value={settings?.gate_button_bg_color || '#8a6d3b'} onChange={(e) => updateSettings({ gate_button_bg_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} /><input type="text" value={settings?.gate_button_bg_color || ''} onChange={(e) => updateSettings({ gate_button_bg_color: e.target.value })} placeholder="#8a6d3b" className="admin-input flex-1" /></div></div><div><label className="admin-label">Button Text Color</label><div className="flex items-center gap-2"><input type="color" value={settings?.gate_button_text_color || '#ffffff'} onChange={(e) => updateSettings({ gate_button_text_color: e.target.value })} className="w-10 h-10 rounded border cursor-pointer" style={{ borderColor: '#e6ddcd' }} /><input type="text" value={settings?.gate_button_text_color || ''} onChange={(e) => updateSettings({ gate_button_text_color: e.target.value })} placeholder="#ffffff" className="admin-input flex-1" /></div></div></div>
+              <div><label className="admin-label">Button Corner Radius: {settings?.gate_button_radius ?? 8}px</label><input type="range" min={0} max={30} value={settings?.gate_button_radius ?? 8} onChange={(e) => updateSettings({ gate_button_radius: parseInt(e.target.value) })} className="w-full accent-[#8a6d3b]" /></div>
+              <div className="rounded-lg p-4 mt-2 text-center" style={{ background: settings?.gate_bg_color || '#f4efe6', backgroundImage: settings?.gate_background_image_url ? `url(${settings.gate_background_image_url})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center' }}><div className="rounded-lg p-3" style={{ background: settings?.gate_card_color || '#fffaf2' }}>{settings?.gate_show_monogram !== false && <SiteMonogram settings={settings} size={settings?.gate_monogram_size ?? 72} className="mx-auto" />} {settings?.gate_show_partner_names !== false && <h3 style={{ fontFamily: stackFor(settings?.gate_title_font || 'Cormorant Garamond'), fontSize: 22, color: settings?.gate_title_color || '#5a4430', margin: '8px 0' }}>{settings?.partner1_name} &amp; {settings?.partner2_name}</h3>}<p className="text-sm mb-2" style={{ fontFamily: stackFor(settings?.gate_text_font || 'Cormorant Garamond'), color: settings?.gate_text_color || '#5a4430' }}>{settings?.gate_message || 'Enter the password to view our wedding invitation'}</p><button className="px-4 py-2 text-sm font-semibold" style={{ background: settings?.gate_button_bg_color || '#8a6d3b', color: settings?.gate_button_text_color || '#fff', borderRadius: settings?.gate_button_radius ?? 8 }}>Enter Site</button><Lock size={22} className="mx-auto mt-3" style={{ color: settings?.gate_title_color || '#5a4430' }} /></div></div>
             </div>
           )}
         </div>
