@@ -104,6 +104,7 @@ export default function InvitationDesigner() {
       invitation_paper_body: draft.invitation_paper_body,
       invitation_paper_buttons: draft.invitation_paper_buttons,
       env_greeting: draft.env_greeting,
+      env_greeting_font: draft.env_greeting_font,
       env_button_text: draft.env_button_text,
       env_cta_type: draft.env_cta_type,
       env_cta_link: draft.env_cta_link,
@@ -257,29 +258,17 @@ export default function InvitationDesigner() {
           </Card>
 
           <Card>
-            <h3 className="font-semibold text-[#3a2e22] mb-3">Greeting &amp; Button</h3>
+            <h3 className="font-semibold text-[#3a2e22] mb-3">Envelope Greetings</h3>
             <div className="space-y-3">
               <div>
                 <label className="admin-label">Greeting Text (shown before opening)</label>
                 <textarea className="admin-input" rows={2} value={draft.env_greeting || ''} onChange={(e) => upd({ env_greeting: e.target.value })} placeholder="You are cordially invited to celebrate our wedding" />
               </div>
               <div>
-                <label className="admin-label">Open Button Text</label>
-                <input className="admin-input" value={draft.env_button_text || ''} onChange={(e) => upd({ env_button_text: e.target.value })} placeholder="Explore Invitation" />
+                <label className="admin-label">Greeting Font</label>
+                <FontSelect value={draft.env_greeting_font || 'Cormorant Garamond'} onChange={(v) => upd({ env_greeting_font: v })} previewText="You are cordially invited — Tap the seal to open" previewSize={14} previewColor="#c9b896" />
+                <p className="text-xs text-[#8a7a66] mt-1">Applies to the greeting and the "Tap the seal to open" hint below the envelope.</p>
               </div>
-              <div>
-                <label className="admin-label">Continue Button Action</label>
-                <select className="admin-input" value={draft.env_cta_type || 'internal'} onChange={(e) => upd({ env_cta_type: e.target.value as 'internal' | 'external' })}>
-                  <option value="internal">Internal (scroll to invitation)</option>
-                  <option value="external">External URL</option>
-                </select>
-              </div>
-              {draft.env_cta_type === 'external' && (
-                <div>
-                  <label className="admin-label">External URL</label>
-                  <input className="admin-input" value={draft.env_cta_link || ''} onChange={(e) => upd({ env_cta_link: e.target.value })} placeholder="https://..." />
-                </div>
-              )}
             </div>
           </Card>
 
@@ -613,6 +602,30 @@ export default function InvitationDesigner() {
                   <button key={tag} onClick={() => upd({ invitation_paper_body: (draft.invitation_paper_body || '') + tag })} className="text-[10px] px-2 py-0.5 rounded font-mono" style={{ background: '#f0e8d8', color: '#8a6d3b' }}>{tag}</button>
                 ))}
               </div>
+            </div>
+          </Card>
+
+          <Card>
+            <h3 className="font-semibold text-[#3a2e22] mb-3">Open Button &amp; Continue Action</h3>
+            <p className="text-xs text-[#8a7a66] mb-3">Controls the button that appears at the bottom of the letter inside the opened envelope.</p>
+            <div className="space-y-3">
+              <div>
+                <label className="admin-label">Open Button Text</label>
+                <input className="admin-input" value={draft.env_button_text || ''} onChange={(e) => upd({ env_button_text: e.target.value })} placeholder="Explore Invitation" />
+              </div>
+              <div>
+                <label className="admin-label">Continue Button Action</label>
+                <select className="admin-input" value={draft.env_cta_type || 'internal'} onChange={(e) => upd({ env_cta_type: e.target.value as 'internal' | 'external' })}>
+                  <option value="internal">Internal (scroll to invitation)</option>
+                  <option value="external">External URL</option>
+                </select>
+              </div>
+              {draft.env_cta_type === 'external' && (
+                <div>
+                  <label className="admin-label">External URL</label>
+                  <input className="admin-input" value={draft.env_cta_link || ''} onChange={(e) => upd({ env_cta_link: e.target.value })} placeholder="https://..." />
+                </div>
+              )}
             </div>
           </Card>
 

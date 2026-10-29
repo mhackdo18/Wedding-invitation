@@ -38,6 +38,7 @@ export interface SiteSettings {
   seal_color: string;
   seal_style: string;
   env_greeting: string | null;
+  env_greeting_font: string | null;
   env_button_text: string;
   monogram_url: string | null;
   letter_body: string | null;

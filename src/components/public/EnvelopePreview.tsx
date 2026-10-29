@@ -95,6 +95,7 @@ export default function EnvelopePreview({ settings, fullscreen }: Props) {
   const flapNameText = settings.invitation_flap_name_text || 'Sample Guest';
   const nameFont = settings.invitation_flap_name_font || 'Great Vibes';
   const nameColor = settings.invitation_flap_name_color || adjustColor(env, -45);
+  const greetingFont = settings.env_greeting_font || 'Cormorant Garamond';
 
   // ---- Letter paper ----
   const paperBg = settings.invitation_paper_background_color || '#fffef8';
@@ -145,7 +146,7 @@ export default function EnvelopePreview({ settings, fullscreen }: Props) {
           }}
         >
           {showSeal && (
-            <p className="text-center mb-4 text-xs fade-up" style={{ color: '#c9b896', letterSpacing: '0.12em', fontFamily: stackFor(headingFont) }}>
+            <p className="text-center mb-4 text-xs fade-up" style={{ color: '#c9b896', letterSpacing: '0.12em', fontFamily: stackFor(greetingFont) }}>
               {settings.env_greeting || 'You are cordially invited'}
             </p>
           )}
@@ -210,7 +211,7 @@ export default function EnvelopePreview({ settings, fullscreen }: Props) {
           </div>
 
           {showSeal && (
-            <p className="text-center mt-5 text-xs fade-up" style={{ color: '#c9b896', letterSpacing: '0.15em' }}>TAP THE SEAL TO OPEN</p>
+            <p className="text-center mt-5 text-xs fade-up" style={{ color: '#c9b896', letterSpacing: '0.15em', fontFamily: stackFor(greetingFont) }}>TAP THE SEAL TO OPEN</p>
           )}
         </div>
 

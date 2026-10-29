@@ -186,6 +186,7 @@ export default function EnvelopeIntro({
     : (guestName || partyName || 'Guest');
   const flapNameFont = settings.invitation_flap_name_font || 'Great Vibes';
   const flapNameColor = settings.invitation_flap_name_color || adjustColor(env, -45);
+  const greetingFont = settings.env_greeting_font || 'Cormorant Garamond';
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-3 py-5 sm:px-4 sm:py-8 overflow-y-auto" style={{ background: 'rgba(40,28,18,0.82)', backdropFilter: useTextures ? 'blur(6px)' : 'none', opacity: isClosing ? 0 : 1, transition: 'opacity 0.6s ease', WebkitOverflowScrolling: 'touch' }}>
@@ -202,7 +203,7 @@ export default function EnvelopeIntro({
         >
           {showSeal && (
             <div className="text-center mb-5 max-w-xs fade-up px-2">
-              <p style={{ fontFamily: 'var(--heading-font)', fontSize: 'clamp(14px, 3.6vw, 16px)', color: '#f0e0c8', lineHeight: 1.6 }}>
+              <p style={{ fontFamily: stackFor(greetingFont), fontSize: 'clamp(14px, 3.6vw, 16px)', color: '#f0e0c8', lineHeight: 1.6 }}>
                 {settings.env_greeting || 'You are cordially invited to celebrate our wedding'}
               </p>
             </div>
@@ -440,7 +441,7 @@ export default function EnvelopeIntro({
           </div>
 
           {showSeal && (
-            <p className="text-center mt-5 sm:mt-7 fade-up" style={{ color: '#c9b896', fontSize: 'clamp(11px, 2.8vw, 12px)', letterSpacing: '0.15em' }}>
+            <p className="text-center mt-5 sm:mt-7 fade-up" style={{ fontFamily: stackFor(greetingFont), color: '#c9b896', fontSize: 'clamp(11px, 2.8vw, 12px)', letterSpacing: '0.15em' }}>
               TAP THE SEAL TO OPEN
             </p>
           )}
