@@ -5,8 +5,6 @@ import { typeStyle, fluidPx } from '@/lib/typography';
 import HeroImage from '@/components/public/HeroImage';
 import { Reveal } from '@/components/public/Reveal';
 
-const FONT_LIST = ['inherit', 'Great Vibes', 'Cormorant Garamond', 'Playfair Display', 'Cinzel', 'Lora', 'Raleway', 'Montserrat', 'Inter'];
-
 function resolveFont(f?: string) {
   return f && f !== 'inherit' ? `'${f}', serif` : 'var(--body-font)';
 }

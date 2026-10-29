@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import type { Guest, SeatingTable, SeatAssignment, Party, WeddingEvent } from '@/types';
-import { Search, MapPin, Users, Check, Clock, X, Armchair, Utensils, ChevronDown, UserCircle, UserCheck, Loader2, RotateCcw, AlertCircle, UserX, MailCheck } from 'lucide-react';
+import { Search, MapPin, Users, Check, Clock, X, Armchair, Utensils, ChevronDown, UserCircle, UserCheck, Loader2, RotateCcw, UserX, MailCheck } from 'lucide-react';
 
 export default function CoordinatorPage() {
   const { settings, loading } = useSiteSettings();

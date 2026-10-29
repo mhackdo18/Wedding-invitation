@@ -119,7 +119,6 @@ export default function EnvelopeIntro({
   const envShadow = adjustColor(env, -30);
   const envDeepShadow = adjustColor(env, -58);
   const envGradient = `linear-gradient(145deg, ${envHighlight} 0%, ${env} 36%, ${envShadow} 72%, ${envDeepShadow} 100%)`;
-  const linerGradient = `linear-gradient(165deg, ${envHighlight} 0%, ${env} 54%, ${envShadow} 100%)`;
 
   // --- Wax seal colors ---
   const waxBase = settings.invitation_wax_seal_color || settings.seal_color || '#C5A059';

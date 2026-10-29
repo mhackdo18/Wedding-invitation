@@ -18,11 +18,9 @@ export function useColumnResize(storageKey: string, defaultWidths: Record<string
     e.stopPropagation();
     const startX = e.clientX;
     const startWidth = colWidths[col] || 120;
-    let moved = false;
 
     const onMove = (ev: MouseEvent) => {
       const delta = ev.clientX - startX;
-      if (Math.abs(delta) > 2) moved = true;
       const newWidth = Math.max(60, startWidth + delta);
       setColWidths((prev) => ({ ...prev, [col]: newWidth }));
     };

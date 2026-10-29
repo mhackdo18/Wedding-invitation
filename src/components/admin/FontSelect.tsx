@@ -15,7 +15,7 @@ interface FontSelectProps {
 
 interface PopperRect { top: number; left: number; width: number }
 
-export function FontSelect({ value, onChange, previewText = 'Sample Text', previewSize = 16, previewColor = '#5a4430', className }: FontSelectProps) {
+export function FontSelect({ value, onChange, previewSize = 16, className }: FontSelectProps) {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState('');
   const [popperRect, setPopperRect] = useState<PopperRect>({ top: 0, left: 0, width: 0 });

@@ -10,12 +10,7 @@ export async function uploadImage(file: File, folder: string, onProgress?: Uploa
     .upload(fileName, file, {
       contentType: file.type,
       upsert: false,
-      ...(onProgress ? { onUploadProgress: (e: ProgressEvent) => {
-        if (e.lengthComputable && e.total > 0) {
-          onProgress(Math.round((e.loaded / e.total) * 100));
-        }
-      } } : {}),
-    } as any);
+    });
   if (error) {
     console.error('Upload error:', error.message);
     onProgress?.(0);

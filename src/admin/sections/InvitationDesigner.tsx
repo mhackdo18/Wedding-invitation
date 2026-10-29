@@ -865,7 +865,7 @@ export default function InvitationDesigner() {
       {preview && (
         <div className="fixed inset-0 z-50 overflow-auto" style={{ background: 'rgba(30,20,12,0.85)' }}>
           <button onClick={() => setPreview(false)} className="absolute top-4 right-4 text-sm text-[#c9b896] hover:text-white z-10">✕ Close Preview</button>
-          <EnvelopePreview settings={draft} fullscreen onClose={() => setPreview(false)} />
+          <EnvelopePreview settings={draft} fullscreen />
         </div>
       )}
     </div>

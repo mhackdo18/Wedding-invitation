@@ -1,5 +1,3 @@
-import type { TypeStyle } from '@/types';
-
 export interface PageBorderTemplate {
   value: string;
   label: string;

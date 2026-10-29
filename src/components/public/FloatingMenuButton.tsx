@@ -6,7 +6,7 @@ export interface FloatingMenuItem {
   label: string;
   onSelect: () => void;
   accent?: boolean;
-  ctaStyle?: { background?: string; color?: string; borderRadius?: string };
+  ctaStyle?: { background?: string; color?: string; borderRadius?: string | number };
 }
 
 export default function FloatingMenuButton({

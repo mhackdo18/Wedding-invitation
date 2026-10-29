@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { typeStyle, fluidPx } from '@/lib/typography';
-import type { Invitation, Guest, Party, WeddingEvent, RsvpQuestion, Page, GalleryPhoto, StoryMilestone, TypeStyle, SeatingTable } from '@/types';
+import type { Invitation, Guest, Party, WeddingEvent, RsvpQuestion, Page, GalleryPhoto, StoryMilestone, SeatingTable } from '@/types';
 import EnvelopeIntro from '@/components/public/EnvelopeIntro';
 import DoorReveal from '@/components/public/DoorReveal';
 import WelcomePage from '@/components/public/WelcomePage';
@@ -14,9 +14,7 @@ import VenueSection from '@/components/public/VenueSection';
 import EntouragePage from '@/components/public/EntouragePage';
 import InformationPage from '@/components/public/InformationPage';
 import DocumentViewer from '@/components/public/DocumentViewer';
-import HeroImage from '@/components/public/HeroImage';
 import RsvpWizard from '@/components/public/RsvpWizard';
-import { navigate } from '@/lib/router';
 import { Loader2 } from 'lucide-react';
 import { SiteMonogram } from '@/components/public/SiteMonogram';
 import FloatingMusicControl from '@/components/public/FloatingMusicControl';
@@ -300,7 +298,7 @@ export default function InvitationPage({ token }: { token: string }) {
             </div>
             <div
               className="text-sm leading-relaxed text-[#6b5d4f] max-w-md mx-auto text-center"
-              dangerouslySetInnerHTML={{ __html: (p as any).body_text || (p as any).config?.body_text || 'Add your content in the Page Builder.' }}
+              dangerouslySetInnerHTML={{ __html: (p as { body_text?: string; config?: { body_text?: string } }).body_text || (p as { config?: { body_text?: string } }).config?.body_text || 'Add your content in the Page Builder.' }}
             />
           </section>
         );
@@ -383,10 +381,10 @@ export default function InvitationPage({ token }: { token: string }) {
         <section id="invitation-rsvp" style={{ borderTop: '1px solid rgba(120,90,60,0.15)' }}>
           {settings.rsvp_deadline && (
             <div className="text-center pt-6">
-              <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline, settings.timezone) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
-                {isRsvpClosed(settings.rsvp_deadline, settings.timezone) ? 'RSVP IS NOW CLOSED' : 'RSVP DEADLINE'}
+              <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
+                {isRsvpClosed(settings.rsvp_deadline) ? 'RSVP IS NOW CLOSED' : 'RSVP DEADLINE'}
               </p>
-              <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline, settings.timezone) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
+              <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
                 {formatDeadlineDate(settings.rsvp_deadline, settings.timezone)}
               </p>
             </div>

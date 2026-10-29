@@ -2,16 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Guest, WeddingEvent, RsvpQuestion, SiteSettings, TypeStyle, ConditionalSubQuestion } from '@/types';
 import type { RsvpDesign } from '@/lib/rsvpDesign';
-import { typeStyle, fluidPx } from '@/lib/typography';
+import { fluidPx } from '@/lib/typography';
 import { Check, ChevronRight, ChevronLeft, Loader2, Clock } from 'lucide-react';
 import { SiteMonogram } from '@/components/public/SiteMonogram';
 import { isRsvpClosed } from '@/lib/timezone';
 import { resolveRsvpDesign, rsvpButtonStyle, rsvpTextStyle } from '@/lib/rsvpDesign';
-
-const FIELD_MAPPINGS: Record<string, string> = {
-  dietary: 'dietary',
-  message: 'song_requests',
-};
 
 interface RsvpWizardProps { guests: Guest[]; events: WeddingEvent[]; questions: RsvpQuestion[]; settings: SiteSettings; typo: Record<string, TypeStyle>; embedded?: boolean; onGuestsUpdate?: (guests: Guest[]) => void; }
 type AnswerValue = string | boolean | { first_name: string; last_name: string };
@@ -212,7 +207,7 @@ export default function RsvpWizard({ guests, events, questions, settings, typo, 
 
   const submit = async () => {
     if (!member) return;
-    if (isRsvpClosed(settings.rsvp_deadline, settings.timezone)) {
+    if (isRsvpClosed(settings.rsvp_deadline)) {
       setError('The RSVP deadline has passed and submissions are now closed.');
       return;
     }
@@ -421,7 +416,7 @@ export default function RsvpWizard({ guests, events, questions, settings, typo, 
   };
 
   if (guests.length === 0) return <div className="px-6 py-10 text-center text-[#8a7a66]">No guests found for this invitation.</div>;
-  if (isRsvpClosed(settings.rsvp_deadline, settings.timezone)) {
+  if (isRsvpClosed(settings.rsvp_deadline)) {
     return (
       <div className="px-6 py-16 text-center">
         <Clock size={40} className="mx-auto mb-4" style={{ color: '#b03a3a' }} />
@@ -450,7 +445,7 @@ export default function RsvpWizard({ guests, events, questions, settings, typo, 
       if (!isComplete(currentQuestion!, currentValue)) { setError('Please answer this required question before continuing.'); return; }
     }
     setError('');
-    last ? void submit() : setStep((value) => value + 1);
+    last ? (() => { void submit(); })() : setStep((value) => value + 1);
   };
 
   const heading = isFollowUpStep ? currentFollowUp!.label : currentQuestion!.label;

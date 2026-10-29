@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { navigate } from '@/lib/router';
 import { typeStyle, fluidPx } from '@/lib/typography';
-import type { WeddingEvent, RsvpQuestion, SiteSettings, TypeStyle, Guest } from '@/types';
+import type { WeddingEvent, RsvpQuestion, Guest } from '@/types';
 import { ArrowLeft, Loader2, Search } from 'lucide-react';
 import RsvpWizard from '@/components/public/RsvpWizard';
 import { Reveal } from '@/components/public/Reveal';
@@ -87,7 +87,7 @@ export default function RsvpPage() {
   const rsvpDeadlineStr = settings.rsvp_deadline
     ? formatDeadlineLong(settings.rsvp_deadline, tz)
     : '';
-  const rsvpClosed = isRsvpClosed(settings.rsvp_deadline, tz);
+  const rsvpClosed = isRsvpClosed(settings.rsvp_deadline);
 
   // If a guest is selected, show the wizard
   if (selectedGuests) {

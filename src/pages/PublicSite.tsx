@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
 import { navigate } from '@/lib/router';
 import { typeStyle, fluidPx } from '@/lib/typography';
-import type { SiteSettings, TypeStyle, Page, WeddingEvent, GalleryPhoto, RsvpQuestion, StoryMilestone } from '@/types';
+import type { Page, WeddingEvent, GalleryPhoto, StoryMilestone } from '@/types';
 import WelcomePage from '@/components/public/WelcomePage';
 import StoryPage from '@/components/public/StoryPage';
 import Schedule from '@/components/public/Schedule';
@@ -151,7 +151,6 @@ export default function PublicSite() {
   const [pages, setPages] = useState<Page[]>([]);
   const [events, setEvents] = useState<WeddingEvent[]>([]);
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
-  const [questions, setQuestions] = useState<RsvpQuestion[]>([]);
   const [milestones, setMilestones] = useState<StoryMilestone[]>([]);
   const [introOpen, setIntroOpen] = useState(true);
   const [doorOpen, setDoorOpen] = useState(false);
@@ -178,8 +177,6 @@ export default function PublicSite() {
       setEvents(ev as unknown as WeddingEvent[] || []);
       const { data: ph } = await supabase.from('gallery_photos').select('*').order('display_order');
       setPhotos(ph as GalleryPhoto[] || []);
-      const { data: q } = await supabase.from('rsvp_questions').select('*').order('display_order');
-      setQuestions(q as RsvpQuestion[] || []);
     })();
   }, []);
 
@@ -244,7 +241,7 @@ export default function PublicSite() {
             <HeroImage url={p.hero_image_url || ''} alt={p.title} />
             <div
               className="text-sm leading-relaxed text-[#6b5d4f] max-w-md mx-auto text-center"
-              dangerouslySetInnerHTML={{ __html: (p as any).body_text || (p as any).config?.body_text || 'Add your content in the Page Builder.' }}
+              dangerouslySetInnerHTML={{ __html: (p as { body_text?: string; config?: { body_text?: string } }).body_text || (p as { config?: { body_text?: string } }).config?.body_text || 'Add your content in the Page Builder.' }}
             />
           </section>
         );
@@ -328,10 +325,10 @@ export default function PublicSite() {
             <p style={{ fontSize: fluidPx(14), color: '#8a7a66', marginTop: 6 }}>Let us know your response</p>
         {settings.rsvp_deadline && (
           <div className="mt-2">
-            <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline, settings.timezone) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
-              {isRsvpClosed(settings.rsvp_deadline, settings.timezone) ? 'RSVP IS NOW CLOSED' : 'RSVP DEADLINE'}
+            <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
+              {isRsvpClosed(settings.rsvp_deadline) ? 'RSVP IS NOW CLOSED' : 'RSVP DEADLINE'}
             </p>
-            <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline, settings.timezone) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
+            <p className="text-base sm:text-lg font-semibold" style={{ color: isRsvpClosed(settings.rsvp_deadline) ? '#b03a3a' : '#8a6d3b', ...typeStyle(typo.rsvpDeadline) }}>
               {formatDeadlineDate(settings.rsvp_deadline, settings.timezone)}
             </p>
           </div>

@@ -61,7 +61,7 @@ export function offsetMinutes(timezone: string | null): number {
   return sign * (h * 60 + min);
 }
 
-export function isRsvpClosed(deadline: string | null, timezone: string | null): boolean {
+export function isRsvpClosed(deadline: string | null): boolean {
   if (!deadline) return false;
   return new Date().getTime() >= new Date(deadline).getTime();
 }

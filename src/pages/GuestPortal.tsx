@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSiteSettings, applySettingsVars } from '@/lib/useSiteSettings';
-import { navigate } from '@/lib/router';
 import type { SiteSettings } from '@/types';
 import { Loader2, Check, UserPlus } from 'lucide-react';
 import { SiteMonogram } from '@/components/public/SiteMonogram';

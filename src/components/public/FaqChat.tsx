@@ -9,7 +9,7 @@ const SESSION_ACTIVITY_KEY = 'wedding_chat_activity';
 
 function newSessionId(): string {
   try {
-    const id = (crypto as any).uuid ? (crypto as any).uuid() : crypto.randomUUID();
+    const id = crypto.randomUUID();
     localStorage.setItem(SESSION_KEY, id);
     return id;
   } catch {

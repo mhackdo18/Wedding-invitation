@@ -102,11 +102,10 @@ export function DoorStylePreview({ style, color }: { style: DoorStyle; color: st
   // Style-specific gradients for 3D depth
   let styleGradient = gradient;
   let styleBoxShadow = 'none';
-  let styleBorderRadius = `${archRadius}px ${archRadius}px 2px 2px`;
-  let extraDecor: React.ReactNode[] = [];
+  const styleBorderRadius = `${archRadius}px ${archRadius}px 2px 2px`;
+  const extraDecor: React.ReactNode[] = [];
 
   if (style === 'royal') {
-    const goldTone = adjust(base, -20);
     styleGradient = `linear-gradient(155deg, ${highlight} 0%, ${adjust(base, -8)} 30%, ${shadow} 100%)`;
     styleBoxShadow = `inset 0 2px 4px ${highlight}, inset 0 -2px 4px ${deep}`;
     extraDecor.push(

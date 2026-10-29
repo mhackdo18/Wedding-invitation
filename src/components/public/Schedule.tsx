@@ -3,7 +3,7 @@ import type { WeddingEvent, TypeStyle } from '@/types';
 import { typeStyle, fluidPx } from '@/lib/typography';
 import HeroImage from '@/components/public/HeroImage';
 import { Reveal } from '@/components/public/Reveal';
-import { Clock, MapPin, CalendarPlus, Navigation, Navigation2 } from 'lucide-react';
+import { Clock, CalendarPlus, Navigation, Navigation2 } from 'lucide-react';
 
 function addToCalendar(ev: WeddingEvent, partner1?: string, partner2?: string) {
   const start = ev.start_time ? new Date(ev.start_time) : new Date();
@@ -62,7 +62,7 @@ export default function Schedule({
 }: { events: WeddingEvent[]; typo: Record<string, TypeStyle>; partner1?: string; partner2?: string; heroImageUrl?: string; animEnabled?: boolean }) {
   if (!events.length) return null;
 
-  const dateGroups = useMemo(() => {
+  const dateGroups = (() => {
     const groups: { date: string; dateLabel: string; events: WeddingEvent[] }[] = [];
     const map = new Map<string, WeddingEvent[]>();
     const order: string[] = [];
@@ -78,7 +78,7 @@ export default function Schedule({
       groups.push({ date: key, dateLabel, events: evts });
     }
     return groups;
-  }, [events]);
+  })();
 
   const hasMultipleDates = dateGroups.length > 1 || (dateGroups.length === 1 && dateGroups[0].dateLabel);
 

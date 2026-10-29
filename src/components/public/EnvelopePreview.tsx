@@ -10,10 +10,9 @@ type Phase = 'closed' | 'releasing' | 'opening' | 'rising' | 'open';
 interface Props {
   settings: SiteSettings;
   fullscreen?: boolean;
-  onClose?: () => void;
 }
 
-export default function EnvelopePreview({ settings, fullscreen, onClose }: Props) {
+export default function EnvelopePreview({ settings, fullscreen }: Props) {
   const [phase, setPhase] = useState<Phase>('closed');
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
