@@ -51,9 +51,10 @@ interface FaqChatProps {
   tableNumber?: string | null;
   partyName?: string | null;
   bottomOffset?: number;
+  visible?: boolean;
 }
 
-export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCard, guestTags, authUsername, authPassword, botName, tableNumber, partyName, bottomOffset = 76 }: FaqChatProps) {
+export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCard, guestTags, authUsername, authPassword, botName, tableNumber, partyName, bottomOffset = 76, visible = true }: FaqChatProps) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -263,6 +264,8 @@ export default function FaqChat({ webhookUrl, greeting, guestName, guestNameOnCa
   };
 
   const hasName = Boolean(name);
+
+  if (!visible) return null;
 
   return (
     <>

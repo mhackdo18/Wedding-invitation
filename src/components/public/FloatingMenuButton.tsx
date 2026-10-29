@@ -11,13 +11,15 @@ export interface FloatingMenuItem {
 export default function FloatingMenuButton({
   items,
   bottomOffset = 20,
+  visible = true,
 }: {
   items: FloatingMenuItem[];
   bottomOffset?: number;
+  visible?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
-  if (items.length === 0) return null;
+  if (!visible || items.length === 0) return null;
 
   const choose = (item: FloatingMenuItem) => {
     setOpen(false);

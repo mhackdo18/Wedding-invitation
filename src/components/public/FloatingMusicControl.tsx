@@ -5,11 +5,13 @@ export default function FloatingMusicControl({
   musicUrl,
   autoplay = true,
   active = true,
+  visible = true,
   bottomOffset = 20,
 }: {
   musicUrl: string | null;
   autoplay?: boolean;
   active?: boolean;
+  visible?: boolean;
   bottomOffset?: number;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -82,7 +84,7 @@ export default function FloatingMusicControl({
     };
   }, [musicUrl, autoplay, active, muted]);
 
-  if (!musicUrl) return null;
+  if (!musicUrl || !visible) return null;
 
   const toggleMute = () => {
     const audio = audioRef.current;

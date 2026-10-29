@@ -423,14 +423,14 @@ export default function InvitationPage({ token }: { token: string }) {
       <FloatingMenuButton items={[
         ...navItems.map((p) => ({ key: p.id, label: p.title, onSelect: () => scrollToSection(p.template, p.id) })),
         ...(settings.show_rsvp_in_navigation !== false ? [{ key: 'rsvp', label: settings.cta_text, onSelect: () => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }), accent: true }] : []),
-      ]} bottomOffset={20} />
+      ]} bottomOffset={20} visible={revealDone} />
 
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
       )}
-      <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} active={revealDone} bottomOffset={settings.faq_chat_enabled && settings.faq_chat_webhook_url ? 132 : 76} />
+      <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} active={revealDone} visible={revealDone} bottomOffset={settings.faq_chat_enabled && settings.faq_chat_webhook_url ? 132 : 76} />
       {settings.faq_chat_enabled && settings.faq_chat_webhook_url && (
-        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} guestName={guest?.name_on_card || guest?.name} guestNameOnCard={guest?.name_on_card} guestTags={guest?.tags} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} botName={settings.faq_chat_bot_name} tableNumber={tableNumber} partyName={party?.name} bottomOffset={76} />
+        <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} guestName={guest?.name_on_card || guest?.name} guestNameOnCard={guest?.name_on_card} guestTags={guest?.tags} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} botName={settings.faq_chat_bot_name} tableNumber={tableNumber} partyName={party?.name} bottomOffset={76} visible={revealDone} />
       )}
       </BgPhotoLayer>
     </div>
