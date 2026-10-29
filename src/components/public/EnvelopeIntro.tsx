@@ -469,13 +469,13 @@ export default function EnvelopeIntro({
             maxWidth: '100%',
             boxShadow: '0 24px 48px rgba(25, 18, 10, 0.24), 0 5px 12px rgba(25, 18, 10, 0.13), inset 0 1px 0 rgba(255,255,255,0.56)',
           }}>
-            <div className="p-6 sm:p-10 flex flex-col text-center items-center w-full" style={{
+            <div className="p-4 sm:p-8 flex flex-col text-center items-center w-full" style={{
               border: paperBorderStyle === 'none' ? 'none' : paperBorderStyle === 'double' ? `3px double ${paperBorder}` : `1px ${paperBorderStyle} ${paperBorder}`,
               borderRadius: 2,
             }}>
-              {settings.invitation_paper_show_monogram !== false && <SiteMonogram settings={settings} size={settings.invitation_paper_monogram_size ?? 48} className="mb-4" />}
+              {settings.invitation_paper_show_monogram !== false && <SiteMonogram settings={settings} size={settings.invitation_paper_monogram_size ?? 48} className="mb-3" />}
               {/* Decorative top */}
-              <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="flex items-center justify-center gap-3 mb-3">
                 <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
                 <span style={{ color: dividerColor, fontSize: 12 }}>&#10022;</span>
                 <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
@@ -488,7 +488,7 @@ export default function EnvelopeIntro({
                     {settings.partner1_name}
                   </h2>
                   <p className="text-xl italic mb-1" style={{ fontFamily: headingFontStack, color: headingColor }}>&amp;</p>
-                  <h2 className="leading-tight mb-4 w-full" style={{ fontFamily: headingFontStack, fontSize: 'clamp(1.8rem, 6vw, 2.5rem)', color: headingColor }}>
+                  <h2 className="leading-tight mb-3 w-full" style={{ fontFamily: headingFontStack, fontSize: 'clamp(1.8rem, 6vw, 2.5rem)', color: headingColor }}>
                     {settings.partner2_name}
                   </h2>
                 </>
@@ -496,7 +496,7 @@ export default function EnvelopeIntro({
 
               {/* Date and venue */}
               {(showWeddingDate && weddingDate) || settings.venue_line ? (
-                <div className="mb-4 w-full">
+                <div className="mb-3 w-full">
                   {showWeddingDate && weddingDate && (
                     <p style={{ fontFamily: dateFontStack, fontSize: 'clamp(12px, 3.1vw, 13px)', color: dateColor, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                       {formattedWeddingDate}
@@ -509,13 +509,13 @@ export default function EnvelopeIntro({
               ) : null}
 
               {showBodyDivider && (
-                <div className="h-px w-16 mx-auto my-4" style={{ background: dividerColor, opacity: 0.3 }} />
+                <div className="h-px w-16 mx-auto my-3" style={{ background: dividerColor, opacity: 0.3 }} />
               )}
 
               {/* Letter body */}
               <div
-                className="mb-6 leading-relaxed w-full text-left [&_p]:mb-2 [&_p:last-child]:mb-0"
-                style={{ fontFamily: letterFontStack, fontSize: 'clamp(14px, 3.6vw, 15px)', lineHeight: 1.7, color: letterTextColor, opacity: 0.85, overflowWrap: 'break-word' }}
+                className="mb-4 leading-relaxed w-full text-left [&_p]:mb-1.5 [&_p:last-child]:mb-0"
+                style={{ fontFamily: letterFontStack, fontSize: 'clamp(14px, 3.6vw, 15px)', lineHeight: 1.55, color: letterTextColor, opacity: 0.85, overflowWrap: 'break-word' }}
                 dangerouslySetInnerHTML={{ __html: fillLetterBody(settings.invitation_paper_body || `Dear ${displayName},\n\nWe joyfully request the pleasure of your company as we celebrate our union.`) }}
               />
 
@@ -532,7 +532,7 @@ export default function EnvelopeIntro({
                     fontSize: 'clamp(13px, 3.3vw, 14px)',
                     letterSpacing: '0.1em',
                     fontWeight: 600,
-                    minHeight: 48,
+                    minHeight: 44,
                   }}
                 >
                   {settings.env_button_text || 'Explore Invitation'}
@@ -540,7 +540,7 @@ export default function EnvelopeIntro({
               </div>
 
               {/* Decorative bottom */}
-              <div className="flex items-center justify-center gap-3 mt-6 w-full">
+              <div className="flex items-center justify-center gap-3 mt-4 w-full">
                 <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
                 <span style={{ color: dividerColor, fontSize: 12 }}>&#10022;</span>
                 <span className="h-px w-8" style={{ background: dividerColor, opacity: 0.3 }} />
@@ -552,7 +552,7 @@ export default function EnvelopeIntro({
           {isOpen && !isClosing && (
             <button
               onClick={handleClose}
-              className="mt-5 mx-auto flex items-center gap-1.5 transition-colors fade-up"
+              className="mt-3 mx-auto flex items-center gap-1.5 transition-colors fade-up"
               style={{ color: '#c9b896', fontSize: 12, letterSpacing: '0.08em' }}
             >
               <RotateCcw size={14} /> Close Invitation
