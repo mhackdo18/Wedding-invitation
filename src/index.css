@@ -169,6 +169,12 @@ html, body {
   border-color: #b59a6b;
   box-shadow: 0 0 0 3px rgba(181,154,107,0.18);
 }
+/* 16px prevents iOS Safari from auto-zooming when guests tap RSVP inputs */
+.rsvp-input {
+  font-size: max(16px, 0.875rem);
+  padding: 0.625rem 0.75rem;
+  min-height: 44px;
+}
 .admin-label {
   font-size: 0.75rem;
   font-weight: 600;

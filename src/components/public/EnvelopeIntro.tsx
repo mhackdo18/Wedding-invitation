@@ -188,8 +188,8 @@ export default function EnvelopeIntro({
   const flapNameColor = settings.invitation_flap_name_color || adjustColor(env, -45);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-3 py-5 sm:px-4 sm:py-8 overflow-y-auto" style={{ background: 'rgba(40,28,18,0.82)', backdropFilter: useTextures ? 'blur(6px)' : 'none', opacity: isClosing ? 0 : 1, transition: 'opacity 0.6s ease' }}>
-      <div className="relative w-full max-w-md min-h-[calc(100svh-2.5rem)] sm:min-h-[520px] flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-3 py-5 sm:px-4 sm:py-8 overflow-y-auto" style={{ background: 'rgba(40,28,18,0.82)', backdropFilter: useTextures ? 'blur(6px)' : 'none', opacity: isClosing ? 0 : 1, transition: 'opacity 0.6s ease', WebkitOverflowScrolling: 'touch' }}>
+      <div className="relative w-full max-w-md flex items-center justify-center py-2" style={{ minHeight: 'min(calc(100svh - 2.5rem), auto)' }}>
         {/* ---- Envelope ---- */}
         <div
           className="absolute inset-0 flex flex-col items-center justify-center"
@@ -201,8 +201,8 @@ export default function EnvelopeIntro({
           }}
         >
           {showSeal && (
-            <div className="text-center mb-5 max-w-xs fade-up">
-              <p style={{ fontFamily: 'var(--heading-font)', fontSize: 15, color: '#f0e0c8', lineHeight: 1.6 }}>
+            <div className="text-center mb-5 max-w-xs fade-up px-2">
+              <p style={{ fontFamily: 'var(--heading-font)', fontSize: 'clamp(14px, 3.6vw, 16px)', color: '#f0e0c8', lineHeight: 1.6 }}>
                 {settings.env_greeting || 'You are cordially invited to celebrate our wedding'}
               </p>
             </div>
@@ -401,7 +401,7 @@ export default function EnvelopeIntro({
                     backfaceVisibility: 'hidden',
                   }}
                 >
-                  <button onClick={handleOpen} type="button" aria-label="Open invitation" className="group cursor-pointer bg-transparent border-0 p-0">
+                  <button onClick={handleOpen} type="button" aria-label="Open invitation" className="group cursor-pointer bg-transparent border-0 p-0" style={{ minHeight: 44, minWidth: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div className="relative transition-transform duration-300 group-hover:scale-110 group-active:scale-95" style={{ width: 'clamp(4.75rem, 23vw, 6rem)', height: 'clamp(4.75rem, 23vw, 6rem)' }}>
                       {/* Wax body */}
                       <div className="absolute inset-0 rounded-full" style={{
@@ -440,7 +440,7 @@ export default function EnvelopeIntro({
           </div>
 
           {showSeal && (
-            <p className="text-center mt-5 sm:mt-7 text-xs fade-up" style={{ color: '#c9b896', letterSpacing: '0.15em' }}>
+            <p className="text-center mt-5 sm:mt-7 fade-up" style={{ color: '#c9b896', fontSize: 'clamp(11px, 2.8vw, 12px)', letterSpacing: '0.15em' }}>
               TAP THE SEAL TO OPEN
             </p>
           )}
@@ -453,6 +453,7 @@ export default function EnvelopeIntro({
             ...paperMotion,
             pointerEvents: isOpen ? 'auto' : 'none',
             willChange: 'transform, opacity',
+            margin: 'auto 0',
             transition: phase === 'rising'
               ? 'opacity 0.28s ease, transform 1.55s cubic-bezier(0.16, 0.88, 0.27, 1)'
             : phase === 'closing'
@@ -464,6 +465,7 @@ export default function EnvelopeIntro({
             background: paperBg,
             padding: 10,
             borderRadius: 4,
+            maxWidth: '100%',
             boxShadow: '0 24px 48px rgba(25, 18, 10, 0.24), 0 5px 12px rgba(25, 18, 10, 0.13), inset 0 1px 0 rgba(255,255,255,0.56)',
           }}>
             <div className="p-6 sm:p-10 flex flex-col text-center items-center w-full" style={{
@@ -495,12 +497,12 @@ export default function EnvelopeIntro({
               {(showWeddingDate && weddingDate) || settings.venue_line ? (
                 <div className="mb-4 w-full">
                   {showWeddingDate && weddingDate && (
-                    <p style={{ fontFamily: dateFontStack, fontSize: 12, color: dateColor, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                    <p style={{ fontFamily: dateFontStack, fontSize: 'clamp(12px, 3.1vw, 13px)', color: dateColor, opacity: 0.7, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                       {formattedWeddingDate}
                     </p>
                   )}
                   {settings.venue_line && (
-                    <p style={{ fontSize: 14, color: letterTextColor, opacity: 0.7, marginTop: 4 }}>{settings.venue_line}</p>
+                    <p style={{ fontSize: 'clamp(14px, 3.6vw, 15px)', color: letterTextColor, opacity: 0.7, marginTop: 4 }}>{settings.venue_line}</p>
                   )}
                 </div>
               ) : null}
@@ -511,8 +513,8 @@ export default function EnvelopeIntro({
 
               {/* Letter body */}
               <div
-                className="text-sm mb-6 leading-relaxed w-full [&_p]:mb-2 [&_p:last-child]:mb-0"
-                style={{ fontFamily: letterFontStack, color: letterTextColor, opacity: 0.85 }}
+                className="mb-6 leading-relaxed w-full text-left [&_p]:mb-2 [&_p:last-child]:mb-0"
+                style={{ fontFamily: letterFontStack, fontSize: 'clamp(14px, 3.6vw, 15px)', lineHeight: 1.7, color: letterTextColor, opacity: 0.85, overflowWrap: 'break-word' }}
                 dangerouslySetInnerHTML={{ __html: fillLetterBody(settings.invitation_paper_body || `Dear ${displayName},\n\nWe joyfully request the pleasure of your company as we celebrate our union.`) }}
               />
 
@@ -520,15 +522,16 @@ export default function EnvelopeIntro({
               <div className="flex flex-col gap-2.5 w-full pt-2">
                 <button
                   onClick={handleCtaClick}
-                  className="px-6 py-2.5 transition-all hover:tracking-widest"
+                  className="w-full sm:w-auto px-6 transition-all hover:tracking-widest"
                   style={{
                     background: 'transparent',
                     color: '#5a4430',
                     border: '1px solid rgba(90,68,48,0.3)',
                     borderRadius: 4,
-                    fontSize: 13,
+                    fontSize: 'clamp(13px, 3.3vw, 14px)',
                     letterSpacing: '0.1em',
                     fontWeight: 600,
+                    minHeight: 48,
                   }}
                 >
                   {settings.env_button_text || 'Explore Invitation'}

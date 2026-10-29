@@ -162,14 +162,14 @@ export default function RsvpPage() {
           </Reveal>
         </div>
 
-        <div className="px-6 pb-8">
+        <div className="px-4 sm:px-6 pb-8">
           <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up" delay={80}>
           <p className="text-center mb-4" style={rsvpTextStyle(design, 'instruction')}>Find your name to begin:</p>
           <div className="max-w-sm mx-auto">
             <div className="grid grid-cols-2 gap-2">
               <div className="relative">
                 <input
-                  className="w-full rounded-full border pl-4 pr-4 py-3 text-sm outline-none focus:border-[#b59a6b]"
+                  className="w-full rounded-full border pl-4 pr-4 py-3 outline-none focus:border-[#b59a6b] rsvp-input"
                   style={{ borderColor: design.inputBorderColor, background: design.inputBackgroundColor }}
                   placeholder="First name"
                   value={firstName}
@@ -179,7 +179,7 @@ export default function RsvpPage() {
               </div>
               <div className="relative">
                 <input
-                  className="w-full rounded-full border pl-4 pr-4 py-3 text-sm outline-none focus:border-[#b59a6b]"
+                  className="w-full rounded-full border pl-4 pr-4 py-3 outline-none focus:border-[#b59a6b] rsvp-input"
                   style={{ borderColor: design.inputBorderColor, background: design.inputBackgroundColor }}
                   placeholder="Last name"
                   value={lastName}
@@ -189,7 +189,7 @@ export default function RsvpPage() {
               </div>
             </div>
             <div className="text-center mt-3">
-              <button onClick={searchGuest} className="inline-flex items-center gap-1.5" style={rsvpButtonStyle(design)}>
+              <button onClick={searchGuest} className="inline-flex items-center gap-1.5" style={{ ...rsvpButtonStyle(design), minHeight: 44 }}>
                 <Search size={16} /> Search
               </button>
             </div>
@@ -208,7 +208,7 @@ export default function RsvpPage() {
                   <button onClick={() => selectGuest(g)}
                     className="w-full text-left rounded-lg border p-3 transition hover:border-[#8a6d3b]"
                     style={{ borderColor: design.cardBorderColor, background: design.cardBackgroundColor }}>
-                    <span style={rsvpTextStyle(design, 'guestName')}>{g.name}</span>
+                    <span className="block truncate" style={rsvpTextStyle(design, 'guestName')}>{g.name}</span>
                     {g.party_id && <span className="block" style={rsvpTextStyle(design, 'guestStatus')}>RSVP for your full party</span>}
                   </button>
                   </Reveal>
