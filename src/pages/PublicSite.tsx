@@ -157,6 +157,7 @@ export default function PublicSite() {
   const [doorOpen, setDoorOpen] = useState(false);
   const [doorOpening, setDoorOpening] = useState(false);
   const [revealDone, setRevealDone] = useState(false);
+  const [sealPressed, setSealPressed] = useState(false);
   const storyPageRef = useRef<Page | null>(null);
 
   useEffect(() => { applySettingsVars(settings); }, [settings]);
@@ -267,6 +268,7 @@ export default function PublicSite() {
       />
       <EnvelopeIntro
         open={introOpen}
+        onOpen={() => setSealPressed(true)}
         onClose={() => {
           setRevealDone(false);
           setDoorOpen(true);
@@ -367,7 +369,7 @@ export default function PublicSite() {
       {settings.petal_animation_enabled && (
         <FallingPetals color={settings.petal_color} size={settings.petal_size} count={settings.petal_count} speed={settings.petal_speed} />
       )}
-      <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} active={revealDone} bottomOffset={20} />
+      <FloatingMusicControl musicUrl={settings.music_url} autoplay={settings.music_autoplay} active={sealPressed} bottomOffset={20} />
       {settings.faq_chat_enabled && settings.faq_chat_webhook_url && (
         <FaqChat webhookUrl={settings.faq_chat_webhook_url} greeting={settings.faq_chat_greeting} authUsername={settings.faq_chat_auth_username} authPassword={settings.faq_chat_auth_password} botName={settings.faq_chat_bot_name} bottomOffset={76} visible={revealDone} />
       )}
