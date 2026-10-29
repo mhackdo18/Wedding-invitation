@@ -29,11 +29,11 @@ export default function FloatingMenuButton({
   return (
     <>
       {open && (
-        <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setOpen(false)} />
+        <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
       )}
       {open && (
         <div
-          className="fixed right-[4.5rem] z-50 w-52 max-h-[60vh] overflow-y-auto rounded-2xl p-2 shadow-2xl lg:hidden"
+          className="fixed right-[4.5rem] z-50 w-52 max-h-[60vh] overflow-y-auto rounded-2xl p-2 shadow-2xl"
           style={{
             bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))`,
             background: 'var(--page-color, #FBF7F0)',
@@ -56,7 +56,7 @@ export default function FloatingMenuButton({
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? 'Close menu' : 'Open menu'}
         aria-expanded={open}
-        className="fixed right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition active:scale-95 lg:hidden"
+        className="fixed right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition active:scale-95"
         style={{
           bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))`,
           background: 'rgba(58,46,34,0.88)',
