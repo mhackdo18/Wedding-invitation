@@ -74,9 +74,7 @@ export default function PasswordGate({ settings, onGranted }: { settings: SiteSe
     backgroundPosition: 'center',
   };
 
-  // Sync browser theme-color to match the gate background
   useEffect(() => {
-    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', pageBg);
     document.body.style.background = pageBg;
     return () => { document.body.style.background = ''; };
   }, [pageBg]);

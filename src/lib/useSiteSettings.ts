@@ -89,8 +89,4 @@ export function applySettingsVars(s: SiteSettings | null) {
   root.setProperty('--body-font', s.body_font);
   buildBgLayerVars('card', getCardBg(s.typography));
   buildBgLayerVars('outer', getOuterBg(s.typography));
-  // On phones the card fills the screen, so browser bars must match the card color to look edge-to-edge
-  const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-  const themeColor = (isMobile ? s.page_color : s.bg_color) || '#3a1a14';
-  document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', themeColor);
 }
