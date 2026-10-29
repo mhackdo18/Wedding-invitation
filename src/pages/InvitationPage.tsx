@@ -334,7 +334,7 @@ export default function InvitationPage({ token }: { token: string }) {
         partyName={party?.name}
       />
 
-      <div className="mx-auto w-full embossed-card scroll-edge fade-up lg:max-w-[var(--page-width)]" style={{ fontFamily: 'var(--body-font)', paddingBottom: 'env(safe-area-inset-bottom, 0px)', overflow: (introOpen || doorOpen) && !revealDone ? 'hidden' : undefined, maxHeight: (introOpen || doorOpen) && !revealDone ? '100dvh' : undefined }}>
+      <div className="mx-auto w-full embossed-card scroll-edge fade-up lg:max-w-[var(--page-width)]" style={{ fontFamily: 'var(--body-font)', overflow: (introOpen || doorOpen) && !revealDone ? 'hidden' : undefined, maxHeight: (introOpen || doorOpen) && !revealDone ? '100dvh' : undefined }}>
         <BgPhotoLayer bg={cardBg}>
         {/* Sticky Navigation */}
         <nav className="sticky top-0 z-20 hidden lg:flex items-center justify-between px-4 py-2.5 border-b" style={{ background: 'var(--page-color)', borderColor: 'rgba(120,90,60,0.12)' }}>
@@ -359,13 +359,13 @@ export default function InvitationPage({ token }: { token: string }) {
         {welcomePage && (
           <div id={welcomePage.id ? `section-${welcomePage.id}` : 'section-welcome'}>
             <SectionBackground page={welcomePage}>
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder}>{renderSection(welcomePage)}</PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder} flushTop>{renderSection(welcomePage)}</PageBorder></Reveal>
             </SectionBackground>
           </div>
         )}
         {!welcomePage && (
           <div id="section-welcome">
-            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder}><WelcomePage settings={settings} typo={typo} onRsvp={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} /></PageBorder></Reveal>
+            <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-up"><PageBorder template={borderTemplate} typography={settings.typography} enabled={!excludeWelcomeBorder} flushTop><WelcomePage settings={settings} typo={typo} onRsvp={() => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' })} /></PageBorder></Reveal>
           </div>
         )}
 
@@ -406,7 +406,7 @@ export default function InvitationPage({ token }: { token: string }) {
 
         <Reveal enabled={!!settings.scroll_animation_enabled} animation="fade-in">
         {/* Footer */}
-        <footer className="text-center pt-8 pb-28 lg:pb-10" style={{ background: settings.footer_bg_color && settings.footer_bg_color !== 'transparent' ? settings.footer_bg_color : 'transparent' }}>
+        <footer className="text-center pt-8 pb-4" style={{ background: settings.footer_bg_color && settings.footer_bg_color !== 'transparent' ? settings.footer_bg_color : 'transparent' }}>
           {settings.footer_monogram_url ? (
             <img src={settings.footer_monogram_url} alt="Monogram" className="w-16 h-16 rounded-full object-cover mx-auto mb-3" />
           ) : (
@@ -423,7 +423,7 @@ export default function InvitationPage({ token }: { token: string }) {
       </div>
       <FloatingMenuButton items={[
         ...navItems.map((p) => ({ key: p.id, label: p.title, onSelect: () => scrollToSection(p.template, p.id) })),
-        ...(settings.show_rsvp_in_navigation !== false ? [{ key: 'rsvp', label: settings.cta_text, onSelect: () => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }), accent: true }] : []),
+        ...(settings.show_rsvp_in_navigation !== false ? [{ key: 'rsvp', label: settings.cta_text, onSelect: () => document.getElementById('invitation-rsvp')?.scrollIntoView({ behavior: 'smooth' }), accent: true, ctaStyle: { background: settings.cta_bg_color, color: settings.cta_text_color, borderRadius: settings.cta_radius } }] : []),
       ]} bottomOffset={settings.faq_chat_enabled && settings.faq_chat_webhook_url ? 132 : 76} visible={revealDone} />
 
       {settings.petal_animation_enabled && (

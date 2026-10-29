@@ -6,6 +6,7 @@ export interface FloatingMenuItem {
   label: string;
   onSelect: () => void;
   accent?: boolean;
+  ctaStyle?: { background?: string; color?: string; borderRadius?: string };
 }
 
 export default function FloatingMenuButton({
@@ -40,16 +41,33 @@ export default function FloatingMenuButton({
             border: '1px solid rgba(120,90,60,0.2)',
           }}
         >
-          {items.map((item) => (
-            <button
-              key={item.key}
-              onClick={() => choose(item)}
-              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition hover:bg-black/5 ${item.accent ? 'font-semibold' : ''}`}
-              style={{ color: item.accent ? '#8a6d3b' : '#5a4430' }}
-            >
-              {item.label}
-            </button>
-          ))}
+          {items.map((item) =>
+            item.ctaStyle ? (
+              <button
+                key={item.key}
+                onClick={() => choose(item)}
+                className="w-full text-center font-semibold transition hover:opacity-90"
+                style={{
+                  background: item.ctaStyle.background || '#8a6d3b',
+                  color: item.ctaStyle.color || '#fff',
+                  borderRadius: item.ctaStyle.borderRadius || '9999px',
+                  padding: '10px 16px',
+                  fontSize: '14px',
+                }}
+              >
+                {item.label}
+              </button>
+            ) : (
+              <button
+                key={item.key}
+                onClick={() => choose(item)}
+                className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition hover:bg-black/5"
+                style={{ color: '#5a4430' }}
+              >
+                {item.label}
+              </button>
+            )
+          )}
         </div>
       )}
       <button
